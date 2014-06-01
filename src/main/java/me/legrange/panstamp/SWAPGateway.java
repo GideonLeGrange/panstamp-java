@@ -1,6 +1,7 @@
 package me.legrange.panstamp;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.swap.CommandMessage;
 import me.legrange.swap.Message;
 import me.legrange.swap.MessageListener;
@@ -9,7 +10,6 @@ import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.SerialException;
 import me.legrange.swap.StatusMessage;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -96,7 +96,7 @@ public class SWAPGateway {
             try {
                 mote = network.getMote(address);
             } catch (NodeNotFoundException ex) {
-                logger.error(String.format("Could not find node %02x for update.", address));
+                logger.severe(String.format("Could not find node %02x for update.", address));
                 return;
             }
         } else {
@@ -108,7 +108,7 @@ public class SWAPGateway {
     private SWAPModem modem;
     private Receiver receiver;
     private SWAPNetwork network;
-    private static final Logger logger = Logger.getLogger(SWAPGateway.class);
+    private static final Logger logger = Logger.getLogger(SWAPGateway.class.getName());
 
     /**
      * A receiver for incoming messages

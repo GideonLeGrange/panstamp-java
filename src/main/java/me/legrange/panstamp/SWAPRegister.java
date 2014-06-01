@@ -2,6 +2,8 @@ package me.legrange.panstamp;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.swap.SerialException;
 
 /**
@@ -55,14 +57,9 @@ public class SWAPRegister {
      * @return the register value
      * @throws GatewayException if the value cannot be found
      */
-    public byte[] getValue() throws GatewayException {
+    public byte[] getValue() throws MoteException, ModemException {
         if ((value == null) || ((System.currentTimeMillis() - lastSeen) > maxAge)) {
-            try {
-                mote.requestRegister(id);
-            }
-            catch (SerialException e) {
-                throw new MoteException(e.getMessage(), e);
-            }
+            mote.requestRegister(id);
             synchronized (this) {
                 try {
                     wait(5000); // FIX ME, add adjustable timeout
@@ -99,14 +96,13 @@ public class SWAPRegister {
      * set the register value and send to remote node
      *
      * @param value the new value
-     * @throws me.legrange.swap.GatewayException
+     * @throws me.legrange.panstamp.MoteException
      */
-    public void setValue(byte value[]) throws GatewayException {
+    public void setValue(byte value[]) throws MoteException {
         this.value = value;
         try {
             mote.updateRegister(id, value);
-        }
-        catch (SerialException e) {
+        } catch (ModemException e) {
             throw new MoteException(e.getMessage(), e);
         }
     }
