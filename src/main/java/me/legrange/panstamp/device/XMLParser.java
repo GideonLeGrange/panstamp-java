@@ -21,13 +21,9 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-    public static void main(String... args) throws Exception {
-        parse("devices");
-    }
-
-    public static void parse(String dirName) throws ParseException {
+    public static List<Device> parse(String dirName) throws ParseException {
         XMLParser parser = new XMLParser(dirName);
-        parser.parseDevices();
+        return parser.parseDevices();
     }
 
     /**
@@ -40,8 +36,9 @@ public class XMLParser {
     /**
      * parse the devices.xml file
      */
-    private void parseDevices() throws ParseException {
+    private List<Device> parseDevices() throws ParseException {
         String fileName = dirName + "/devices.xml";
+        List<Device> devices = new LinkedList<>();
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -53,44 +50,52 @@ public class XMLParser {
                 throw new ParseException(String.format("Excpected 'devices' element, but found '%s'", root.getNodeName()));
             }
             for (Element node : iterable(root.getElementsByTagName("developer"))) {
-                parseDeveloper(node);
+                devices.addAll(parseDeveloper(node));
             }
         } catch (ParserConfigurationException | SAXException ex) {
             throw new ParseException(String.format("XML error parsing '%s': %s", fileName, ex.getMessage()), ex);
         } catch (IOException ex) {
             throw new ParseException(String.format("IO error parsing '%s': %s", fileName, ex.getMessage()), ex);
         }
+        return devices;
     }
 
     /**
      * parse the devices for one developer
      */
-    private void parseDeveloper(Element node) throws ParseException {
+    private List<Device> parseDeveloper(Element node) throws ParseException {
+        List<Device> devices = new LinkedList<>();
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
         Developer dev = new Developer(id, name);
         for (Element n : iterable(node.getChildNodes())) {
             if (n.getNodeName().equals("dev")) {
-                parseDevice(dev, n);
+                Device device = parseDevice(dev, n);
+                if (device != null) {
+                    devices.add(device);
+                }
             }
         }
+        return devices;
     }
 
     /**
      * parse a device configuration
      */
-    private void parseDevice(Developer devel, Element node) throws ParseException {
+    private Device parseDevice(Developer devel, Element node) throws ParseException {
+        Device dev = null;
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
         String label = requireAttr(node, "label");
         String fileName = dirName + "/" + devel.getName() + "/" + name + ".xml";
         File file = new File(fileName);
         if (file.exists()) {
-            Device dev = new Device(devel, id, name, label);
+            dev = new Device(devel, id, name, label);
             parseDeviceXML(dev, fileName);
         } else {
             log.warning(String.format("File '%s' for device id %d does not exist, skipping.", file.getAbsolutePath(), id));
         }
+        return dev;
     }
 
     /**
