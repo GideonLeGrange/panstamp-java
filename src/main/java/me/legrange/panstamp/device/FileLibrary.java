@@ -7,7 +7,7 @@ import java.util.Map;
  * A device library implementation for loading device definitions from the file system.
  * @author gideon
  */
-public class FileLibrary implements DeviceLibrary {
+public final class FileLibrary implements DeviceLibrary {
     
     FileLibrary(String path) {
         this.path = path;
