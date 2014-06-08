@@ -1,7 +1,7 @@
 package me.legrange.panstamp.device;
 
 /**
- * Exception thrown if a panstamp device cannot be found 
+ * Exception thrown if a panStamp device cannot be found 
  * @author gideon
  */
 public final class DeviceNotFoundException extends Exception {

@@ -2,7 +2,7 @@
 package me.legrange.panstamp.device;
 
 /**
- * 
+ * The size of a data point 
  * @author gideon
  */
 public class Size {

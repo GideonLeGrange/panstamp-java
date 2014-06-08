@@ -1,7 +1,7 @@
 package me.legrange.panstamp.device;
 
 /**
- *
+ * Enum for the types of data defined for panStamp data points
  * @author gideon
  */
 public enum Type {

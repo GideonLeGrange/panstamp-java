@@ -1,8 +1,7 @@
-
 package me.legrange.panstamp.device;
 
 /**
- * 
+ *  The position of data relative to a panStamp register
  * @author gideon
  */
 public class Position {

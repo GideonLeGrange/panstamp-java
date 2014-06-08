@@ -36,6 +36,11 @@ public class Device {
     public boolean isPowerDownMode() {
         return powerDownMode;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" + "id=" + id + ", developer=" + developer + ", name=" + name + ", label=" + label + ", product=" + product + ", powerDownMode=" + powerDownMode + '}';
+    }
     
     void setProduct(String product) {
         this.product = product;

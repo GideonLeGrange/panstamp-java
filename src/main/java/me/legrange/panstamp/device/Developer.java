@@ -18,6 +18,11 @@ public class Developer {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "Developer{" + "id=" + id + ", name=" + name + '}';
+    }
     
     private final int id;
     private final String name;

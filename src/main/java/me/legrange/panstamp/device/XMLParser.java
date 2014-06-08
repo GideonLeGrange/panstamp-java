@@ -1,7 +1,7 @@
 package me.legrange.panstamp.device;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,29 +21,29 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-    public static List<Device> parse(String dirName) throws ParseException {
-        XMLParser parser = new XMLParser(dirName);
+    public static List<Device> parse(StreamSource source) throws ParseException {
+        XMLParser parser = new XMLParser(source);
         return parser.parseDevices();
     }
 
     /**
      * create a new parser
      */
-    private XMLParser(String dirName) {
-        this.dirName = dirName;
+    private XMLParser(StreamSource source) {
+        this.source = source;
     }
 
     /**
      * parse the devices.xml file
      */
     private List<Device> parseDevices() throws ParseException {
-        String fileName = dirName + "/devices.xml";
+        String fileName = "devices.xml";
         List<Device> devices = new LinkedList<>();
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(fileName));
+            Document doc = db.parse(makeStream(fileName));
 
             Element root = doc.getDocumentElement();
             if (!root.getNodeName().equals("devices")) {
@@ -87,13 +87,13 @@ public class XMLParser {
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
         String label = requireAttr(node, "label");
-        String fileName = dirName + "/" + devel.getName() + "/" + name + ".xml";
-        File file = new File(fileName);
-        if (file.exists()) {
+        String fileName = devel.getName() + "/" + name + ".xml";
+        InputStream in = makeStream(fileName);
+        if (in !=  null) {
             dev = new Device(devel, id, name, label);
             parseDeviceXML(dev, fileName);
         } else {
-            log.warning(String.format("File '%s' for device id %d does not exist, skipping.", file.getAbsolutePath(), id));
+            log.warning(String.format("File '%s' for device id %d does not exist, skipping.", fileName, id));
         }
         return dev;
     }
@@ -105,7 +105,7 @@ public class XMLParser {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(fileName));
+            Document doc = db.parse(makeStream(fileName));
             Element root = doc.getDocumentElement();
             if (!root.getNodeName().equals("device")) {
                 throw new ParseException(String.format("Excpected 'device' element, but found '%s'", root.getNodeName()));
@@ -418,6 +418,10 @@ public class XMLParser {
         }
     }
 
+    private InputStream makeStream(String fileName) {
+        return source.getStream(fileName); //getClass().getClassLoader().getResourceAsStream(fileName);
+    }
+    
     private static Iterable<Element> iterable(final NodeList nl) {
         List<Element> els = new LinkedList<>();
         for (int i = 0; i < nl.getLength(); ++i) {
@@ -429,6 +433,6 @@ public class XMLParser {
         return els;
     }
 
-    private final String dirName;
+    private final StreamSource source;
     private final static Logger log = Logger.getLogger(XMLParser.class.getName());
 }
