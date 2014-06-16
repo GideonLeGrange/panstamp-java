@@ -1,5 +1,6 @@
-package me.legrange.panstamp.device;
+package me.legrange.panstamp.def;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ public abstract class DeviceLibrary {
     public Device findDevice(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
         if (devices == null) {
             devices = new HashMap<>();
-            List<Device> all = XMLParser.parse(getSource());
+            List<Device> all = XMLParser.parse(this);
             for (Device dev : all) {
                 devices.put(makeId(dev.getDeveloper().getId(), dev.getId()), dev);
             }
@@ -25,7 +26,12 @@ public abstract class DeviceLibrary {
         return dev;
     }
     
-    protected abstract StreamSource getSource();
+    /** implement to supply implementation specific way of finding the input stream for 
+     * a given path name. 
+     * @param path Path name of the XML file.
+     * @return An input stream for the XML file, or null if it could not be found.
+     */
+    protected abstract InputStream getStream(String path) ;
     
     private String makeId(int manufacturedID, int productId) {
         return String.format("%d/%d", manufacturedID, productId);

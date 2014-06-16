@@ -2,7 +2,6 @@ package me.legrange.panstamp;
 
 import java.util.HashMap;
 import java.util.Map;
-import me.legrange.swap.SerialException;
 
 /**
  * An abstraction of a SWAP mote (PanStamp)
@@ -95,10 +94,10 @@ public class SWAPMote {
     int getRoute() {
         return route;
     }
+    
     private final int address;
     private final SWAPNetwork network;
     private long lastSeen;
     private int route;
     private final Map<Integer, SWAPRegister> registers = new HashMap<>();
-    private static final long MAX_AGE = 60000;
 }

@@ -1,4 +1,4 @@
-package me.legrange.panstamp.device;
+package me.legrange.panstamp.def;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,16 +21,16 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-    public static List<Device> parse(StreamSource source) throws ParseException {
-        XMLParser parser = new XMLParser(source);
+    public static List<Device> parse(DeviceLibrary lib) throws ParseException {
+        XMLParser parser = new XMLParser(lib);
         return parser.parseDevices();
     }
 
     /**
      * create a new parser
      */
-    private XMLParser(StreamSource source) {
-        this.source = source;
+    private XMLParser(DeviceLibrary lib) {
+        this.lib = lib;
     }
 
     /**
@@ -419,7 +419,7 @@ public class XMLParser {
     }
 
     private InputStream makeStream(String fileName) {
-        return source.getStream(fileName); //getClass().getClassLoader().getResourceAsStream(fileName);
+        return lib.getStream(fileName); 
     }
     
     private static Iterable<Element> iterable(final NodeList nl) {
@@ -433,6 +433,6 @@ public class XMLParser {
         return els;
     }
 
-    private final StreamSource source;
+    private final DeviceLibrary lib;
     private final static Logger log = Logger.getLogger(XMLParser.class.getName());
 }

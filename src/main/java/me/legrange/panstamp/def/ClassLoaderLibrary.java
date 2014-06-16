@@ -1,22 +1,14 @@
-package me.legrange.panstamp.device;
+package me.legrange.panstamp.def;
 
 import java.io.InputStream;
 
 /**
- *
+ * A device library that uses the Java class loader to load XML definitions.
  * @author gideon
  */
-public class ClassLoaderLibrary extends DeviceLibrary implements StreamSource {
+public final class ClassLoaderLibrary extends DeviceLibrary  {
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    protected StreamSource getSource() {
-        return this;
-    }
-    
+ 
     @Override
       public InputStream getStream(String path) {
         return getClass().getClassLoader().getResourceAsStream(base + "/" + path);

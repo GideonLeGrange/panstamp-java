@@ -1,5 +1,5 @@
 
-package me.legrange.panstamp.device;
+package me.legrange.panstamp.def;
 
 /**
  * The size of a data point 

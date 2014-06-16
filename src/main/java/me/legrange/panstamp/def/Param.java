@@ -1,4 +1,4 @@
-package me.legrange.panstamp.device;
+package me.legrange.panstamp.def;
 
 import java.util.List;
 

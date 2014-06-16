@@ -20,7 +20,7 @@ public class SWAPGateway {
     public SWAPGateway() {
     }
 
-    public void start(String port, int baud) throws ModemException  {
+    public void start(String port, int baud) throws ModemException {
         receiver = new Receiver();
         network = new SWAPNetwork(this);
         try {
@@ -34,8 +34,7 @@ public class SWAPGateway {
     public void stop() throws ModemException {
         try {
             modem.close();
-        }
-        catch (SerialException e) {
+        } catch (SerialException e) {
             throw new ModemException(e.getMessage(), e);
         }
     }
@@ -47,7 +46,7 @@ public class SWAPGateway {
     /**
      * set a remote register
      */
-    void setRegister(SWAPMote mote, int register, byte[] value) throws ModemException  {
+    void setRegister(SWAPMote mote, int register, byte[] value) throws ModemException {
         Message msg = new CommandMessage();
         msg.setReceiver(mote.getAddress());
         msg.setRegisterAddress(mote.getAddress());
@@ -55,8 +54,10 @@ public class SWAPGateway {
         msg.setRegisterValue(value);
         send(msg);
     }
-    
-    /** request a remote register */
+
+    /**
+     * request a remote register
+     */
     void requestRegister(SWAPMote mote, int register) throws ModemException {
         Message msg = new QueryMessage();
         msg.setReceiver(mote.getAddress());
@@ -68,7 +69,7 @@ public class SWAPGateway {
     /**
      * send a message to a mote
      */
-    void send(Message msg) throws ModemException  {
+    void send(Message msg) throws ModemException {
         System.out.printf("send: %s\n", msg);
         try {
             modem.send(msg);

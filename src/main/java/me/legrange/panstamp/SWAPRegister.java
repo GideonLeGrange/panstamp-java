@@ -2,9 +2,6 @@ package me.legrange.panstamp;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import me.legrange.swap.SerialException;
 
 /**
  * Abstraction of a SWAP register.
@@ -39,41 +36,6 @@ public class SWAPRegister {
 
         void registerUpdated(RegisterEvent ev);
     }
-
-    /**
-     * return the time (in Java millis) since an update for the register was
-     * last seen
-     *
-     * @return time last seen (in milliseconds)
-     */
-    public long getLastSeen() {
-        return lastSeen;
-    }
-
-    /**
-     * return the register value. If we do not have a recent value for the
-     * register, one is requested and the call waits for a result
-     *
-     * @return the register value
-     * @throws GatewayException if the value cannot be found
-     */
-    public byte[] getValue() throws MoteException, ModemException {
-        if ((value == null) || ((System.currentTimeMillis() - lastSeen) > maxAge)) {
-            mote.requestRegister(id);
-            synchronized (this) {
-                try {
-                    wait(5000); // FIX ME, add adjustable timeout
-                    if (value == null) {
-                        throw new MoteException(String.format("Timed out waiting for register value"));
-                    }
-                } catch (InterruptedException e) {
-                    throw new MoteException(String.format("Interrupted out waiting for register value"));
-                }
-            }
-        }
-        return value;
-    }
-
     /**
      * Add a listener to receive register updates
      *
@@ -99,7 +61,6 @@ public class SWAPRegister {
      * @throws me.legrange.panstamp.MoteException
      */
     public void setValue(byte value[]) throws MoteException {
-        this.value = value;
         try {
             mote.updateRegister(id, value);
         } catch (ModemException e) {
@@ -111,11 +72,6 @@ public class SWAPRegister {
      * update the abstracted register value and notify listeners
      */
     void updateValue(byte value[]) {
-        this.value = value;
-        synchronized (this) {
-            lastSeen = System.currentTimeMillis();
-            notify();
-        }
         RegisterEvent ev = new RegisterEvent(this, value);
         for (RegisterListener l : listeners) {
             l.registerUpdated(ev);
@@ -132,8 +88,5 @@ public class SWAPRegister {
 
     private final SWAPMote mote;
     private final int id;
-    private long lastSeen;
-    private byte value[];
     private final List<RegisterListener> listeners = new LinkedList<>();
-    private long maxAge;
 }

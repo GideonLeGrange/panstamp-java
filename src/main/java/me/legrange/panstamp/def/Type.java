@@ -1,4 +1,4 @@
-package me.legrange.panstamp.device;
+package me.legrange.panstamp.def;
 
 /**
  * Enum for the types of data defined for panStamp data points
