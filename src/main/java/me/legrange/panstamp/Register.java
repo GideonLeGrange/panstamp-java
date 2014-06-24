@@ -8,11 +8,11 @@ import java.util.List;
  *
  * @author gideon
  */
-public class SWAPRegister {
+public class Register {
 
     public static class RegisterEvent {
 
-        public SWAPRegister getRegister() {
+        public Register getRegister() {
             return reg;
         }
 
@@ -20,12 +20,12 @@ public class SWAPRegister {
             return bytes;
         }
 
-        private RegisterEvent(SWAPRegister reg, byte bytes[]) {
+        private RegisterEvent(Register reg, byte bytes[]) {
             this.reg = reg;
             this.bytes = bytes;
         }
 
-        private final SWAPRegister reg;
+        private final Register reg;
         private final byte[] bytes;
     }
 
@@ -81,12 +81,12 @@ public class SWAPRegister {
     /**
      * create a new register for the given mote and register address
      */
-    SWAPRegister(SWAPMote mote, int id) {
+    Register(PanStamp mote, int id) {
         this.mote = mote;
         this.id = id;
     }
 
-    private final SWAPMote mote;
+    private final PanStamp mote;
     private final int id;
     private final List<RegisterListener> listeners = new LinkedList<>();
 }

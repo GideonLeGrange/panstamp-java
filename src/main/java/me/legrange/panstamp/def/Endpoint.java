@@ -4,15 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A device endpoint 
+ * A device endpoint
+ *
  * @author gideon
  */
 public class Endpoint {
-    
-    
 
-
-     Endpoint(String name, Direction direction, Type type) {
+    Endpoint(String name, Direction direction, Type type) {
         this.name = name;
         this.direction = direction;
         this.type = type;
@@ -50,18 +48,16 @@ public class Endpoint {
     public List<Unit> getUnits() {
         return units;
     }
-    
+
     void addUnit(Unit unit) {
         units.add(unit);
     }
-    
-    
-    
+
     private final String name;
-    private final  Direction direction;
+    private final Direction direction;
     private final Type type;
     private Position position;
     private Size size;
-        private final List<Unit> units;
+    private final List<Unit> units;
 
 }

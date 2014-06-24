@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An abstraction of a SWAP mote (PanStamp)
+ * An abstraction of a PanStamp
  *
  * @author gideon
  */
-public class SWAPMote {
+public class PanStamp {
 
     /**
      * @return address of this mote
@@ -21,14 +21,14 @@ public class SWAPMote {
      * @return the register for the given id
      * @param id Register to read
      */
-    public SWAPRegister getRegister(int id) {
-        SWAPRegister reg = registers.get(id);
+    public Register getRegister(int id) {
+        Register reg = registers.get(id);
         if (reg == null) {
-            reg = new SWAPRegister(this, id);
+            reg = new Register(this, id);
             registers.put(id, reg);
         }
         return reg;
-    }
+    } 
 
     public long getLastSeen() {
         return lastSeen;
@@ -38,7 +38,7 @@ public class SWAPMote {
      * request the register value from the remote node
      */
     void requestRegister(int id) throws ModemException  {
-        network.getGateway().requestRegister(this, id);
+        gw.requestRegister(this, id);
     }
 
     /**
@@ -47,22 +47,22 @@ public class SWAPMote {
      * @param value Value to send
      */
     void updateRegister(int id, byte[] value) throws ModemException {
-        network.getGateway().setRegister(this, id, value);
+        gw.setRegister(this, id, value);
     }
 
     /**
      * Update the state of a mote based on status message
      */
     void update(int id, byte[] value) throws MoteException {
-        SWAPRegister reg = getRegister(id);
+        Register reg = getRegister(id);
         reg.updateValue(value);
     }
 
     /**
      * create a new mote for the given address in the given network
      */
-    SWAPMote(SWAPNetwork network, int address) {
-        this.network = network;
+    PanStamp(Gateway gw, int address) {
+        this.gw = gw;
         this.address = address;
     }
 
@@ -96,8 +96,8 @@ public class SWAPMote {
     }
     
     private final int address;
-    private final SWAPNetwork network;
+    private final Gateway gw;
     private long lastSeen;
     private int route;
-    private final Map<Integer, SWAPRegister> registers = new HashMap<>();
+    private final Map<Integer, Register> registers = new HashMap<>();
 }

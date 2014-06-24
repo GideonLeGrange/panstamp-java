@@ -1,5 +1,7 @@
 package me.legrange.panstamp;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.swap.CommandMessage;
@@ -15,14 +17,14 @@ import me.legrange.swap.StatusMessage;
  *
  * @author gideon
  */
-public class SWAPGateway {
+public class Gateway {
 
-    public SWAPGateway() {
+    public Gateway() {
     }
 
     public void start(String port, int baud) throws ModemException {
+        devices = new HashMap<>();
         receiver = new Receiver();
-        network = new SWAPNetwork(this);
         try {
             modem = SWAPModem.open(port, baud);
         } catch (SWAPException ex) {
@@ -39,14 +41,11 @@ public class SWAPGateway {
         }
     }
 
-    public SWAPNetwork getNetwork() {
-        return network;
-    }
 
     /**
      * set a remote register
      */
-    void setRegister(SWAPMote mote, int register, byte[] value) throws ModemException {
+    void setRegister(PanStamp mote, int register, byte[] value) throws ModemException {
         Message msg = new CommandMessage();
         msg.setReceiver(mote.getAddress());
         msg.setRegisterAddress(mote.getAddress());
@@ -58,7 +57,7 @@ public class SWAPGateway {
     /**
      * request a remote register
      */
-    void requestRegister(SWAPMote mote, int register) throws ModemException {
+    void requestRegister(PanStamp mote, int register) throws ModemException {
         Message msg = new QueryMessage();
         msg.setReceiver(mote.getAddress());
         msg.setRegisterAddress(mote.getAddress());
@@ -92,24 +91,36 @@ public class SWAPGateway {
      * update the mote
      */
     private void updateMote(int address, int route) {
-        SWAPMote mote;
-        if (network.hasMote(address)) {
+        PanStamp mote;
+        if (hasMote(address)) {
             try {
-                mote = network.getMote(address);
+                mote = getMote(address);
             } catch (NodeNotFoundException ex) {
                 logger.severe(String.format("Could not find node %02x for update.", address));
                 return;
             }
         } else {
-            mote = network.createMote(address);
+            mote = new PanStamp(this, address);
         }
         mote.setLastSeen(System.currentTimeMillis());
         mote.setRoute(route);
     }
+    
+    
+    private boolean hasMote(int address) {
+        return devices.get(address) != null;
+    }
+    
+    private PanStamp getMote(int address) throws NodeNotFoundException {
+        PanStamp mote = devices.get(address);
+        if (mote == null) throw new NodeNotFoundException(String.format("No device found for address %02x", address));
+        return mote;
+    }
+    
     private SWAPModem modem;
     private Receiver receiver;
-    private SWAPNetwork network;
-    private static final Logger logger = Logger.getLogger(SWAPGateway.class.getName());
+    private Map<Integer, PanStamp> devices;
+    private static final Logger logger = Logger.getLogger(Gateway.class.getName());
 
     /**
      * A receiver for incoming messages
@@ -125,10 +136,10 @@ public class SWAPGateway {
         public void statusReceived(StatusMessage msg) {
             try {
                 updateNetwork(msg);
-                SWAPMote mote = network.getMote(msg.getSender());
+                PanStamp mote = getMote(msg.getSender());
                 mote.update(msg.getRegisterID(), msg.getRegisterValue());
             } catch (MoteException | NodeNotFoundException ex) {
-                java.util.logging.Logger.getLogger(SWAPGateway.class.getName()).log(Level.SEVERE, null, ex);
+                java.util.logging.Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

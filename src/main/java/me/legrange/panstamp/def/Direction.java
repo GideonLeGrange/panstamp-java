@@ -4,7 +4,7 @@ package me.legrange.panstamp.def;
  * Enum used for defining data flow direction 
  * @author gideon
  */
- enum Direction {
+ public enum Direction {
     IN("inp"), OUT("out");
 
     static Direction forTag(String tag) {
