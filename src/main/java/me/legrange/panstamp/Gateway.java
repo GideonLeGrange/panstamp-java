@@ -14,11 +14,12 @@ public abstract class Gateway {
         Gateway gw = Gateway.open("/dev/tty.usbserial-A800HNMV", 38400);
         while (true) {
             for (PanStamp p : gw.getDevices()) {
+                    
                 InputEndpoint<Double> ep0 = (InputEndpoint<Double>) p.getEndpoint("Temperature");
                 InputEndpoint<Double> ep1 = (InputEndpoint<Double>) p.getEndpoint("Voltage");
                 System.out.printf("%s C, %s V\n", ep0.getValue("C"), ep1.getValue("V"));
             }
-            Thread.sleep(1000);
+            Thread.sleep(10000);
         }
     }
 

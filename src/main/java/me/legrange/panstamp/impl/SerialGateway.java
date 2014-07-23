@@ -108,8 +108,8 @@ public final class SerialGateway extends Gateway {
                 return getInputEndpoint(ps, epDef);
             case OUT:
                 return getOutputEndpoint(ps, epDef);
+            default : throw new  NoSuchUnitException(String.format("Unknown end point direction '%s'. BUG!", epDef.getDirection()));
         }
-        return null; // FIX ME. Need to handle impossible ase of direction being weird. 
     }
 
     private InputEndpoint getInputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
@@ -161,7 +161,7 @@ public final class SerialGateway extends Gateway {
      * send a message to a mote
      */
     void send(Message msg) throws ModemException {
-        System.out.printf("send: %s\n", msg);
+//        System.out.printf("send: %s\n", msg);
         try {
             modem.send(msg);
         } catch (SerialException ex) {
