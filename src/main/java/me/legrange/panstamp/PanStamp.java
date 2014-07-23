@@ -22,6 +22,6 @@ public interface PanStamp {
      * @param name
      * @return 
      */
-    Endpoint getEndpoint(String name);
+    Endpoint getEndpoint(String name) throws GatewayException;
 
 }

@@ -331,7 +331,7 @@ public class XMLParser {
                 String parts[] = text.split("\\.");
                 endpoint.setSize(new Size(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
             } else {
-                endpoint.setPosition(new Position(Integer.parseInt(text)));
+                endpoint.setSize(new Size(Integer.parseInt(text), 0));
             }
 
         } catch (NumberFormatException e) {

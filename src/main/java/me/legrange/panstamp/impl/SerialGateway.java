@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.InputEndpoint;
@@ -17,14 +16,9 @@ import me.legrange.panstamp.OutputEndpoint;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
-import me.legrange.panstamp.def.DefinitionException;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
-import me.legrange.panstamp.def.DeviceNotFoundException;
 import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.NoSuchEndpointException;
-import me.legrange.panstamp.def.ParseException;
-import me.legrange.panstamp.def.Unit;
 import me.legrange.swap.CommandMessage;
 import me.legrange.swap.Message;
 import me.legrange.swap.MessageListener;
@@ -35,8 +29,9 @@ import me.legrange.swap.SerialException;
 import me.legrange.swap.StatusMessage;
 
 /**
- * A gateway connecting a PanStampImpl network to your code using the PanStampImpl modem connected 
- to the local serial port.
+ * A gateway connecting a PanStampImpl network to your code using the
+ * PanStampImpl modem connected to the local serial port.
+ *
  * @author gideon
  */
 public final class SerialGateway extends Gateway {
@@ -47,8 +42,11 @@ public final class SerialGateway extends Gateway {
         return gw;
     }
 
-    /** Disconnect from the modem and close the gateway
-     * @throws me.legrange.panstamp.impl.ModemException */
+    /**
+     * Disconnect from the modem and close the gateway
+     *
+     * @throws me.legrange.panstamp.impl.ModemException
+     */
     @Override
     public void close() throws ModemException {
         try {
@@ -61,18 +59,22 @@ public final class SerialGateway extends Gateway {
 
     /**
      * use to check if a device with the given address is known
+     *
      * @param address Address of the device we're looking for.
-     * @return True if a device with the given address is known 
+     * @return True if a device with the given address is known
      */
     @Override
     public boolean hasDevice(int address) {
         return devices.get(address) != null;
     }
 
-    /** return the device with the given name
+    /**
+     * return the device with the given name
+     *
      * @param address Address of device to fins
      * @return The device
-     * @throws me.legrange.panstamp.NodeNotFoundException */
+     * @throws me.legrange.panstamp.NodeNotFoundException
+     */
     @Override
     public PanStamp getDevice(int address) throws NodeNotFoundException {
         PanStampImpl mote = devices.get(address);
@@ -82,46 +84,56 @@ public final class SerialGateway extends Gateway {
         return mote;
     }
 
-    /** return the devices associated with this gateway
-     * @return  The collection of devices */
+    /**
+     * return the devices associated with this gateway
+     *
+     * @return The collection of devices
+     */
     @Override
     public Collection<PanStamp> getDevices() {
         List<PanStamp> res = new ArrayList<>();
-//        return Collections.unmodifiableCollection(devices.values());
         res.addAll(devices.values());
         return res;
     }
-    
+
     Endpoint getEndpoint(PanStampImpl ps, String name) throws GatewayException {
         Register reg = ps.getRegister(0);
         byte val[] = reg.getValue();
-        int manId = val[0] << 8 & val[1];
-        int productId = val[2] << 8 & val[3];
+        int manId = val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
+        int productId = val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
         Device dev = lib.findDevice(manId, productId);
         EndpointDef epDef = dev.getEndpoint(name);
         switch (epDef.getDirection()) {
-            case IN : return getInputEndpoint(ps, epDef);
-            case OUT : return getOutputEndpoint(epDef);
+            case IN:
+                return getInputEndpoint(ps, epDef);
+            case OUT:
+                return getOutputEndpoint(ps, epDef);
         }
         return null; // FIX ME. Need to handle impossible ase of direction being weird. 
     }
-    
+
     private InputEndpoint getInputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
-            case NUMBER : return new  NumberInputEndpoint(ps, epDef);
-            case STRING : return new StringInputEndpoint(ps, epDef);
-            default : throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
+            case NUMBER:
+                return new NumberInputEndpoint(ps, epDef);
+            case STRING:
+                return new StringInputEndpoint(ps, epDef);
+            default:
+                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
     }
-    
-    private OutputEndpoint getOutputEndpoint(PanStamp ps, EndpointDef epDef) {
+
+    private OutputEndpoint getOutputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
-            case NUMBER : return new  NumberOutputEndpoint(ps, epDef);
-            default : throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
+            case NUMBER:
+                return new NumberOutputEndpoint(ps, epDef);
+            case STRING:
+                return new StringOutputEndpoint(ps, epDef);
+            default:
+                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
     }
-    
-    
+
     /**
      * set a remote register
      */
@@ -175,7 +187,7 @@ public final class SerialGateway extends Gateway {
     /**
      * update the network based on a received message
      */
-    private void updateNetwork(Message msg) {
+    private void updateNetwork(Message msg) throws ModemException {
         updateMote(msg.getSender(), 0);
         if (msg.getRegisterAddress() != msg.getSender()) {
             updateMote(msg.getRegisterAddress(), msg.getSender());
@@ -185,7 +197,7 @@ public final class SerialGateway extends Gateway {
     /**
      * update the mote
      */
-    private void updateMote(int address, int route) {
+    private void updateMote(int address, int route) throws ModemException {
         PanStampImpl mote;
         if (hasDevice(address)) {
             try {
@@ -196,6 +208,7 @@ public final class SerialGateway extends Gateway {
             }
         } else {
             mote = new PanStampImpl(this, address);
+            requestRegister(mote, 0);
             devices.put(address, mote);
         }
         mote.setLastSeen(System.currentTimeMillis());
@@ -215,7 +228,11 @@ public final class SerialGateway extends Gateway {
 
         @Override
         public void queryReceived(QueryMessage msg) {
-            updateNetwork(msg);
+            try {
+                updateNetwork(msg);
+            } catch (ModemException ex) {
+                java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         @Override
@@ -224,7 +241,7 @@ public final class SerialGateway extends Gateway {
                 updateNetwork(msg);
                 PanStampImpl mote = (PanStampImpl) getDevice(msg.getSender());
                 mote.update(msg.getRegisterID(), msg.getRegisterValue());
-            } catch (MoteException | NodeNotFoundException ex) {
+            } catch (GatewayException ex) {
                 java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -232,7 +249,12 @@ public final class SerialGateway extends Gateway {
 
         @Override
         public void commandReceived(CommandMessage msg) {
-            updateNetwork(msg);
+            try {
+                updateNetwork(msg);
+            } catch (GatewayException ex) {
+                java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 }

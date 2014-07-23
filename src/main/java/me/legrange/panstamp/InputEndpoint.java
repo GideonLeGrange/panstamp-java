@@ -9,11 +9,7 @@ import me.legrange.panstamp.impl.NoSuchUnitException;
  * @param <T> Type of data received from the endpoint
  */
 public interface InputEndpoint<T> extends Endpoint<T> {
-    
-    /** Get the units supported by this endpoint
-     * @return The supported units. */
-    List<String> getUnits();
-    
+
     /**
      * Add a listener to the endpoint. 
      * @param unit Unit in which the data must be received.

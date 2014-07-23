@@ -21,10 +21,11 @@ public class NumberInputEndpoint extends AbstractInputEndpoint<Double> {
         long val = 0;
         for (int i = 0; i < epDef.getSize().getBytes(); ++i) {
             val = val << 8;
-            val = val | bytes[epDef.getPosition().getBytePos() + i];
+            val = val | (bytes[epDef.getPosition().getBytePos() + i]) & 0xFF;
         }
         Unit u = getUnit(unit);
-        return ((double)val) * u.getFactor() + u.getOffset();
+        double res = ((double)val) * u.getFactor() + u.getOffset();
+        return res;
         
     }
 }

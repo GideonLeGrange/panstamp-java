@@ -12,7 +12,6 @@ import me.legrange.panstamp.Register;
  */
 public class RegisterImpl implements Register {
 
-
     /**
      * Add a listener to receive register updates
      *
@@ -49,16 +48,15 @@ public class RegisterImpl implements Register {
 
     /**
      *
-     * @return
-     * @throws ModemException
+     * @return @throws ModemException
      * @throws NoSuchRegisterException
      */
     @Override
     public byte[] getValue() throws GatewayException {
         if (value == null) {
-            dev.requestRegister(id);
             synchronized (this) {
                 try {
+                    dev.requestRegister(id);
                     wait();
                 } catch (InterruptedException ex) {
                     throw new NoSuchRegisterException(String.format("Interrupted while waiting for register %d to update", id));
@@ -72,12 +70,13 @@ public class RegisterImpl implements Register {
      * update the abstracted register value and notify listeners
      */
     void updateValue(byte value[]) {
+        synchronized (this) {
+            this.value = value;
+            notify();
+        }
         RegisterEvent ev = new RegisterEvent(this, value);
         for (RegisterListener l : listeners) {
             l.registerUpdated(ev);
-        }
-        synchronized (this) {
-            notify();
         }
     }
 

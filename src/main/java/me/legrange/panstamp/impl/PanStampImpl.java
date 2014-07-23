@@ -3,6 +3,7 @@ package me.legrange.panstamp.impl;
 import java.util.HashMap;
 import java.util.Map;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 
@@ -37,9 +38,10 @@ public class PanStampImpl implements PanStamp {
     
     /** return the endpoint for the given name */
     @Override
-    public Endpoint getEndpoint(String name) {
+    public Endpoint getEndpoint(String name) throws GatewayException {
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
+            ep = gw.getEndpoint(this, name);
         }
         return ep;
     }

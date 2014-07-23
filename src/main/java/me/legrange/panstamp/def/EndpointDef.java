@@ -62,7 +62,7 @@ public class EndpointDef {
     private final String name;
     private final Direction direction;
     private final Type type;
-    private Position position;
+    private Position position = new Position(0); // default to byte 0
     private Size size;
     private final List<Unit> units;
 
