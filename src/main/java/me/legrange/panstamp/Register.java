@@ -67,6 +67,11 @@ public class Register {
             throw new MoteException(e.getMessage(), e);
         }
     }
+    
+    
+    
+    
+    
 
     /**
      * update the abstracted register value and notify listeners

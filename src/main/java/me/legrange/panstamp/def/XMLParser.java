@@ -263,7 +263,7 @@ public class XMLParser {
         for (Element node : iterable(reg.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "endpoint":
-                    parseEndpoint(register, node);
+                    dev.addEndpoint(parseEndpoint(register, node));
                     break;
                 default:
                     throw new ParseException(String.format("Unexpected element '%s'", node.getNodeName()));
@@ -274,8 +274,7 @@ public class XMLParser {
     /**
      * parse a register end point
      */
-    private void parseEndpoint(Register register, Element endp) throws ParseException {
-//              <endpoint name="Backlight level" type="bin" dir="out">
+    private Endpoint parseEndpoint(Register register, Element endp) throws ParseException {
         String name = requireAttr(endp, "name");
         Type type = Type.forTag(requireAttr(endp, "type"));
         if (type == null) {
@@ -301,6 +300,7 @@ public class XMLParser {
                     throw new ParseException(String.format("Unexpected element '%s' in element '%s'", node.getNodeName(), endp.getNodeName()));
             }
         }
+        return endpoint;
     }
 
     /**

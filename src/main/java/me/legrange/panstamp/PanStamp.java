@@ -30,6 +30,7 @@ public class PanStamp {
         return reg;
     } 
 
+    /** @return the timestamp the panstamp was last seen by the modem. */
     public long getLastSeen() {
         return lastSeen;
     }
@@ -100,4 +101,5 @@ public class PanStamp {
     private long lastSeen;
     private int route;
     private final Map<Integer, Register> registers = new HashMap<>();
+    private final Map<String, Endpoint> endpoints = new HashMap<>();
 }
