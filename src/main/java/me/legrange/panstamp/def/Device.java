@@ -40,8 +40,8 @@ public class Device {
         return powerDownMode;
     }
     
-    public Endpoint getEndpoint(String eName) throws NoSuchEndpointException {
-        Endpoint ep = endpoints.get(eName);
+    public EndpointDef getEndpoint(String eName) throws NoSuchEndpointException {
+        EndpointDef ep = endpoints.get(eName);
         if (ep == null) throw new NoSuchEndpointException(String.format("No endpoint '%s' in definition for device %s", eName, name));
         return ep;
     }
@@ -63,7 +63,7 @@ public class Device {
         this.powerDownMode = pdm;
     }
     
-    void addEndpoint(Endpoint ep) {
+    void addEndpoint(EndpointDef ep) {
         endpoints.put(ep.getName(), ep);
     }
     
@@ -73,6 +73,6 @@ public class Device {
     private final String label;
     private String product;
     private boolean powerDownMode;
-    private final Map<String, Endpoint> endpoints = new HashMap<>();
+    private final Map<String, EndpointDef> endpoints = new HashMap<>();
 
 }

@@ -20,6 +20,18 @@ public class Size {
         this.sizeBit = sizeBit;
     }
     
+    public Type getType() {
+        return type;
+    }
+    
+    public int getBytes() {
+        return sizeByte;
+    }
+    
+    public int getBits() {
+        return sizeBit;
+    }
+    
 
     private final int sizeByte;
     private final int sizeBit;

@@ -4,9 +4,9 @@ package me.legrange.panstamp.def;
  * A device register
  * @author gideon
  */
-public class Register {
+public class RegisterDef {
 
-    public Register(int id, String name) {
+    public RegisterDef(int id, String name) {
         this.id = id;
         this.name = name;
     }

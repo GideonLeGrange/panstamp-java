@@ -1,15 +1,11 @@
 package me.legrange.panstamp;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
- * Abstraction of a SWAP register.
  *
  * @author gideon
  */
-public class Register {
-
+public interface Register {
+    
     public static class RegisterEvent {
 
         public Register getRegister() {
@@ -20,7 +16,7 @@ public class Register {
             return bytes;
         }
 
-        private RegisterEvent(Register reg, byte bytes[]) {
+        public RegisterEvent(Register reg, byte bytes[]) {
             this.reg = reg;
             this.bytes = bytes;
         }
@@ -36,62 +32,28 @@ public class Register {
 
         void registerUpdated(RegisterEvent ev);
     }
+
     /**
      * Add a listener to receive register updates
      *
      * @param l listener to add
      */
-    public void addListener(RegisterListener l) {
-        listeners.add(l);
-    }
+    public void addListener(RegisterListener l);
 
     /**
      * remove a listener
      *
      * @param l listener to remove
      */
-    public void removeListener(RegisterListener l) {
-        listeners.remove(l);
-    }
-
+    public void removeListener(RegisterListener l);
     /**
      * set the register value and send to remote node
      *
      * @param value the new value
-     * @throws me.legrange.panstamp.MoteException
      */
-    public void setValue(byte value[]) throws MoteException {
-        try {
-            mote.updateRegister(id, value);
-        } catch (ModemException e) {
-            throw new MoteException(e.getMessage(), e);
-        }
-    }
+    public void setValue(byte value[]) throws GatewayException;
     
+    public byte[] getValue() throws GatewayException;
     
-    
-    
-    
-
-    /**
-     * update the abstracted register value and notify listeners
-     */
-    void updateValue(byte value[]) {
-        RegisterEvent ev = new RegisterEvent(this, value);
-        for (RegisterListener l : listeners) {
-            l.registerUpdated(ev);
-        }
-    }
-
-    /**
-     * create a new register for the given mote and register address
-     */
-    Register(PanStamp mote, int id) {
-        this.mote = mote;
-        this.id = id;
-    }
-
-    private final PanStamp mote;
-    private final int id;
-    private final List<RegisterListener> listeners = new LinkedList<>();
 }
+

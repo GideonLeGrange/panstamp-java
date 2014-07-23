@@ -20,6 +20,20 @@ public class Position {
         this.bitPos =  0;
         this.type = Type.BYTES;
     }
+
+    public int getBytePos() {
+        return bytePos;
+    }
+
+    public int getBitPos() {
+        return bitPos;
+    }
+
+    public Type getType() {
+        return type;
+    }
+    
+    
     
     private final int bytePos;
     private final int bitPos;

@@ -1,6 +1,6 @@
 package me.legrange.panstamp.at;
 
-import me.legrange.panstamp.MoteException;
+import me.legrange.panstamp.impl.MoteException;
 
 /**
  *

@@ -159,7 +159,7 @@ public class XMLParser {
     private void parseConfigReg(Device dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
-        Register register = new Register(id, name);
+        RegisterDef register = new RegisterDef(id, name);
         for (Element node : iterable(reg.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "param":
@@ -174,7 +174,7 @@ public class XMLParser {
     /**
      * parse a register parameter
      */
-    private void parseParam(Register register, Element param) throws ParseException {
+    private void parseParam(RegisterDef register, Element param) throws ParseException {
         String name = requireAttr(param, "name");
         Type type = Type.forTag(requireAttr(param, "type"));
         if (type == null) {
@@ -259,7 +259,7 @@ public class XMLParser {
     private void parseRegularReg(Device dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
-        Register register = new Register(id, name);
+        RegisterDef register = new RegisterDef(id, name);
         for (Element node : iterable(reg.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "endpoint":
@@ -274,7 +274,7 @@ public class XMLParser {
     /**
      * parse a register end point
      */
-    private Endpoint parseEndpoint(Register register, Element endp) throws ParseException {
+    private EndpointDef parseEndpoint(RegisterDef register, Element endp) throws ParseException {
         String name = requireAttr(endp, "name");
         Type type = Type.forTag(requireAttr(endp, "type"));
         if (type == null) {
@@ -284,7 +284,7 @@ public class XMLParser {
         if (dir == null) {
             throw new ParseException(String.format("Unexpected endpoint direction '%s'", requireAttr(endp, "dir")));
         }
-        Endpoint endpoint = new Endpoint(name, dir, type);
+        EndpointDef endpoint = new EndpointDef(register, name, dir, type);
         for (Element node : iterable(endp.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "position":
@@ -306,7 +306,7 @@ public class XMLParser {
     /**
      * parse endpoint position
      */
-    private void parsePosition(Endpoint endpoint, Element pos) throws ParseException {
+    private void parsePosition(EndpointDef endpoint, Element pos) throws ParseException {
         String text = requireText(pos);
         try {
             if (text.matches("[0-9]+\\.[0-9]+")) {
@@ -324,7 +324,7 @@ public class XMLParser {
     /**
      * parse endpoint size
      */
-    private void parseSize(Endpoint endpoint, Element pos) throws ParseException {
+    private void parseSize(EndpointDef endpoint, Element pos) throws ParseException {
         String text = requireText(pos);
         try {
             if (text.matches("[0-9]+\\.[0-9]+")) {
@@ -342,7 +342,7 @@ public class XMLParser {
     /**
      * parse endpoint units
      */
-    private void parseUnits(Endpoint endpoint, Element units) throws ParseException {
+    private void parseUnits(EndpointDef endpoint, Element units) throws ParseException {
         for (Element node : iterable(units.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "unit":
@@ -358,7 +358,7 @@ public class XMLParser {
     /**
      * parse an endpoint unit
      */
-    private void parseUnit(Endpoint endpoint, Element u) throws ParseException {
+    private void parseUnit(EndpointDef endpoint, Element u) throws ParseException {
         String name = "";
         if (u.hasAttribute("name")) {
             name = u.getAttribute("name");

@@ -8,15 +8,20 @@ import java.util.List;
  *
  * @author gideon
  */
-public class Endpoint {
+public class EndpointDef {
 
-    Endpoint(String name, Direction direction, Type type) {
+    EndpointDef(RegisterDef reg, String name, Direction direction, Type type) {
+        this.reg = reg;
         this.name = name;
         this.direction = direction;
         this.type = type;
         this.units = new LinkedList<>();
     }
 
+    public RegisterDef getRegister() {
+        return reg;
+    }
+    
     public String getName() {
         return name;
     }
@@ -41,7 +46,7 @@ public class Endpoint {
         return size;
     }
 
-    public void setSize(Size size) {
+    void setSize(Size size) {
         this.size = size;
     }
 
@@ -53,6 +58,7 @@ public class Endpoint {
         units.add(unit);
     }
 
+    private final RegisterDef reg;
     private final String name;
     private final Direction direction;
     private final Type type;

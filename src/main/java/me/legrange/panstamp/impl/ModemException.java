@@ -1,4 +1,6 @@
-package me.legrange.panstamp;
+package me.legrange.panstamp.impl;
+
+import me.legrange.panstamp.GatewayException;
 
 /**
  * Thrown when there is a problem with modem coms
