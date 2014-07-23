@@ -34,6 +34,8 @@ public abstract class AbstractInputEndpoint<T> extends AbstractEndpoint<T>  impl
         });
     }
 
-    private final Map<String, EndpointListener> listeners;
+    private final Map<String, EndpointListener> listeners; // FIXME - This is flawed. We can't map unit => listener, we need to map unit => set of listener
+    // because we may have more than one listener listening to an endpoint!
+    // re-think.
 
 }
