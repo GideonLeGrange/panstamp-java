@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package me.legrange.panstamp.impl;
 
 import me.legrange.panstamp.GatewayException;
@@ -28,7 +22,7 @@ class NumberOutputEndpoint extends AbstractOutputEndpoint<Double> {
         long val = adj.longValue();
         byte bytes[] = new byte[epDef.getSize().getBytes()];
         for (int i = epDef.getSize().getBytes() -1; i >=0; --i) {
-            bytes[i] = (byte)(val & 0xF);
+            bytes[i] = (byte)(val & 0xFF);
             val = val >>> 8;
         }
         ps.getRegister(epDef.getRegister().getId()).setValue(bytes);

@@ -36,12 +36,14 @@ public class PanStampImpl implements PanStamp {
         return reg;
     } 
     
-    /** return the endpoint for the given name */
+    /** return the endpoint for the given name
+     * @throws me.legrange.panstamp.GatewayException */
     @Override
     public Endpoint getEndpoint(String name) throws GatewayException {
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
             ep = gw.getEndpoint(this, name);
+            endpoints.put(name, ep);
         }
         return ep;
     }

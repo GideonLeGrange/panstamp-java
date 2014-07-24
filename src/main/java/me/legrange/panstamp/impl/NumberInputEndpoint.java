@@ -26,6 +26,5 @@ public class NumberInputEndpoint extends AbstractInputEndpoint<Double> {
         Unit u = getUnit(unit);
         double res = ((double)val) * u.getFactor() + u.getOffset();
         return res;
-        
     }
 }

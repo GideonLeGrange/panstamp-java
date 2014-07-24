@@ -129,6 +129,8 @@ public final class SerialGateway extends Gateway {
                 return new NumberOutputEndpoint(ps, epDef);
             case STRING:
                 return new StringOutputEndpoint(ps, epDef);
+            case BINARY : 
+                return new BinaryOutputEndpoint(ps, epDef);
             default:
                 throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
