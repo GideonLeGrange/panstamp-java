@@ -19,11 +19,11 @@ public abstract class Gateway {
         System.out.printf("Found '%s' \n", p.getAddress());
 
         Endpoint<Boolean> ep0 = (Endpoint<Boolean>) p.getEndpoint("Binary 0");
-         ep0.addListener("", new  EndpointListener<Boolean>() {
+         ep0.addListener(new  EndpointListener<Boolean>() {
 
             @Override
             public void valueReceived(Boolean val) {
-                System.out.printf("LED is %s", val ? "on" : "off");
+                System.out.printf("LED is %s\n", val ? "on" : "off");
             }
         });
         
