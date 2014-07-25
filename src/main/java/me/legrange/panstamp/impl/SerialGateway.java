@@ -10,9 +10,7 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.InputEndpoint;
 import me.legrange.panstamp.NodeNotFoundException;
-import me.legrange.panstamp.OutputEndpoint;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
@@ -112,25 +110,25 @@ public final class SerialGateway extends Gateway {
         }
     }
 
-    private InputEndpoint getInputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
+    private Endpoint getInputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
             case NUMBER:
-                return new NumberInputEndpoint(ps, epDef);
+                return new NumberEndpoint(ps, epDef);
             case STRING:
-                return new StringInputEndpoint(ps, epDef);
+                return new StringEndpoint(ps, epDef);
             default:
                 throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
     }
 
-    private OutputEndpoint getOutputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
+    private Endpoint getOutputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
             case NUMBER:
-                return new NumberOutputEndpoint(ps, epDef);
+                return new NumberEndpoint(ps, epDef);
             case STRING:
-                return new StringOutputEndpoint(ps, epDef);
+                return new StringEndpoint(ps, epDef);
             case BINARY : 
-                return new BinaryOutputEndpoint(ps, epDef);
+                return new BinaryEndpoint(ps, epDef);
             default:
                 throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
