@@ -3,6 +3,7 @@ package me.legrange.panstamp.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
@@ -94,6 +96,13 @@ public final class SerialGateway extends Gateway {
         return res;
     }
 
+    @Override
+    public void addListener(GatewayListener l) {
+        listeners.add(l);
+    }
+    
+    
+
     Endpoint getEndpoint(PanStampImpl ps, String name) throws GatewayException {
         Register reg = ps.getRegister(0);
         byte val[] = reg.getValue();
@@ -109,6 +118,7 @@ public final class SerialGateway extends Gateway {
             default : throw new  NoSuchUnitException(String.format("Unknown end point direction '%s'. BUG!", epDef.getDirection()));
         }
     }
+    
 
     private Endpoint getInputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
@@ -116,6 +126,8 @@ public final class SerialGateway extends Gateway {
                 return new NumberEndpoint(ps, epDef);
             case STRING:
                 return new StringEndpoint(ps, epDef);
+            case BINARY : 
+                return new BinaryEndpoint(ps, epDef);
             default:
                 throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
@@ -210,14 +222,22 @@ public final class SerialGateway extends Gateway {
             mote = new PanStampImpl(this, address);
             requestRegister(mote, 0);
             devices.put(address, mote);
+            fireEvent(mote);
         }
         mote.setLastSeen(System.currentTimeMillis());
         mote.setRoute(route);
+    }
+    
+    private void fireEvent(PanStamp ps) {
+        for (GatewayListener l : listeners) {
+            l.deviceDetected(ps);
+        }
     }
 
     private SWAPModem modem;
     private Receiver receiver;
     private Map<Integer, PanStampImpl> devices;
+    private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
     private final DeviceLibrary lib;
 

@@ -1,6 +1,9 @@
 package me.legrange.panstamp;
 
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import me.legrange.panstamp.impl.NoSuchUnitException;
 import me.legrange.panstamp.impl.SerialGateway;
 
 /**
@@ -12,21 +15,31 @@ public abstract class Gateway {
 
     public static void main(String... args) throws Exception {
         Gateway gw = Gateway.open("/dev/tty.usbserial-A800HNMV", 38400);
-        while (gw.getDevices().isEmpty()) {
-            Thread.sleep(1000);
-        }
-        PanStamp p = gw.getDevices().iterator().next();
-        System.out.printf("Found '%s' \n", p.getAddress());
-
-        Endpoint<Boolean> ep0 = (Endpoint<Boolean>) p.getEndpoint("Binary 0");
-         ep0.addListener(new  EndpointListener<Boolean>() {
+        gw.addListener(new GatewayListener() {
 
             @Override
-            public void valueReceived(Boolean val) {
-                System.out.printf("LED is %s\n", val ? "on" : "off");
+            public void deviceDetected(PanStamp ps) {
+        Endpoint<Boolean> ep0 = null;
+                try {
+                    ep0 = (Endpoint<Boolean>) ps.getEndpoint("Binary 0");
+                } catch (GatewayException ex) {
+                    Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    ep0.addListener(new EndpointListener<Boolean>() {
+                        
+                        @Override
+                        public void valueReceived(Boolean val) {
+                            System.out.printf("Action: %s\n", val);
+//                System.out.printf("LED is %s\n", val ? "on" : "off");
+                        }
+                    });     } catch (NoSuchUnitException ex) {
+                    Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-        
+
+
         /* InputEndpoint<Double> ep0 = (InputEndpoint<Double>) p.getEndpoint("Temperature");
          ep0.addListener("C", new EndpointListener<Double>() {
 
@@ -37,20 +50,20 @@ public abstract class Gateway {
          }); */
         boolean on = true;
         while (true) {
-            ep0.setValue(on);
-            on = !on;
+//            ep0.setValue(on);
+            //           on = !on;
             Thread.sleep(5000);
         }
-}
+    }
 
-/**
- *
- * @param port
- * @param baud
- * @return
- * @throws GatewayException
- */
-public static Gateway open(String port, int baud) throws GatewayException {
+    /**
+     *
+     * @param port
+     * @param baud
+     * @return
+     * @throws GatewayException
+     */
+    public static Gateway open(String port, int baud) throws GatewayException {
         return SerialGateway.openSerial(port, baud);
     }
 
@@ -79,10 +92,13 @@ public static Gateway open(String port, int baud) throws GatewayException {
     public abstract PanStamp getDevice(int address) throws NodeNotFoundException;
 
     /**
-     * return the devices associated with this gateway
+     * return all the devices associated with this gateway
      *
      * @return The collection of devices
      */
     public abstract Collection<PanStamp> getDevices();
+    
+    /** add listener to receive new device events */
+    public abstract void addListener(GatewayListener l);
 
 }
