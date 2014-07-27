@@ -21,7 +21,10 @@ public interface PanStamp {
      * return the endpoint for the given name
      * @param name
      * @return 
+     * @throws me.legrange.panstamp.GatewayException 
      */
     Endpoint getEndpoint(String name) throws GatewayException;
+    
+   
 
 }

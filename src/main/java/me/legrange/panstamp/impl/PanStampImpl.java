@@ -92,32 +92,10 @@ public class PanStampImpl implements PanStamp {
         this.lastSeen = last;
     }
 
-    /**
-     * set the route taken to reach this mote - this is the address of a mote
-     * that will store and forward messages to this mote, usually in case where
-     * a mote can sleep
-     *
-     * @param route the route to this mote.
-     */
-    void setRoute(int route) {
-        this.route = route;
-    }
-
-    /**
-     * get the route taken to reach this mote - this is the address of a mote
-     * that will store and forward messages to this mote, usually in case where
-     * a mote can sleep
-     *
-     * @return the route to this mote.
-     */
-    int getRoute() {
-        return route;
-    }
-    
+   
     private final int address;
     private final SerialGateway gw;
     private long lastSeen;
-    private int route;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
     private final Map<String, Endpoint> endpoints = new HashMap<>();
 }

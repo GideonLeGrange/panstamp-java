@@ -77,11 +77,11 @@ public final class SerialGateway extends Gateway {
      */
     @Override
     public PanStamp getDevice(int address) throws NodeNotFoundException {
-        PanStampImpl mote = devices.get(address);
-        if (mote == null) {
+        DeviceEntry ent = devices.get(address);
+        if (ent == null) {
             throw new NodeNotFoundException(String.format("No device found for address %02x", address));
         }
-        return mote;
+        return ent.dev;
     }
 
     /**
@@ -92,7 +92,9 @@ public final class SerialGateway extends Gateway {
     @Override
     public Collection<PanStamp> getDevices() {
         List<PanStamp> res = new ArrayList<>();
-        res.addAll(devices.values());
+        for (DeviceEntry ent : devices.values()) {
+            res.add(ent.dev);
+        }
         return res;
     }
 
@@ -110,30 +112,6 @@ public final class SerialGateway extends Gateway {
         int productId = val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
         Device dev = lib.findDevice(manId, productId);
         EndpointDef epDef = dev.getEndpoint(name);
-        switch (epDef.getDirection()) {
-            case IN:
-                return getInputEndpoint(ps, epDef);
-            case OUT:
-                return getOutputEndpoint(ps, epDef);
-            default : throw new  NoSuchUnitException(String.format("Unknown end point direction '%s'. BUG!", epDef.getDirection()));
-        }
-    }
-    
-
-    private Endpoint getInputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
-        switch (epDef.getType()) {
-            case NUMBER:
-                return new NumberEndpoint(ps, epDef);
-            case STRING:
-                return new StringEndpoint(ps, epDef);
-            case BINARY : 
-                return new BinaryEndpoint(ps, epDef);
-            default:
-                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
-        }
-    }
-
-    private Endpoint getOutputEndpoint(PanStamp ps, EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
             case NUMBER:
                 return new NumberEndpoint(ps, epDef);
@@ -200,32 +178,31 @@ public final class SerialGateway extends Gateway {
      * update the network based on a received message
      */
     private void updateNetwork(Message msg) throws ModemException {
-        updateMote(msg.getSender(), 0);
-        if (msg.getRegisterAddress() != msg.getSender()) {
-            updateMote(msg.getRegisterAddress(), msg.getSender());
+        int address = msg.getSender();
+        DeviceEntry ent = devices.get(address);
+        if (ent == null) {
+            ent = new DeviceEntry(new PanStampImpl(this, address));
+            devices.put(address, ent);
+            fireEvent(ent.dev);
         }
-    }
-
-    /**
-     * update the mote
-     */
-    private void updateMote(int address, int route) throws ModemException {
-        PanStampImpl mote;
-        if (hasDevice(address)) {
-            try {
-                mote = (PanStampImpl) getDevice(address);
-            } catch (NodeNotFoundException ex) {
-                logger.severe(String.format("Could not find node %02x for update.", address));
-                return;
+        switch (ent.status) {
+            case NEW : {
+                requestRegister(ent.dev, 0);
+                ent.status = DeviceEntry.Status.QUERYING;
             }
-        } else {
-            mote = new PanStampImpl(this, address);
-            requestRegister(mote, 0);
-            devices.put(address, mote);
-            fireEvent(mote);
+            break;
+            case QUERYING : {
+                if (msg.getType() == Message.Type.STATUS) {
+                    if (msg.isStandardRegister()) {
+                        switch (msg.getStandardRegister()) {
+                            case PRODUCT_CODE : 
+                        }
+                    }
+                }
+            }
+            break;
         }
-        mote.setLastSeen(System.currentTimeMillis());
-        mote.setRoute(route);
+        ent.dev.setLastSeen(System.currentTimeMillis());
     }
     
     private void fireEvent(PanStamp ps) {
@@ -236,7 +213,7 @@ public final class SerialGateway extends Gateway {
 
     private SWAPModem modem;
     private Receiver receiver;
-    private Map<Integer, PanStampImpl> devices;
+    private Map<Integer, DeviceEntry> devices;
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
     private final DeviceLibrary lib;
@@ -276,5 +253,20 @@ public final class SerialGateway extends Gateway {
             }
 
         }
+    }
+    
+    /** A container class to keep entries pointing to panStamp devices on the network */
+    private static class DeviceEntry { 
+        
+        enum Status { NEW, QUERYING, UPDATED, UNKNOWN };
+        
+        private DeviceEntry(PanStampImpl dev) {
+            this.dev = dev;
+            this.status = Status.NEW;
+        }
+        
+        private final PanStampImpl dev;
+        private Status status;
+        
     }
 }

@@ -19,39 +19,26 @@ public abstract class Gateway {
 
             @Override
             public void deviceDetected(PanStamp ps) {
-        Endpoint<Boolean> ep0 = null;
+        Endpoint<Double> ep0 = null;
                 try {
-                    ep0 = (Endpoint<Boolean>) ps.getEndpoint("Binary 0");
+                    ep0 = (Endpoint<Double>) ps.getEndpoint("Temperature");
                 } catch (GatewayException ex) {
                     Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
-                    ep0.addListener(new EndpointListener<Boolean>() {
+                    ep0.addListener(new EndpointListener<Double>() {
                         
                         @Override
-                        public void valueReceived(Boolean val) {
-                            System.out.printf("Action: %s\n", val);
-//                System.out.printf("LED is %s\n", val ? "on" : "off");
+                        public void valueReceived(Double val) {
+                            System.out.printf("Temperature: %0.2f\n", val);
                         }
                     });     } catch (NoSuchUnitException ex) {
                     Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-
-
-        /* InputEndpoint<Double> ep0 = (InputEndpoint<Double>) p.getEndpoint("Temperature");
-         ep0.addListener("C", new EndpointListener<Double>() {
-
-         @Override
-         public void valueReceived(Double val) {
-         System.out.printf("Temperature: %0.2f\n", val);
-         }
-         }); */
-        boolean on = true;
+   
         while (true) {
-//            ep0.setValue(on);
-            //           on = !on;
             Thread.sleep(5000);
         }
     }
