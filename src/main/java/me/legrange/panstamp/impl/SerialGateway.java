@@ -196,6 +196,7 @@ public final class SerialGateway extends Gateway {
                     if (msg.isStandardRegister()) {
                         switch (msg.getStandardRegister()) {
                             case PRODUCT_CODE : 
+                                
                         }
                     }
                 }
@@ -236,7 +237,7 @@ public final class SerialGateway extends Gateway {
         public void statusReceived(StatusMessage msg) {
             try {
                 updateNetwork(msg);
-                PanStampImpl mote = (PanStampImpl) getDevice(msg.getSender());
+                PanStampImpl mote = (PanStampImpl) getDevice(msg.getRegisterAddress());
                 mote.update(msg.getRegisterID(), msg.getRegisterValue());
             } catch (GatewayException ex) {
                 java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
@@ -266,6 +267,7 @@ public final class SerialGateway extends Gateway {
         }
         
         private final PanStampImpl dev;
+        private int manId, productId;
         private Status status;
         
     }

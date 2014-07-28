@@ -17,6 +17,7 @@ public class RegisterImpl implements Register {
      *
      * @param l listener to add
      */
+    @Override
     public void addListener(RegisterListener l) {
         listeners.add(l);
     }
@@ -26,6 +27,7 @@ public class RegisterImpl implements Register {
      *
      * @param l listener to remove
      */
+    @Override
     public void removeListener(RegisterListener l) {
         listeners.remove(l);
     }
@@ -35,7 +37,6 @@ public class RegisterImpl implements Register {
      *
      * @param value the new value
      * @throws me.legrange.panstamp.impl.MoteException
-     * @throws me.legrange.panstamp.MoteException
      */
     @Override
     public void setValue(byte value[]) throws GatewayException {

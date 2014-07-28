@@ -1,12 +1,10 @@
 package me.legrange.panstamp.impl;
 
-import me.legrange.panstamp.impl.MoteException;
-
 /**
  *
  * @author gideon
  */
-class NoSuchRegisterException extends MoteException {
+public class NoSuchRegisterException extends MoteException {
 
     public NoSuchRegisterException(String msg) {
         super(msg);
