@@ -48,11 +48,6 @@ public class PanStampImpl implements PanStamp {
         return ep;
     }
 
-    /** @return the timestamp the panstamp was last seen by the modem. */
-    public long getLastSeen() {
-        return lastSeen;
-    }
-
     /**
      * request the register value from the remote node
      */
@@ -84,18 +79,9 @@ public class PanStampImpl implements PanStamp {
         this.gw = gw;
         this.address = address;
     }
-
-    /**
-     * set the time the mote was last seen
-     */
-    void setLastSeen(long last) {
-        this.lastSeen = last;
-    }
-
    
     private final int address;
     private final SerialGateway gw;
-    private long lastSeen;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
     private final Map<String, Endpoint> endpoints = new HashMap<>();
 }
