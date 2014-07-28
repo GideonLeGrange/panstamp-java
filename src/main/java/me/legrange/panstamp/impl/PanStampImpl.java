@@ -28,7 +28,7 @@ public class PanStampImpl implements PanStamp {
      * @param id Register to read
      */
     @Override
-    public Register getRegister(int id) {
+    public synchronized Register getRegister(int id) {
         RegisterImpl reg = registers.get(id);
         if (reg == null) {
             reg = new RegisterImpl(this, id);
