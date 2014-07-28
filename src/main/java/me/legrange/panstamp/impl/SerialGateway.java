@@ -102,8 +102,6 @@ public final class SerialGateway extends Gateway {
     public void addListener(GatewayListener l) {
         listeners.add(l);
     }
-    
-    
 
     Endpoint getEndpoint(PanStampImpl ps, String name) throws GatewayException {
         Register reg = ps.getRegister(0);
@@ -117,7 +115,7 @@ public final class SerialGateway extends Gateway {
                 return new NumberEndpoint(ps, epDef);
             case STRING:
                 return new StringEndpoint(ps, epDef);
-            case BINARY : 
+            case BINARY:
                 return new BinaryEndpoint(ps, epDef);
             default:
                 throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
@@ -185,31 +183,26 @@ public final class SerialGateway extends Gateway {
             devices.put(address, ent);
             fireEvent(ent.dev);
         }
-        switch (ent.status) {
-            case NEW : {
-                requestRegister(ent.dev, 0);
-                ent.status = DeviceEntry.Status.QUERYING;
-            }
-            break;
-            case QUERYING : {
-                if (msg.getType() == Message.Type.STATUS) {
-                    if (msg.isStandardRegister()) {
-                        switch (msg.getStandardRegister()) {
-                            case PRODUCT_CODE : 
-                                
-                        }
-                    }
-                }
-            }
-            break;
-        }
-        ent.dev.setLastSeen(System.currentTimeMillis());
     }
-    
+
     private void fireEvent(PanStamp ps) {
         for (GatewayListener l : listeners) {
             l.deviceDetected(ps);
         }
+    }
+
+    /**
+     * process a status message received from the modem
+     */
+    private void processStatusMessage(StatusMessage msg) {
+        try {
+            updateNetwork(msg);
+            PanStampImpl mote = (PanStampImpl) getDevice(msg.getRegisterAddress());
+            mote.update(msg.getRegisterID(), msg.getRegisterValue());
+        } catch (GatewayException ex) {
+            java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     private SWAPModem modem;
@@ -235,13 +228,7 @@ public final class SerialGateway extends Gateway {
 
         @Override
         public void statusReceived(StatusMessage msg) {
-            try {
-                updateNetwork(msg);
-                PanStampImpl mote = (PanStampImpl) getDevice(msg.getRegisterAddress());
-                mote.update(msg.getRegisterID(), msg.getRegisterValue());
-            } catch (GatewayException ex) {
-                java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            processStatusMessage(msg);
 
         }
 
@@ -249,26 +236,32 @@ public final class SerialGateway extends Gateway {
         public void commandReceived(CommandMessage msg) {
             try {
                 updateNetwork(msg);
-            } catch (GatewayException ex) {
+            } catch (ModemException ex) {
                 java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
     }
-    
-    /** A container class to keep entries pointing to panStamp devices on the network */
-    private static class DeviceEntry { 
-        
-        enum Status { NEW, QUERYING, UPDATED, UNKNOWN };
-        
+
+    /**
+     * A container class to keep entries pointing to panStamp devices on the
+     * network
+     */
+    private static class DeviceEntry {
+
+        enum Status {
+
+            NEW, QUERYING, UPDATED, UNKNOWN
+        };
+
         private DeviceEntry(PanStampImpl dev) {
             this.dev = dev;
             this.status = Status.NEW;
         }
-        
+
         private final PanStampImpl dev;
         private int manId, productId;
         private Status status;
-        
+
     }
 }
