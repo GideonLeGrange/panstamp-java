@@ -90,7 +90,7 @@ public final class SerialGateway extends Gateway {
      * @return The collection of devices
      */
     @Override
-    public Collection<PanStamp> getDevices() {
+    public List<PanStamp> getDevices() {
         List<PanStamp> res = new ArrayList<>();
         for (DeviceEntry ent : devices.values()) {
             res.add(ent.dev);

@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.impl.NoSuchUnitException;
@@ -19,7 +19,7 @@ public abstract class Gateway {
 
             @Override
             public void deviceDetected(PanStamp ps) {
-        Endpoint<Double> ep0 = null;
+                Endpoint<Double> ep0 = null;
                 try {
                     ep0 = (Endpoint<Double>) ps.getEndpoint("Temperature");
                 } catch (GatewayException ex) {
@@ -27,17 +27,18 @@ public abstract class Gateway {
                 }
                 try {
                     ep0.addListener(new EndpointListener<Double>() {
-                        
+
                         @Override
                         public void valueReceived(Double val) {
                             System.out.printf("Temperature: %0.2f\n", val);
                         }
-                    });     } catch (NoSuchUnitException ex) {
+                    });
+                } catch (NoSuchUnitException ex) {
                     Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-   
+
         while (true) {
             Thread.sleep(5000);
         }
@@ -81,11 +82,15 @@ public abstract class Gateway {
     /**
      * return all the devices associated with this gateway
      *
-     * @return The collection of devices
+     * @return The list of devices
      */
-    public abstract Collection<PanStamp> getDevices();
-    
-    /** add listener to receive new device events */
+    public abstract List<PanStamp> getDevices();
+
+    /**
+     * add listener to receive new device events
+     *
+     * @param l
+     */
     public abstract void addListener(GatewayListener l);
 
 }
