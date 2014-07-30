@@ -6,7 +6,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
 
 /**
- * Abstraction of a SWAP register.
+ * Abstraction of a panStamp register.
  *
  * @author gideon
  */
@@ -41,7 +41,7 @@ public class RegisterImpl implements Register {
     @Override
     public void setValue(byte value[]) throws GatewayException {
         try {
-            dev.updateRegister(id, value);
+            dev.sendCommandMessage(id, value);
         } catch (ModemException e) {
             throw new MoteException(e.getMessage(), e);
         }
@@ -57,7 +57,7 @@ public class RegisterImpl implements Register {
         if (value == null) {
             synchronized (this) {
                 try {
-                    dev.requestRegister(id);
+                    dev.sendQueryMessage(id);
                     wait();
                 } catch (InterruptedException ex) {
                     throw new NoSuchRegisterException(String.format("Interrupted while waiting for register %d to update", id));
@@ -70,7 +70,7 @@ public class RegisterImpl implements Register {
     /**
      * update the abstracted register value and notify listeners
      */
-    void updateValue(byte value[]) {
+    void valueReceived(byte value[]) {
         synchronized (this) {
             this.value = value;
             notify();

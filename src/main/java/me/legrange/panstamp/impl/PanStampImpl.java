@@ -40,7 +40,7 @@ public class PanStampImpl implements PanStamp {
     /** return the endpoint for the given name
      * @throws me.legrange.panstamp.GatewayException */
     @Override
-    public Endpoint getEndpoint(String name) throws GatewayException {
+    public synchronized Endpoint getEndpoint(String name) throws GatewayException {
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
             ep = gw.getEndpoint(this, name);
@@ -50,27 +50,27 @@ public class PanStampImpl implements PanStamp {
     }
 
     /**
-     * request the register value from the remote node
+     * send a query message to the remote node
      */
-    void requestRegister(int id) throws ModemException  {
-        gw.requestRegister(this, id);
+    void sendQueryMessage(int id) throws ModemException  {
+        gw.sendQueryMessage(this, id);
     }
 
     /**
-     * update the register value on the remote node
+     * send a command message to the remote node
      *
      * @param value Value to send
      */
-    void updateRegister(int id, byte[] value) throws ModemException {
-        gw.setRegister(this, id, value);
+    void sendCommandMessage(int id, byte[] value) throws ModemException {
+        gw.sendCommandMessage(this, id, value);
     }
 
     /**
-     * Update the state of a mote based on status message
+     * Receive a status message from the remote node.
      */
-    void update(int id, byte[] value) throws MoteException {
+    void statusMessageReceived(int id, byte[] value) throws MoteException {
         RegisterImpl reg = (RegisterImpl) getRegister(id);
-        reg.updateValue(value);
+        reg.valueReceived(value);
     }
 
     /**

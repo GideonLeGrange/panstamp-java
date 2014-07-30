@@ -1,7 +1,6 @@
 package me.legrange.panstamp.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,24 +122,24 @@ public final class SerialGateway extends Gateway {
     }
 
     /**
-     * set a remote register
+     * send a command message to a remote device
      */
-    void setRegister(PanStampImpl mote, int register, byte[] value) throws ModemException {
+    void sendCommandMessage(PanStampImpl dev, int register, byte[] value) throws ModemException {
         Message msg = new CommandMessage();
-        msg.setReceiver(mote.getAddress());
-        msg.setRegisterAddress(mote.getAddress());
+        msg.setReceiver(dev.getAddress());
+        msg.setRegisterAddress(dev.getAddress());
         msg.setRegisterID(register);
         msg.setRegisterValue(value);
         send(msg);
     }
 
     /**
-     * request a remote register
+     * send a query message to a remote device
      */
-    void requestRegister(PanStampImpl mote, int register) throws ModemException {
+    void sendQueryMessage(PanStampImpl dev, int register) throws ModemException {
         Message msg = new QueryMessage();
-        msg.setReceiver(mote.getAddress());
-        msg.setRegisterAddress(mote.getAddress());
+        msg.setReceiver(dev.getAddress());
+        msg.setRegisterAddress(dev.getAddress());
         msg.setRegisterID(register);
         send(msg);
     }
@@ -183,6 +182,8 @@ public final class SerialGateway extends Gateway {
             devices.put(address, ent);
             fireEvent(ent.dev);
         }
+        // FIXME 
+        // I need to add code to handle discovery more rigirously.
     }
 
     private void fireEvent(PanStamp ps) {
@@ -197,8 +198,8 @@ public final class SerialGateway extends Gateway {
     private void processStatusMessage(StatusMessage msg) {
         try {
             updateNetwork(msg);
-            PanStampImpl mote = (PanStampImpl) getDevice(msg.getRegisterAddress());
-            mote.update(msg.getRegisterID(), msg.getRegisterValue());
+            PanStampImpl dev = (PanStampImpl) getDevice(msg.getRegisterAddress());
+            dev.statusMessageReceived(msg.getRegisterID(), msg.getRegisterValue());
         } catch (GatewayException ex) {
             java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
         }

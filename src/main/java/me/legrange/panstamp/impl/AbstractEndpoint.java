@@ -89,7 +89,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.Regis
 
     @Override
     public void setValue(String unit, T value) throws GatewayException {
-        setValue(transformIn(value, getUnit(unit)));
+        setValue(transformOut(value, getUnit(unit)));
     }
         
     protected abstract T transformOut(T value, Unit unit);
