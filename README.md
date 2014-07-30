@@ -33,6 +33,14 @@ You can retrieve the device object:
   PanStamp dev = gw.getDevice(100);
 ```
 
+#### Retrieve an endpoint for a device
+
+Once you have a panStamp device object, you can get an endpoint for it using the endpoint name from the XML file:
+
+```java
+  Endpoint ep0 = (Endpoint<Double>) ps.getEndpoint("Temperature");
+```
+
 If the device doesn't exist however, the gateway will throw a NodeNotFoundException. So the best way to use getDevice() is usually to first call hasDevice().
 
 #### Get a list of known devices 
