@@ -14,7 +14,7 @@ import me.legrange.panstamp.impl.SerialGateway;
 public abstract class Gateway {
 
     public static void main(String... args) throws Exception {
-        Gateway gw = Gateway.open("/dev/tty.usbserial-A800HNMV7", 38400);
+        Gateway gw = Gateway.open("/dev/tty.usbserial-A800HNMV", 38400);
         System.out.println("Opened gateway");
         gw.addListener(new GatewayListener() {
 
