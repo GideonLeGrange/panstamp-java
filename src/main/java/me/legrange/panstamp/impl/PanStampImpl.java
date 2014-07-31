@@ -1,15 +1,20 @@
 package me.legrange.panstamp.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.def.Device;
+import me.legrange.panstamp.def.EndpointDef;
 
 /**
- * An implementation of a panStamp abstraction. Instances of this class represent 
- * instances of panStamp devices connected to the network behind the gateway. 
+ * An implementation of a panStamp abstraction. Instances of this class
+ * represent instances of panStamp devices connected to the network behind the
+ * gateway.
  *
  * @author gideon
  */
@@ -35,24 +40,61 @@ public class PanStampImpl implements PanStamp {
             registers.put(id, reg);
         }
         return reg;
-    } 
-    
-    /** return the endpoint for the given name
-     * @throws me.legrange.panstamp.GatewayException */
+    }
+
+    /**
+     * return the endpoint for the given name
+     *
+     * @throws me.legrange.panstamp.GatewayException
+     */
     @Override
-    public synchronized Endpoint getEndpoint(String name) throws GatewayException {
+    public Endpoint getEndpoint(String name) throws GatewayException {
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
-            ep = gw.getEndpoint(this, name);
+            Device dev = getDeviceDefinition();
+            EndpointDef epDef = dev.getEndpoint(name);
+            switch (epDef.getType()) {
+                case NUMBER:
+                    ep = new NumberEndpoint(this, epDef);
+                    break;
+                case STRING:
+                    ep = new StringEndpoint(this, epDef);
+                    break;
+                case BINARY:
+                    ep = new BinaryEndpoint(this, epDef);
+                    break;
+                default:
+                    throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
+            }
             endpoints.put(name, ep);
         }
         return ep;
     }
 
     /**
+     * returns all the endpoints for this panStamp
+     *
+     * @return Return the list of all endpoints for the device
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
+     * problem determining endpoint information
+     */
+    public List<Endpoint> getEndpoints() throws GatewayException {
+        if (endpoints.isEmpty()) {
+            Device def = getDeviceDefinition();
+            List<EndpointDef> epDefs = def.getEndpoints();
+            for (EndpointDef epDef : epDefs) {
+                endpoints.put(epDef.getName(), makeEndpoint(epDef));
+            }
+        }
+        List<Endpoint> res = new ArrayList<>();
+        res.addAll(endpoints.values());
+        return res;
+    }
+
+    /**
      * send a query message to the remote node
      */
-    void sendQueryMessage(int id) throws ModemException  {
+    void sendQueryMessage(int id) throws ModemException {
         gw.sendQueryMessage(this, id);
     }
 
@@ -80,9 +122,52 @@ public class PanStampImpl implements PanStamp {
         this.gw = gw;
         this.address = address;
     }
-   
+
+    /**
+     * make an endpoint object based on it's definition
+     */
+    private Endpoint makeEndpoint(EndpointDef epDef) throws NoSuchUnitException {
+        switch (epDef.getType()) {
+            case NUMBER:
+                return new NumberEndpoint(this, epDef);
+            case STRING:
+                return new StringEndpoint(this, epDef);
+            case BINARY:
+                return new BinaryEndpoint(this, epDef);
+            default:
+                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
+        }
+    }
+
+    /**
+     * get the device definition for this panStamp
+     */
+    private Device getDeviceDefinition() throws GatewayException {
+        return gw.getDeviceDefinition(getManufacturerId(), getProductId());
+    }
+
+    /**
+     * get the manufacturer id for this panStamp
+     */
+    private int getManufacturerId() throws GatewayException {
+        Register reg = getRegister(0);
+        byte val[] = reg.getValue();
+        return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
+    }
+
+    /**
+     * get the product id for this panStamp
+     */
+    private int getProductId() throws GatewayException {
+        Register reg = getRegister(0);
+        byte val[] = reg.getValue();
+        return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
+
+    }
+
     private final int address;
     private final SerialGateway gw;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
     private final Map<String, Endpoint> endpoints = new HashMap<>();
+
 }

@@ -1,6 +1,8 @@
 package me.legrange.panstamp.def;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +50,12 @@ public class Device {
     
     public boolean hasEndpoint(String eName) { 
         return  endpoints.get(eName) != null;
+    }
+    
+    public List<EndpointDef> getEndpoints() {
+        List<EndpointDef> res = new ArrayList<>();
+        res.addAll(endpoints.values());
+        return res;
     }
 
     @Override

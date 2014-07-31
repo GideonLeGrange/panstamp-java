@@ -101,26 +101,6 @@ public final class SerialGateway extends Gateway {
     public void addListener(GatewayListener l) {
         listeners.add(l);
     }
-
-    Endpoint getEndpoint(PanStampImpl ps, String name) throws GatewayException {
-        Register reg = ps.getRegister(0);
-        byte val[] = reg.getValue();
-        int manId = val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
-        int productId = val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
-        Device dev = lib.findDevice(manId, productId);
-        EndpointDef epDef = dev.getEndpoint(name);
-        switch (epDef.getType()) {
-            case NUMBER:
-                return new NumberEndpoint(ps, epDef);
-            case STRING:
-                return new StringEndpoint(ps, epDef);
-            case BINARY:
-                return new BinaryEndpoint(ps, epDef);
-            default:
-                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
-        }
-    }
-
     /**
      * send a command message to a remote device
      */
@@ -143,7 +123,11 @@ public final class SerialGateway extends Gateway {
         msg.setRegisterID(register);
         send(msg);
     }
-
+    
+    Device getDeviceDefinition(int manId, int prodId)throws GatewayException {
+        return lib.findDevice(manId, prodId);
+    }
+ 
     /**
      * send a message to a mote
      */
@@ -156,7 +140,7 @@ public final class SerialGateway extends Gateway {
         }
     }
 
-    public SerialGateway(DeviceLibrary lib) {
+    private  SerialGateway(DeviceLibrary lib) {
         this.lib = lib;
     }
 
