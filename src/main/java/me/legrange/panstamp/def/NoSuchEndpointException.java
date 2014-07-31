@@ -6,7 +6,7 @@ package me.legrange.panstamp.def;
  */
 public class NoSuchEndpointException extends DefinitionException {
 
-    NoSuchEndpointException(String message) {
+   public NoSuchEndpointException(String message) {
         super(message);
     }
 

@@ -10,6 +10,7 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
+import me.legrange.panstamp.def.NoSuchEndpointException;
 
 /**
  * An implementation of a panStamp abstraction. Instances of this class
@@ -49,24 +50,12 @@ public class PanStampImpl implements PanStamp {
      */
     @Override
     public Endpoint getEndpoint(String name) throws GatewayException {
+        if (endpoints.isEmpty()) {
+            loadEndpoints();
+        }
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
-            Device dev = getDeviceDefinition();
-            EndpointDef epDef = dev.getEndpoint(name);
-            switch (epDef.getType()) {
-                case NUMBER:
-                    ep = new NumberEndpoint(this, epDef);
-                    break;
-                case STRING:
-                    ep = new StringEndpoint(this, epDef);
-                    break;
-                case BINARY:
-                    ep = new BinaryEndpoint(this, epDef);
-                    break;
-                default:
-                    throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
-            }
-            endpoints.put(name, ep);
+            throw new NoSuchEndpointException(String.format("No endpoint '%s' was found", name));
         }
         return ep;
     }
@@ -80,11 +69,7 @@ public class PanStampImpl implements PanStamp {
      */
     public List<Endpoint> getEndpoints() throws GatewayException {
         if (endpoints.isEmpty()) {
-            Device def = getDeviceDefinition();
-            List<EndpointDef> epDefs = def.getEndpoints();
-            for (EndpointDef epDef : epDefs) {
-                endpoints.put(epDef.getName(), makeEndpoint(epDef));
-            }
+            loadEndpoints();
         }
         List<Endpoint> res = new ArrayList<>();
         res.addAll(endpoints.values());
@@ -123,6 +108,14 @@ public class PanStampImpl implements PanStamp {
         this.address = address;
     }
 
+    /** load all endpoints */
+    private void loadEndpoints() throws GatewayException {
+            Device def = getDeviceDefinition();
+            List<EndpointDef> epDefs = def.getEndpoints();
+            for (EndpointDef epDef : epDefs) {
+                endpoints.put(epDef.getName(), makeEndpoint(epDef));
+            }
+    }
     /**
      * make an endpoint object based on it's definition
      */

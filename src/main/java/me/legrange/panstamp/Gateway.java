@@ -14,14 +14,18 @@ import me.legrange.panstamp.impl.SerialGateway;
 public abstract class Gateway {
 
     public static void main(String... args) throws Exception {
-        Gateway gw = Gateway.open("/dev/tty.usbserial-A800HNMV", 38400);
+        Gateway gw = Gateway.open("/dev/tty.usbserial-A800HNMV7", 38400);
+        System.out.println("Opened gateway");
         gw.addListener(new GatewayListener() {
 
             @Override
             public void deviceDetected(PanStamp ps) {
+                System.out.println("Detected device");
                 Endpoint<Double> ep0 = null;
                 try {
                     ep0 = (Endpoint<Double>) ps.getEndpoint("Temperature");
+                            System.out.println("Found endpoint 'Temperature'");
+
                 } catch (GatewayException ex) {
                     Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -38,6 +42,7 @@ public abstract class Gateway {
                 }
             }
         });
+        System.out.println("Added listener");
 
         while (true) {
             Thread.sleep(5000);
