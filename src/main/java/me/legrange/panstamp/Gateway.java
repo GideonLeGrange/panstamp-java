@@ -34,7 +34,7 @@ public abstract class Gateway {
 
                         @Override
                         public void valueReceived(Double val) {
-                            System.out.printf("Temperature: %0.2f\n", val);
+                            System.out.printf("Temperature: %f\n", val);
                         }
                     });
                 } catch (NoSuchUnitException ex) {

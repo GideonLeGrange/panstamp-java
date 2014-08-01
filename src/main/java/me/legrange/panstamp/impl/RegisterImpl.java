@@ -2,6 +2,11 @@ package me.legrange.panstamp.impl;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
 
@@ -75,10 +80,7 @@ public class RegisterImpl implements Register {
             this.value = value;
             notify();
         }
-        RegisterEvent ev = new RegisterEvent(this, value);
-        for (RegisterListener l : listeners) {
-            l.registerUpdated(ev);
-        }
+        fireEvent(new RegisterEvent(this, value));
     }
 
     /**
@@ -89,9 +91,38 @@ public class RegisterImpl implements Register {
         this.id = id;
     }
 
+    private void fireEvent(RegisterEvent ev) {
+        for (RegisterListener l : listeners) {
+            pool.submit(new UpdateTask(l, ev));
+        }
+    }
+
     private final PanStampImpl dev;
     private final int id;
     private final List<RegisterListener> listeners = new LinkedList<>();
+    private final ExecutorService pool = Executors.newCachedThreadPool();
     private byte[] value;
+
+    private class UpdateTask implements Callable {
+
+        private UpdateTask(RegisterListener l, RegisterEvent e) {
+            this.l = l;
+            this.e = e;
+        }
+
+        @Override
+        public Object call() {
+            try {
+                l.registerUpdated(e);
+            } catch (Throwable e) {
+                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+
+            }
+            return true;
+        }
+
+        private final RegisterListener l;
+        private final RegisterEvent e;
+    }
 
 }
