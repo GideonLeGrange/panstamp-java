@@ -15,7 +15,7 @@ public interface PanStamp {
      * @return the register for the given id
      * @param id Register to read
      */
-    Register getRegister(int id);
+    Register getRegister(int id) throws GatewayException;
 
     /**
      * return the endpoint for the given name
@@ -25,6 +25,6 @@ public interface PanStamp {
      */
     Endpoint getEndpoint(String name) throws GatewayException;
     
-   
+   boolean hasEndpoint(String name) throws GatewayException;
 
 }

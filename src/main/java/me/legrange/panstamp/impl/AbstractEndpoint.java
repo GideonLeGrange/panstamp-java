@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
@@ -43,7 +46,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.Regis
         throw new NoSuchUnitException(String.format("No unit '%s' found in endpoint '%s'", name, getName()));
     }
 
-    AbstractEndpoint(PanStamp ps, EndpointDef epDef) {
+    AbstractEndpoint(PanStampImpl ps, EndpointDef epDef) {
         this.ps = ps;
         this.epDef = epDef;
         this.listeners = new HashMap<>();
@@ -51,7 +54,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.Regis
     }
 
     @Override
-    public void addListener(String unit, EndpointListener<T> el) throws NoSuchUnitException {
+    public synchronized void addListener(String unit, EndpointListener<T> el) throws GatewayException {
         if (listeners.isEmpty()) {
             ps.getRegister(epDef.getRegister().getId()).addListener(this);
         }
@@ -59,13 +62,53 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.Regis
     }
 
     @Override
-    public void addListener(EndpointListener<T> el) throws NoSuchUnitException {
+    public void addListener(EndpointListener<T> el) throws GatewayException {
         addListener(null, el);
     }
 
     @Override
     public void registerUpdated(Register.RegisterEvent ev) {
         for (EndpointListener<T> l : listeners.keySet()) {
+            pool.submit(new ListenerTask(l));
+        }
+    }
+
+    @Override
+    public final T getValue(String unit) throws GatewayException {
+        return transformIn(getValue(), getUnit(unit));
+    }
+
+    @Override
+    public void setValue(String unit, T value) throws GatewayException {
+        setValue(transformOut(value, getUnit(unit)));
+    }
+
+    protected abstract T transformOut(T value, Unit unit);
+
+    protected abstract T transformIn(T value, Unit unit);
+
+    protected final PanStampImpl ps;
+    protected final EndpointDef epDef;
+
+    private final Map<EndpointListener<T>, String> listeners;
+    private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r, "Endpoint Notification Task");
+            t.setDaemon(true);
+            return t;
+        }
+    });
+
+    private class ListenerTask implements Runnable {
+
+        private ListenerTask(EndpointListener l) {
+            this.l = l;
+        }
+
+        @Override
+        public void run()  {
             try {
                 String unit = listeners.get(l);
                 T val;
@@ -74,31 +117,16 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.Regis
                 } else {
                     val = getValue();
                 }
+                System.out.printf("unit %s => %s\n", unit, val);
                 l.valueReceived(val);
-            } catch (GatewayException ex) {
-                java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Throwable e) {
+                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+
             }
         }
+
+        private final EndpointListener l;
+
     }
 
-    @Override
-    public final T getValue(String unit) throws GatewayException {
-        return transformIn(getValue(), getUnit(unit));
-    }
-    
-
-    @Override
-    public void setValue(String unit, T value) throws GatewayException {
-        setValue(transformOut(value, getUnit(unit)));
-    }
-        
-    protected abstract T transformOut(T value, Unit unit);
-
-    protected abstract T transformIn(T value, Unit unit);
-
-    protected final PanStamp ps;
-    protected final EndpointDef epDef;
-    private final Map<EndpointListener<T>, String> listeners;
-
-    
 }

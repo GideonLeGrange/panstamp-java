@@ -32,13 +32,17 @@ public class PanStampImpl implements PanStamp {
     /**
      * @return the register for the given id
      * @param id Register to read
+     * @throws me.legrange.panstamp.GatewayException
      */
     @Override
-    public Register getRegister(int id) {
-        RegisterImpl reg = registers.get(id);
-        if (reg == null) {
-            reg = new RegisterImpl(this, id);
-            registers.put(id, reg);
+    public Register getRegister(int id) throws GatewayException {
+        RegisterImpl reg;
+        synchronized (registers) {
+            reg = registers.get(id);
+            if (reg == null) {
+                reg = new RegisterImpl(this, id);
+                registers.put(id, reg);
+            }
         }
         return reg;
     }
@@ -50,14 +54,26 @@ public class PanStampImpl implements PanStamp {
      */
     @Override
     public Endpoint getEndpoint(String name) throws GatewayException {
-        if (endpoints.isEmpty()) {
-            loadEndpoints();
+        synchronized (endpoints) {
+            if (endpoints.isEmpty()) {
+                loadEndpoints();
+            }
         }
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
             throw new NoSuchEndpointException(String.format("No endpoint '%s' was found", name));
         }
         return ep;
+    }
+
+    @Override
+    public boolean hasEndpoint(String name) throws GatewayException {
+        synchronized (endpoints) {
+            if (endpoints.isEmpty()) {
+                loadEndpoints();
+            }
+        }
+        return endpoints.get(name) != null;
     }
 
     /**
@@ -68,8 +84,10 @@ public class PanStampImpl implements PanStamp {
      * problem determining endpoint information
      */
     public List<Endpoint> getEndpoints() throws GatewayException {
-        if (endpoints.isEmpty()) {
-            loadEndpoints();
+        synchronized (endpoints) {
+            if (endpoints.isEmpty()) {
+                loadEndpoints();
+            }
         }
         List<Endpoint> res = new ArrayList<>();
         res.addAll(endpoints.values());
@@ -95,7 +113,7 @@ public class PanStampImpl implements PanStamp {
     /**
      * Receive a status message from the remote node.
      */
-    void statusMessageReceived(int id, byte[] value) throws MoteException {
+    void statusMessageReceived(int id, byte[] value) throws GatewayException {
         RegisterImpl reg = (RegisterImpl) getRegister(id);
         reg.valueReceived(value);
     }
@@ -108,14 +126,17 @@ public class PanStampImpl implements PanStamp {
         this.address = address;
     }
 
-    /** load all endpoints */
+    /**
+     * load all endpoints
+     */
     private void loadEndpoints() throws GatewayException {
-            Device def = getDeviceDefinition();
-            List<EndpointDef> epDefs = def.getEndpoints();
-            for (EndpointDef epDef : epDefs) {
-                endpoints.put(epDef.getName(), makeEndpoint(epDef));
-            }
+        Device def = getDeviceDefinition();
+        List<EndpointDef> epDefs = def.getEndpoints();
+        for (EndpointDef epDef : epDefs) {
+            endpoints.put(epDef.getName(), makeEndpoint(epDef));
+        }
     }
+
     /**
      * make an endpoint object based on it's definition
      */

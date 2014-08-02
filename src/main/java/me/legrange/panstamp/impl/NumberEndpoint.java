@@ -11,7 +11,7 @@ import me.legrange.panstamp.def.Unit;
  */
 public class NumberEndpoint extends AbstractEndpoint<Double> {
 
-    public NumberEndpoint(PanStamp ps, EndpointDef epDef) {
+    public NumberEndpoint(PanStampImpl ps, EndpointDef epDef) {
         super(ps, epDef); 
     }
     

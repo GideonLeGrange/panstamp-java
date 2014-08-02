@@ -19,25 +19,38 @@ public abstract class Gateway {
         gw.addListener(new GatewayListener() {
 
             @Override
-            public void deviceDetected(PanStamp ps) {
-                System.out.println("Detected device");
-                Endpoint<Double> ep0 = null;
+            public void deviceDetected(final PanStamp ps) {
+                System.out.println("Detected device " + ps.getAddress());
                 try {
-                    ep0 = (Endpoint<Double>) ps.getEndpoint("Temperature");
-                            System.out.println("Found endpoint 'Temperature'");
+                    if (ps.hasEndpoint("Temperature")) {
+                        Endpoint ep0 = (Endpoint<Double>) ps.getEndpoint("Temperature");
+                        System.out.println("Found endpoint 'Temperature'");
+                        ep0.addListener("C", new EndpointListener<Double>() {
+
+                            @Override
+                            public void valueReceived(Double val) {
+                                System.out.printf("Unit %d Temperature: %f\n", ps.getAddress(), val);
+                            }
+                        });
+                    } else {
+                        System.out.println("Did not find endpoint 'Temperature'");
+                    }
+                    if (ps.hasEndpoint("Voltage")) {
+                        Endpoint ep0 = (Endpoint<Double>) ps.getEndpoint("Voltage");
+                        System.out.println("Found endpoint 'Voltage'");
+                        ep0.addListener("V", new EndpointListener<Double>() {
+
+                            @Override
+                            public void valueReceived(Double val) {
+                                System.out.printf("Unit %d Voltage: %f\n", ps.getAddress(), val);
+                            }
+                        });
+                    } else {
+                        System.out.println("Did not find endpoint 'Voltage'");
+
+                    }
 
                 } catch (GatewayException ex) {
-                    Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    ep0.addListener(new EndpointListener<Double>() {
-
-                        @Override
-                        public void valueReceived(Double val) {
-                            System.out.printf("Temperature: %f\n", val);
-                        }
-                    });
-                } catch (NoSuchUnitException ex) {
                     Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

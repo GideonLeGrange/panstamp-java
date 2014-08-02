@@ -12,7 +12,7 @@ import me.legrange.panstamp.def.Unit;
  */
 public class BinaryEndpoint extends AbstractEndpoint<Boolean> {
 
-    public BinaryEndpoint(PanStamp ps, EndpointDef epDef) {
+    public BinaryEndpoint(PanStampImpl ps, EndpointDef epDef) {
         super(ps, epDef);
     }
 

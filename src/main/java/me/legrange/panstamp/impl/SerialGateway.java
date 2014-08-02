@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Gateway;
@@ -61,7 +65,9 @@ public final class SerialGateway extends Gateway {
      */
     @Override
     public boolean hasDevice(int address) {
-        return devices.get(address) != null;
+        synchronized (devices) {
+            return devices.get(address) != null;
+        }
     }
 
     /**
@@ -73,11 +79,13 @@ public final class SerialGateway extends Gateway {
      */
     @Override
     public PanStamp getDevice(int address) throws NodeNotFoundException {
-        DeviceEntry ent = devices.get(address);
-        if (ent == null) {
-            throw new NodeNotFoundException(String.format("No device found for address %02x", address));
+        synchronized (devices) {
+            DeviceEntry ent = devices.get(address);
+            if (ent == null) {
+                throw new NodeNotFoundException(String.format("No device found for address %02x", address));
+            }
+            return ent.dev;
         }
-        return ent.dev;
     }
 
     /**
@@ -88,8 +96,10 @@ public final class SerialGateway extends Gateway {
     @Override
     public List<PanStamp> getDevices() {
         List<PanStamp> res = new ArrayList<>();
-        for (DeviceEntry ent : devices.values()) {
-            res.add(ent.dev);
+        synchronized (devices) {
+            for (DeviceEntry ent : devices.values()) {
+                res.add(ent.dev);
+            }
         }
         return res;
     }
@@ -98,6 +108,7 @@ public final class SerialGateway extends Gateway {
     public void addListener(GatewayListener l) {
         listeners.add(l);
     }
+
     /**
      * send a command message to a remote device
      */
@@ -120,11 +131,11 @@ public final class SerialGateway extends Gateway {
         msg.setRegisterID(register);
         send(msg);
     }
-    
-    Device getDeviceDefinition(int manId, int prodId)throws GatewayException {
+
+    Device getDeviceDefinition(int manId, int prodId) throws GatewayException {
         return lib.findDevice(manId, prodId);
     }
- 
+
     /**
      * send a message to a mote
      */
@@ -137,7 +148,7 @@ public final class SerialGateway extends Gateway {
         }
     }
 
-    private  SerialGateway(DeviceLibrary lib) {
+    private SerialGateway(DeviceLibrary lib) {
         this.lib = lib;
     }
 
@@ -157,19 +168,28 @@ public final class SerialGateway extends Gateway {
      */
     private void updateNetwork(Message msg) throws ModemException {
         int address = msg.getSender();
-        DeviceEntry ent = devices.get(address);
-        if (ent == null) {
-            ent = new DeviceEntry(new PanStampImpl(this, address));
-            devices.put(address, ent);
+        boolean fire = false;
+        DeviceEntry ent = null;
+        synchronized (devices) {
+            ent = devices.get(address);
+            if (ent == null) {
+                ent = new DeviceEntry(new PanStampImpl(this, address));
+                devices.put(address, ent);
+                fire = true;
+            }
+        }
+        if (fire) {
             fireEvent(ent.dev);
         }
+
         // FIXME 
         // I need to add code to handle discovery more rigirously.
     }
 
     private void fireEvent(PanStamp ps) {
         for (GatewayListener l : listeners) {
-            l.deviceDetected(ps);
+            pool.submit(new ListenerTask(l, ps));
+            //   new Thread(new ListenerTask(l, ps)).start();
         }
     }
 
@@ -193,6 +213,15 @@ public final class SerialGateway extends Gateway {
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
     private final DeviceLibrary lib;
+    private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r, "SerialGateway Task");
+            t.setDaemon(true);
+            return t;
+        }
+    });
 
     /**
      * A receiver for incoming messages
@@ -245,5 +274,26 @@ public final class SerialGateway extends Gateway {
         private int manId, productId;
         private Status status;
 
+    }
+
+    private class ListenerTask implements Runnable {
+
+        private ListenerTask(GatewayListener l, PanStamp ps) {
+            this.l = l;
+            this.ps = ps;
+        }
+
+        @Override
+        public void run() {
+            try {
+                l.deviceDetected(ps);
+            } catch (Throwable e) {
+                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+
+            }
+        }
+
+        private final GatewayListener l;
+        private final PanStamp ps;
     }
 }
