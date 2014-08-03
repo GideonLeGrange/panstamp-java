@@ -3,7 +3,6 @@ package me.legrange.panstamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.impl.NoSuchUnitException;
 import me.legrange.panstamp.impl.SerialGateway;
 
 /**
@@ -29,13 +28,13 @@ public abstract class Gateway {
 
                             @Override
                             public void valueReceived(Double val) {
-                                System.out.printf("Unit %d Temperature: %f\n", ps.getAddress(), val);
+                                System.out.printf("Unit %d Temperature: %fC\n", ps.getAddress(), val);
                             }
                         });
                     } else {
                         System.out.println("Did not find endpoint 'Temperature'");
                     }
-                    if (ps.hasEndpoint("Voltage")) {
+/*                    if (ps.hasEndpoint("Voltage")) {
                         Endpoint ep0 = (Endpoint<Double>) ps.getEndpoint("Voltage");
                         System.out.println("Found endpoint 'Voltage'");
                         ep0.addListener("V", new EndpointListener<Double>() {
@@ -48,7 +47,7 @@ public abstract class Gateway {
                     } else {
                         System.out.println("Did not find endpoint 'Voltage'");
 
-                    }
+                    } */
 
                 } catch (GatewayException ex) {
                     Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
