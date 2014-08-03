@@ -1,8 +1,6 @@
 package me.legrange.example;
 
-import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.swap.Registers;
@@ -11,20 +9,18 @@ import me.legrange.swap.Registers;
  *
  * @author gideon
  */
-public class SetAddress implements GatewayListener {
+public class SetAddress extends Example {
 
-    private static final String PORT = "/dev/tty.usbserial-A800HNMV";
-    private static final int BAUD = 38400;
     private static final byte NEW_ADDRESS = 5;
-    private Gateway gw;
     
     public static void main(String... args) throws Exception {
-        new SetAddress().run();
+        SetAddress app = new SetAddress();
+        app.connect();
+        app.run();
     }
 
-    private void run() throws GatewayException {
+    protected void run() throws GatewayException {
 
-         gw = Gateway.open(PORT, BAUD);
         gw.addListener(this);
         say("Waiting to detect node");
 
@@ -47,9 +43,5 @@ public class SetAddress implements GatewayListener {
         }
     }
 
-    private void say(String fmt, Object... args) {
-        System.out.printf(fmt, args);
-        System.out.println();
-    }
 
 }
