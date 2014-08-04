@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.RegisterListener;
+import me.legrange.swap.Registers;
 
 /**
  * Abstraction of a panStamp register.
@@ -72,6 +74,14 @@ public class RegisterImpl implements Register {
         return value;
     }
 
+    @Override
+    public boolean hasValue() {
+        synchronized(this) {
+            return value != null;
+        }
+    }
+   
+
     /**
      * update the abstracted register value and notify listeners
      */
@@ -80,7 +90,7 @@ public class RegisterImpl implements Register {
             this.value = value;
             notify();
         }
-        fireEvent(new RegisterEvent(this, value));
+        fireEvent();
     }
 
     /**
@@ -91,9 +101,9 @@ public class RegisterImpl implements Register {
         this.id = id;
     }
 
-    private void fireEvent(RegisterEvent ev) {
+    private void fireEvent() {
         for (RegisterListener l : listeners) {
-            pool.submit(new UpdateTask(l, ev));
+            pool.submit(new UpdateTask(l));
         }
     }
 
@@ -113,15 +123,14 @@ public class RegisterImpl implements Register {
 
     private class UpdateTask implements Runnable {
 
-        private UpdateTask(RegisterListener l, RegisterEvent e) {
+        private UpdateTask(RegisterListener l) {
             this.l = l;
-            this.e = e;
         }
 
         @Override
         public void run() {
             try {
-                l.registerUpdated(e);
+                l.registerUpdated(RegisterImpl.this );
             } catch (Throwable e) {
                 Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
 
@@ -129,7 +138,6 @@ public class RegisterImpl implements Register {
         }
 
         private final RegisterListener l;
-        private final RegisterEvent e;
     }
 
 }

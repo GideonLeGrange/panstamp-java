@@ -11,7 +11,7 @@ import me.legrange.swap.Registers;
  */
 public class SetAddress extends Example {
 
-    private static final byte NEW_ADDRESS = 5;
+    private static final byte NEW_ADDRESS = 2;
     
     public static void main(String... args) throws Exception {
         SetAddress app = new SetAddress();
@@ -33,7 +33,7 @@ public class SetAddress extends Example {
            Register addr = ps.getRegister(Registers.Register.DEVICE_ADDRESS.position());
             say("Setting remote address %d", NEW_ADDRESS);
            addr.setValue(new byte[]{NEW_ADDRESS});
-            Thread.sleep(5000);
+            Thread.sleep(15000);
             System.exit(1);
         } catch (GatewayException ex) {
             ex.printStackTrace();

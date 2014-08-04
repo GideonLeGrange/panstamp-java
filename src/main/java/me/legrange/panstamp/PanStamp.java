@@ -1,7 +1,7 @@
 package me.legrange.panstamp;
 
 /**
- *
+ * An abstraction of a panStamp device. 
  * @author gideon
  */
 public interface PanStamp {
@@ -13,18 +13,25 @@ public interface PanStamp {
 
     /**
      * @return the register for the given id
-     * @param id Register to read
+     * @param id ID of register to return
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
+     * problem retrieving the register.
      */
     Register getRegister(int id) throws GatewayException;
 
     /**
      * return the endpoint for the given name
+     *
      * @param name
-     * @return 
-     * @throws me.legrange.panstamp.GatewayException 
+     * @return
+     * @throws me.legrange.panstamp.GatewayException
      */
     Endpoint getEndpoint(String name) throws GatewayException;
-    
-   boolean hasEndpoint(String name) throws GatewayException;
+
+    /** returns true if the device has an endpoint with the given name
+     * @param name Name of endpoint we're querying
+     * @return True if the endpoint is known.
+     * @throws me.legrange.panstamp.GatewayException Thrown if an error is experienced */
+    boolean hasEndpoint(String name) throws GatewayException;
 
 }

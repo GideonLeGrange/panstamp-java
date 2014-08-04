@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -23,6 +22,7 @@ import me.legrange.swap.CommandMessage;
 import me.legrange.swap.Message;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.QueryMessage;
+import me.legrange.swap.Registers;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.SerialException;
@@ -36,6 +36,13 @@ import me.legrange.swap.StatusMessage;
  */
 public final class SerialGateway extends Gateway {
 
+    /** create a new serial gateway.
+     * 
+     * @param port Serial port to use.
+     * @param baud Serial baud to communicate at. 
+     * @return The new gateway object
+     * @throws ModemException Thrown if there is a problem opening the gateway.
+     */
     public static SerialGateway openSerial(String port, int baud) throws ModemException {
         SerialGateway gw = new SerialGateway(new ClassLoaderLibrary());
         gw.start(port, baud);
@@ -80,11 +87,11 @@ public final class SerialGateway extends Gateway {
     @Override
     public PanStamp getDevice(int address) throws NodeNotFoundException {
         synchronized (devices) {
-            DeviceEntry ent = devices.get(address);
-            if (ent == null) {
+            PanStampImpl dev = devices.get(address);
+            if (dev == null) {
                 throw new NodeNotFoundException(String.format("No device found for address %02x", address));
             }
-            return ent.dev;
+            return dev;
         }
     }
 
@@ -96,17 +103,18 @@ public final class SerialGateway extends Gateway {
     @Override
     public List<PanStamp> getDevices() {
         List<PanStamp> res = new ArrayList<>();
-        synchronized (devices) {
-            for (DeviceEntry ent : devices.values()) {
-                res.add(ent.dev);
-            }
-        }
+        res.addAll(devices.values());
         return res;
     }
 
     @Override
     public void addListener(GatewayListener l) {
         listeners.add(l);
+    }
+
+    @Override
+    public void removeListener(GatewayListener l) {
+        listeners.remove(l);
     }
 
     /**
@@ -140,7 +148,6 @@ public final class SerialGateway extends Gateway {
      * send a message to a mote
      */
     void send(Message msg) throws ModemException {
-//        System.out.printf("send: %s\n", msg);
         try {
             modem.send(msg);
         } catch (SerialException ex) {
@@ -153,7 +160,6 @@ public final class SerialGateway extends Gateway {
     }
 
     private void start(String port, int baud) throws ModemException {
-        devices = new HashMap<>();
         receiver = new Receiver();
         try {
             modem = SWAPModem.open(port, baud);
@@ -168,30 +174,30 @@ public final class SerialGateway extends Gateway {
      */
     private void updateNetwork(Message msg) throws ModemException {
         int address = msg.getSender();
-        boolean fire = false;
-        DeviceEntry ent = null;
+        boolean isNew = false;
+        PanStampImpl dev;
         synchronized (devices) {
-            ent = devices.get(address);
-            if (ent == null) {
-                ent = new DeviceEntry(new PanStampImpl(this, address));
-                devices.put(address, ent);
-                fire = true;
+            dev = devices.get(address);
+            if (dev == null) {
+                dev = new PanStampImpl(this, address);
+                devices.put(address, dev);
+                isNew = true;
             }
         }
-        if (fire) {
-            fireEvent(ent.dev);
+        if (!dev.getRegister(Registers.Register.PRODUCT_CODE.position()).hasValue()) {
+            dev.sendQueryMessage(Registers.Register.PRODUCT_CODE.position());
         }
-
-        // FIXME 
-        // I need to add code to handle discovery more rigirously.
+        if (isNew) {
+            fireEvent(dev);
+        }
     }
 
     private void fireEvent(PanStamp ps) {
         for (GatewayListener l : listeners) {
             pool.submit(new ListenerTask(l, ps));
-            //   new Thread(new ListenerTask(l, ps)).start();
         }
     }
+    
 
     /**
      * process a status message received from the modem
@@ -209,7 +215,7 @@ public final class SerialGateway extends Gateway {
 
     private SWAPModem modem;
     private Receiver receiver;
-    private Map<Integer, DeviceEntry> devices;
+    private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
     private final DeviceLibrary lib;
@@ -223,9 +229,7 @@ public final class SerialGateway extends Gateway {
         }
     });
 
-    /**
-     * A receiver for incoming messages
-     */
+    /** A receiver for incoming messages */
     private class Receiver implements MessageListener {
 
         @Override
@@ -254,28 +258,7 @@ public final class SerialGateway extends Gateway {
         }
     }
 
-    /**
-     * A container class to keep entries pointing to panStamp devices on the
-     * network
-     */
-    private static class DeviceEntry {
-
-        enum Status {
-
-            NEW, QUERYING, UPDATED, UNKNOWN
-        };
-
-        private DeviceEntry(PanStampImpl dev) {
-            this.dev = dev;
-            this.status = Status.NEW;
-        }
-
-        private final PanStampImpl dev;
-        private int manId, productId;
-        private Status status;
-
-    }
-
+    /** A runnable task that sends a panStamp to a listener */
     private class ListenerTask implements Runnable {
 
         private ListenerTask(GatewayListener l, PanStamp ps) {

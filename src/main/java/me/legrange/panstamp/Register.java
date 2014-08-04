@@ -1,59 +1,39 @@
 package me.legrange.panstamp;
 
 /**
- *
+ * An abstraction of a panStamp register.
  * @author gideon
  */
 public interface Register {
-    
-    public static class RegisterEvent {
-
-        public Register getRegister() {
-            return reg;
-        }
-
-        public byte[] getBytes() {
-            return bytes;
-        }
-
-        public RegisterEvent(Register reg, byte bytes[]) {
-            this.reg = reg;
-            this.bytes = bytes;
-        }
-
-        private final Register reg;
-        private final byte[] bytes;
-    }
-
-    /**
-     * Implement this to receive updates when registers change.
-     */
-    public interface RegisterListener {
-
-        void registerUpdated(RegisterEvent ev);
-    }
 
     /**
      * Add a listener to receive register updates
      *
      * @param l listener to add
      */
-    public void addListener(RegisterListener l);
+    void addListener(RegisterListener l);
 
     /**
      * remove a listener
      *
      * @param l listener to remove
      */
-    public void removeListener(RegisterListener l);
+    void removeListener(RegisterListener l);
     /**
      * set the register value and send to remote node
      *
      * @param value the new value
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem updating the register
      */
-    public void setValue(byte value[]) throws GatewayException;
+    void setValue(byte value[]) throws GatewayException;
     
-    public byte[] getValue() throws GatewayException;
+    /** get the value of the register
+     * @return The value of the register
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem reading the register */
+    byte[] getValue() throws GatewayException;
+    
+    /** return true if the register has a currently set value */
+    boolean hasValue();
     
 }
 

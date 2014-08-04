@@ -13,6 +13,7 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
@@ -21,7 +22,7 @@ import me.legrange.panstamp.def.Unit;
  * @author gideon
  * @param <T>
  */
-public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.RegisterListener {
+public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListener {
 
     @Override
     public String getName() {
@@ -67,7 +68,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, Register.Regis
     }
 
     @Override
-    public void registerUpdated(Register.RegisterEvent ev) {
+    public void registerUpdated(Register reg) {
         for (EndpointListener<T> l : listeners.keySet()) {
             pool.submit(new ListenerTask(l));
         }

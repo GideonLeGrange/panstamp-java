@@ -11,6 +11,7 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.NoSuchEndpointException;
+import me.legrange.swap.Registers;
 
 /**
  * An implementation of a panStamp abstraction. Instances of this class
@@ -32,10 +33,9 @@ public class PanStampImpl implements PanStamp {
     /**
      * @return the register for the given id
      * @param id Register to read
-     * @throws me.legrange.panstamp.GatewayException
      */
     @Override
-    public Register getRegister(int id) throws GatewayException {
+    public Register getRegister(int id) {
         RegisterImpl reg;
         synchronized (registers) {
             reg = registers.get(id);
@@ -103,7 +103,7 @@ public class PanStampImpl implements PanStamp {
 
     /**
      * send a command message to the remote node
-     *
+     * 
      * @param value Value to send
      */
     void sendCommandMessage(int id, byte[] value) throws ModemException {

@@ -19,7 +19,7 @@ public abstract class Example implements GatewayListener {
     
     protected void connect() throws GatewayException {
 
-         gw = Gateway.open(PORT, BAUD);
+         gw = Gateway.openSerial(PORT, BAUD);
         gw.addListener(this);
 
     }
