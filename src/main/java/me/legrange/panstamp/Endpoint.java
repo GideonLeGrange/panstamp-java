@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface Endpoint<T> {
 
+    /** Return the name of this endpoint.
+     * @return  The endpoint name */
     String getName();
 
     /**

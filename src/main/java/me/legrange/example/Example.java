@@ -1,5 +1,7 @@
 package me.legrange.example;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
@@ -14,8 +16,15 @@ public abstract class Example implements GatewayListener {
     private static final int BAUD = 38400;
     protected Gateway gw;
     
-
-    protected abstract void run() throws GatewayException;
+    protected void run() throws GatewayException {
+        while (true) {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SetSleep.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
     protected void connect() throws GatewayException {
 
