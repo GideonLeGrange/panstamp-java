@@ -22,19 +22,15 @@ public interface Endpoint<T> {
     /**
      * Add a listener to the endpoint.
      *
-     * @param unit Unit in which the data must be received.
      * @param el Listener that will receive incoming data
-     * @throws me.legrange.panstamp.impl.NoSuchUnitException
      */
-    void addListener(String unit, EndpointListener<T> el) throws GatewayException;
-
-    /**
-     * Add a listener to the endpoint.
-     *
-     * @param el Listener that will receive incoming data
-     * @throws me.legrange.panstamp.impl.NoSuchUnitException
+    void addListener(EndpointListener<T> el);
+    
+    /** Remove a listener from the endpoint.
+     * 
+     * @param el The listener to remove
      */
-    void addListener(EndpointListener<T> el) throws GatewayException;
+    void removeListener(EndpointListener<T> el);
 
     /**
      * returns the current value of the endpoint in the given unit.

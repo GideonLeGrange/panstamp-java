@@ -50,27 +50,30 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     AbstractEndpoint(PanStampImpl ps, EndpointDef epDef) {
         this.ps = ps;
         this.epDef = epDef;
-        this.listeners = new HashMap<>();
+        this.listeners = new LinkedList<>();
 
     }
 
     @Override
-    public synchronized void addListener(String unit, EndpointListener<T> el) throws GatewayException {
+    public synchronized void addListener(EndpointListener<T> el) {
         if (listeners.isEmpty()) {
             ps.getRegister(epDef.getRegister().getId()).addListener(this);
         }
-        listeners.put(el, unit);
+        listeners.add(el);
     }
 
     @Override
-    public void addListener(EndpointListener<T> el) throws GatewayException {
-        addListener(null, el);
+    public synchronized void removeListener(EndpointListener<T> el) {
+        listeners.remove(el);
+        if (listeners.isEmpty()) {
+            ps.getRegister(epDef.getRegister().getId()).removeListener(this);
+        }
     }
 
     @Override
     public void registerUpdated(Register reg) {
-        for (EndpointListener<T> l : listeners.keySet()) {
-            pool.submit(new ListenerTask(l));
+        for (EndpointListener<T> l : listeners) {
+            pool().submit(new ListenerTask(l));
         }
     }
 
@@ -91,7 +94,11 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     protected final PanStampImpl ps;
     protected final EndpointDef epDef;
 
-    private final Map<EndpointListener<T>, String> listeners;
+    private ExecutorService pool() {
+        return pool;
+    }
+
+    private final List<EndpointListener<T>> listeners;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
         @Override
@@ -109,24 +116,16 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         }
 
         @Override
-        public void run()  {
+        public void run() {
             try {
-                String unit = listeners.get(l);
-                T val;
-                if (unit != null) {
-                    val = getValue(unit);
-                } else {
-                    val = getValue();
-                }
-                System.out.printf("unit %s => %s\n", unit, val);
-                l.valueReceived(val);
+                l.valueReceived(AbstractEndpoint.this);
             } catch (Throwable e) {
                 Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
 
             }
         }
 
-        private final EndpointListener l;
+        private final EndpointListener<T> l;
 
     }
 

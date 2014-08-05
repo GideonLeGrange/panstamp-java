@@ -7,6 +7,6 @@ package me.legrange.panstamp;
  */
 public interface EndpointListener<T> {
     
-    void valueReceived(T val);
+    void valueReceived(Endpoint<T> ep);
     
 }
