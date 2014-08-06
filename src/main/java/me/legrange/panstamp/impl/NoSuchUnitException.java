@@ -1,7 +1,5 @@
 package me.legrange.panstamp.impl;
 
-import me.legrange.panstamp.impl.MoteException;
-
 /**
  * Thrown when an endpoint is accessed with a unit that is not known.
  * @author gideon

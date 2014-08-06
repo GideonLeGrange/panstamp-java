@@ -11,7 +11,6 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.NoSuchEndpointException;
-import me.legrange.swap.Registers;
 
 /**
  * An implementation of a panStamp abstraction. Instances of this class
