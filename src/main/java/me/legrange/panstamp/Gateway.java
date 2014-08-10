@@ -2,6 +2,7 @@ package me.legrange.panstamp;
 
 import java.util.List;
 import me.legrange.panstamp.impl.SerialGateway;
+import me.legrange.swap.SWAPModem;
 
 /**
  * A PanStamp network gateway
@@ -62,5 +63,9 @@ public abstract class Gateway {
     /** remove a listener from the gateway
      * @param l The listener to remove */
     public abstract void removeListener(GatewayListener l);
+    
+    /** gain access to the lower layer SWAP modem
+     * @return The lower layer SWAP modem driving this gateway */
+    public abstract SWAPModem getSWAPModem();
 
 }
