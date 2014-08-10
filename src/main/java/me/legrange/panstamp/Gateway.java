@@ -64,8 +64,5 @@ public abstract class Gateway {
      * @param l The listener to remove */
     public abstract void removeListener(GatewayListener l);
     
-    /** gain access to the lower layer SWAP modem
-     * @return The lower layer SWAP modem driving this gateway */
-    public abstract SWAPModem getSWAPModem();
 
 }

@@ -118,12 +118,6 @@ public final class SerialGateway extends Gateway {
     public void removeListener(GatewayListener l) {
         listeners.remove(l);
     }
-    
-    @Override
-    public SWAPModem getSWAPModem() {
-        return modem;
-    }
-
     /**
      * send a command message to a remote device
      */
