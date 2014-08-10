@@ -25,7 +25,6 @@ import me.legrange.swap.QueryMessage;
 import me.legrange.swap.Registers;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
-import me.legrange.swap.SerialException;
 import me.legrange.swap.StatusMessage;
 
 /**
@@ -36,10 +35,11 @@ import me.legrange.swap.StatusMessage;
  */
 public final class SerialGateway extends Gateway {
 
-    /** create a new serial gateway.
-     * 
+    /**
+     * create a new serial gateway.
+     *
      * @param port Serial port to use.
-     * @param baud Serial baud to communicate at. 
+     * @param baud Serial baud to communicate at.
      * @return The new gateway object
      * @throws ModemException Thrown if there is a problem opening the gateway.
      */
@@ -58,10 +58,12 @@ public final class SerialGateway extends Gateway {
     public void close() throws ModemException {
         try {
             modem.close();
-            devices.clear();
-        } catch (SerialException e) {
-            throw new ModemException(e.getMessage(), e);
+        } 
+        catch (SWAPException ex) {
+            throw new ModemException(ex.getMessage(), ex);
+
         }
+        devices.clear();
     }
 
     /**
@@ -150,7 +152,7 @@ public final class SerialGateway extends Gateway {
     void send(Message msg) throws ModemException {
         try {
             modem.send(msg);
-        } catch (SerialException ex) {
+        } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
     }
@@ -162,11 +164,11 @@ public final class SerialGateway extends Gateway {
     private void start(String port, int baud) throws ModemException {
         receiver = new Receiver();
         try {
-            modem = SWAPModem.open(port, baud);
+            modem = SWAPModem.openSerial(port, baud);
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
-        modem.addMessageListener(receiver);
+        modem.addListener(receiver);
     }
 
     /**
@@ -197,7 +199,6 @@ public final class SerialGateway extends Gateway {
             pool.submit(new ListenerTask(l, ps));
         }
     }
-    
 
     /**
      * process a status message received from the modem
@@ -229,7 +230,9 @@ public final class SerialGateway extends Gateway {
         }
     });
 
-    /** A receiver for incoming messages */
+    /**
+     * A receiver for incoming messages
+     */
     private class Receiver implements MessageListener {
 
         @Override
@@ -258,7 +261,9 @@ public final class SerialGateway extends Gateway {
         }
     }
 
-    /** A runnable task that sends a panStamp to a listener */
+    /**
+     * A runnable task that sends a panStamp to a listener
+     */
     private class ListenerTask implements Runnable {
 
         private ListenerTask(GatewayListener l, PanStamp ps) {
