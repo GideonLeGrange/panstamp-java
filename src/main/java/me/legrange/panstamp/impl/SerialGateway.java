@@ -35,18 +35,12 @@ import me.legrange.swap.StatusMessage;
  */
 public final class SerialGateway extends Gateway {
 
-    /**
-     * create a new serial gateway.
-     *
-     * @param port Serial port to use.
-     * @param baud Serial baud to communicate at.
-     * @return The new gateway object
-     * @throws ModemException Thrown if there is a problem opening the gateway.
-     */
-    public static SerialGateway openSerial(String port, int baud) throws ModemException {
-        SerialGateway gw = new SerialGateway(new ClassLoaderLibrary());
-        gw.start(port, baud);
-        return gw;
+    
+    public SerialGateway(SWAPModem modem) throws ModemException {
+        lib = new ClassLoaderLibrary();
+        this.modem = modem;
+        receiver = new Receiver();
+        modem.addListener(receiver);
     }
 
     /**
@@ -154,20 +148,6 @@ public final class SerialGateway extends Gateway {
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
-    }
-
-    private SerialGateway(DeviceLibrary lib) {
-        this.lib = lib;
-    }
-
-    private void start(String port, int baud) throws ModemException {
-        receiver = new Receiver();
-        try {
-            modem = SWAPModem.openSerial(port, baud);
-        } catch (SWAPException ex) {
-            throw new ModemException(ex.getMessage(), ex);
-        }
-        modem.addListener(receiver);
     }
 
     /**

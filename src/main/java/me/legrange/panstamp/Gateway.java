@@ -1,7 +1,11 @@
 package me.legrange.panstamp;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import me.legrange.panstamp.impl.ModemException;
 import me.legrange.panstamp.impl.SerialGateway;
+import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
 
 /**
@@ -18,8 +22,16 @@ public abstract class Gateway {
      * @return
      * @throws GatewayException
      */
-    public static Gateway openSerial(String port, int baud) throws GatewayException {
-        return SerialGateway.openSerial(port, baud);
+    public static Gateway openSerial(String port, int baud) throws ModemException {
+        try {
+            return new SerialGateway(SWAPModem.openSerial(port, baud));
+        } catch (SWAPException ex) {
+            throw new ModemException(ex.getMessage(), ex);
+        }
+    }
+    
+    public static Gateway open(SWAPModem modem) throws ModemException {
+        return new SerialGateway(modem);
     }
 
     /**
