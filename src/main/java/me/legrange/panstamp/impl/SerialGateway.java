@@ -35,7 +35,6 @@ import me.legrange.swap.StatusMessage;
  */
 public final class SerialGateway extends Gateway {
 
-    
     public SerialGateway(SWAPModem modem) throws ModemException {
         lib = new ClassLoaderLibrary();
         this.modem = modem;
@@ -52,8 +51,7 @@ public final class SerialGateway extends Gateway {
     public void close() throws ModemException {
         try {
             modem.close();
-        } 
-        catch (SWAPException ex) {
+        } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
 
         }
@@ -112,6 +110,7 @@ public final class SerialGateway extends Gateway {
     public void removeListener(GatewayListener l) {
         listeners.remove(l);
     }
+
     /**
      * send a command message to a remote device
      */
@@ -215,28 +214,25 @@ public final class SerialGateway extends Gateway {
     private class Receiver implements MessageListener {
 
         @Override
-        public void queryReceived(QueryMessage msg) {
-            try {
-                updateNetwork(msg);
-            } catch (ModemException ex) {
-                java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+        public void messageReceived(Message msg) {
+            switch (msg.getType()) {
+                case COMMAND:
+                case QUERY:
+                    try {
+                        updateNetwork(msg);
+                    } catch (ModemException ex) {
+                        Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case STATUS:
+                    processStatusMessage((StatusMessage) msg);
+                    break;
             }
+
         }
 
         @Override
-        public void statusReceived(StatusMessage msg) {
-            processStatusMessage(msg);
-
-        }
-
-        @Override
-        public void commandReceived(CommandMessage msg) {
-            try {
-                updateNetwork(msg);
-            } catch (ModemException ex) {
-                java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+        public void messageSent(Message msg) {
         }
     }
 
