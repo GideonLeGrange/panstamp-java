@@ -111,6 +111,11 @@ public final class SerialGateway extends Gateway {
         listeners.remove(l);
     }
 
+    @Override
+    public SWAPModem getSWAPModem() {
+        return modem;
+    }
+
     /**
      * send a command message to a remote device
      */

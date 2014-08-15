@@ -1,8 +1,6 @@
 package me.legrange.panstamp;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.legrange.panstamp.impl.ModemException;
 import me.legrange.panstamp.impl.SerialGateway;
 import me.legrange.swap.SWAPException;
@@ -20,7 +18,7 @@ public abstract class Gateway {
      * @param port
      * @param baud
      * @return
-     * @throws GatewayException
+     * @throws me.legrange.panstamp.impl.ModemException
      */
     public static Gateway openSerial(String port, int baud) throws ModemException {
         try {
@@ -28,10 +26,6 @@ public abstract class Gateway {
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
-    }
-    
-    public static Gateway open(SWAPModem modem) throws ModemException {
-        return new SerialGateway(modem);
     }
 
     /**
@@ -76,5 +70,7 @@ public abstract class Gateway {
      * @param l The listener to remove */
     public abstract void removeListener(GatewayListener l);
     
-
+    /** return the SWAP modem to gain access to the lower layer
+     * @return  */
+    public abstract SWAPModem getSWAPModem();
 }
