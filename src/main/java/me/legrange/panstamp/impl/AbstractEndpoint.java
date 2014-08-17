@@ -55,7 +55,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     @Override
     public synchronized void addListener(EndpointListener<T> el) {
         if (listeners.isEmpty()) {
-            ps.getRegister(epDef.getRegister().getId()).addListener(this);
+            getRegister().addListener(this);
         }
         listeners.add(el);
     }
@@ -64,7 +64,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     public synchronized void removeListener(EndpointListener<T> el) {
         listeners.remove(el);
         if (listeners.isEmpty()) {
-            ps.getRegister(epDef.getRegister().getId()).removeListener(this);
+            getRegister().removeListener(this);
         }
     }
 
@@ -85,6 +85,11 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         setValue(transformOut(value, getUnit(unit)));
     }
 
+    @Override
+    public Register getRegister() {
+        return ps.getRegister(epDef.getRegister().getId());
+    }
+    
     protected abstract T transformOut(T value, Unit unit);
 
     protected abstract T transformIn(T value, Unit unit);

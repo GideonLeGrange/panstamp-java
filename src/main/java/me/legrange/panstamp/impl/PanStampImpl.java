@@ -2,8 +2,12 @@ package me.legrange.panstamp.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
@@ -46,6 +50,16 @@ public class PanStampImpl implements PanStamp {
         return reg;
     }
 
+    @Override
+    public List<Register> getRegisters() throws GatewayException {
+        checkEndpoints();
+        Set<Register> regs = new HashSet<>();
+        for (Endpoint ep : endpoints.values()) {
+            regs.add(ep.getRegister());
+        }
+        return new ArrayList<>(regs);
+    }
+
     /**
      * return the endpoint for the given name
      *
@@ -53,11 +67,7 @@ public class PanStampImpl implements PanStamp {
      */
     @Override
     public Endpoint getEndpoint(String name) throws GatewayException {
-        synchronized (endpoints) {
-            if (endpoints.isEmpty()) {
-                loadEndpoints();
-            }
-        }
+        checkEndpoints();
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
             throw new NoSuchEndpointException(String.format("No endpoint '%s' was found", name));
@@ -67,11 +77,7 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public boolean hasEndpoint(String name) throws GatewayException {
-        synchronized (endpoints) {
-            if (endpoints.isEmpty()) {
-                loadEndpoints();
-            }
-        }
+        checkEndpoints();
         return endpoints.get(name) != null;
     }
 
@@ -82,14 +88,26 @@ public class PanStampImpl implements PanStamp {
      * @throws me.legrange.panstamp.GatewayException Thrown if there is a
      * problem determining endpoint information
      */
+    @Override
     public List<Endpoint> getEndpoints() throws GatewayException {
+        checkEndpoints();
+        List<Endpoint> res = new ArrayList<>();
+        res.addAll(endpoints.values());
+        return res;
+    }
+
+    List<Endpoint> getEndpoints(final int registerId) throws GatewayException {
         synchronized (endpoints) {
             if (endpoints.isEmpty()) {
                 loadEndpoints();
             }
         }
-        List<Endpoint> res = new ArrayList<>();
-        res.addAll(endpoints.values());
+        List<Endpoint> res = new LinkedList<>();
+        for (Endpoint ep : endpoints.values()) {
+            if (ep.getRegister().getId() == registerId) {
+                res.add(ep);
+            }
+        }
         return res;
     }
 
@@ -102,7 +120,7 @@ public class PanStampImpl implements PanStamp {
 
     /**
      * send a command message to the remote node
-     * 
+     *
      * @param value Value to send
      */
     void sendCommandMessage(int id, byte[] value) throws ModemException {
@@ -176,6 +194,12 @@ public class PanStampImpl implements PanStamp {
         byte val[] = reg.getValue();
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
 
+    }
+
+    private synchronized void checkEndpoints() throws GatewayException {
+        if (endpoints.isEmpty()) {
+            loadEndpoints();
+        }
     }
 
     private final int address;

@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
@@ -18,6 +19,16 @@ import me.legrange.panstamp.RegisterListener;
  */
 public class RegisterImpl implements Register {
 
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public List<Endpoint> getEndpoints() throws GatewayException {
+        return dev.getEndpoints(id);
+    }
+    
     /**
      * Add a listener to receive register updates
      *

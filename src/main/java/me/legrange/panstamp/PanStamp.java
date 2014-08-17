@@ -1,7 +1,10 @@
 package me.legrange.panstamp;
 
+import java.util.List;
+
 /**
- * An abstraction of a panStamp device. 
+ * An abstraction of a panStamp device.
+ *
  * @author gideon
  */
 public interface PanStamp {
@@ -28,10 +31,25 @@ public interface PanStamp {
      */
     Endpoint getEndpoint(String name) throws GatewayException;
 
-    /** returns true if the device has an endpoint with the given name
+    /**
+     * returns true if the device has an endpoint with the given name
+     *
      * @param name Name of endpoint we're querying
      * @return True if the endpoint is known.
-     * @throws me.legrange.panstamp.GatewayException Thrown if an error is experienced */
+     * @throws me.legrange.panstamp.GatewayException Thrown if an error is
+     * experienced
+     */
     boolean hasEndpoint(String name) throws GatewayException;
 
+    /** returns the list of endpoints defined for this device
+     * @return The list of endpoints.
+     * @throws me.legrange.panstamp.GatewayException Thrown if an error is
+     * experienced*/
+    List<Endpoint> getEndpoints() throws GatewayException;
+    
+    /** returns the list of registers defined for this device 
+     * 
+     * @return The list of registers. 
+     */
+    List<Register> getRegisters() throws GatewayException;
 }

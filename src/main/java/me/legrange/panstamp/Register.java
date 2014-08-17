@@ -1,10 +1,22 @@
 package me.legrange.panstamp;
 
+import java.util.List;
+
 /**
  * An abstraction of a panStamp register.
  * @author gideon
  */
 public interface Register {
+    
+    /** return the register ID
+     * 
+     * @return  The id of this register. 
+     */
+    int getId();
+    
+    /** return the endpoints defined for this register
+     * @return The endpoints  */
+    List<Endpoint> getEndpoints() throws GatewayException;
 
     /**
      * Add a listener to receive register updates

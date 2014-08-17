@@ -67,5 +67,7 @@ public interface Endpoint<T> {
      * @throws me.legrange.panstamp.GatewayException
      */
     void setValue(T value) throws GatewayException;
+    
+    Register getRegister();
 
 }
