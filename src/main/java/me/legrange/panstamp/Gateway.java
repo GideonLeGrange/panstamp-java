@@ -15,8 +15,8 @@ public abstract class Gateway {
     
     /**
      * Open the serial modem application and return a Gateway object for the connection. 
-     * @param port
-     * @param baud
+     * @param port Serial port to open.
+     * @param baud Serial speed
      * @return
      * @throws me.legrange.panstamp.impl.ModemException
      */
@@ -66,11 +66,16 @@ public abstract class Gateway {
      */
     public abstract void addListener(GatewayListener l);
     
-    /** remove a listener from the gateway
-     * @param l The listener to remove */
+    /** 
+     * remove a listener from the gateway
+     * @param l The listener to remove 
+     */
     public abstract void removeListener(GatewayListener l);
     
-    /** return the SWAP modem to gain access to the lower layer
-     * @return  */
+    /** 
+     * return the SWAP modem to gain access to the lower layer
+     * @return The SWAP modem supporting this gateway
+     */
     public abstract SWAPModem getSWAPModem();
+    
 }
