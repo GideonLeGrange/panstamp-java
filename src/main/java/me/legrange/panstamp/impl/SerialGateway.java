@@ -18,14 +18,12 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
-import me.legrange.swap.CommandMessage;
-import me.legrange.swap.Message;
+import me.legrange.swap.SwapMessage;
 import me.legrange.swap.MessageListener;
-import me.legrange.swap.QueryMessage;
 import me.legrange.swap.Registers;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
-import me.legrange.swap.StatusMessage;
+import me.legrange.swap.UserMessage;
 
 /**
  * A gateway connecting a PanStampImpl network to your code using the
@@ -120,11 +118,8 @@ public final class SerialGateway extends Gateway {
      * send a command message to a remote device
      */
     void sendCommandMessage(PanStampImpl dev, int register, byte[] value) throws ModemException {
-        Message msg = new CommandMessage();
-        msg.setReceiver(dev.getAddress());
+        UserMessage msg = new UserMessage(SwapMessage.Type.COMMAND, 0xFF, dev.getAddress(), register, value);
         msg.setRegisterAddress(dev.getAddress());
-        msg.setRegisterID(register);
-        msg.setRegisterValue(value);
         send(msg);
     }
 
@@ -132,10 +127,8 @@ public final class SerialGateway extends Gateway {
      * send a query message to a remote device
      */
     void sendQueryMessage(PanStampImpl dev, int register) throws ModemException {
-        Message msg = new QueryMessage();
-        msg.setReceiver(dev.getAddress());
-        msg.setRegisterAddress(dev.getAddress());
-        msg.setRegisterID(register);
+        UserMessage msg = new UserMessage(SwapMessage.Type.QUERY, 0xFF, dev.getAddress(), register, new byte[]{});
+          msg.setRegisterAddress(dev.getAddress());
         send(msg);
     }
 
@@ -146,7 +139,7 @@ public final class SerialGateway extends Gateway {
     /**
      * send a message to a mote
      */
-    void send(Message msg) throws ModemException {
+    void send(SwapMessage msg) throws ModemException {
         try {
             modem.send(msg);
         } catch (SWAPException ex) {
@@ -157,7 +150,7 @@ public final class SerialGateway extends Gateway {
     /**
      * update the network based on a received message
      */
-    private void updateNetwork(Message msg) throws ModemException {
+    private void updateNetwork(SwapMessage msg) throws ModemException {
         int address = msg.getSender();
         boolean isNew = false;
         PanStampImpl dev;
@@ -186,7 +179,7 @@ public final class SerialGateway extends Gateway {
     /**
      * process a status message received from the modem
      */
-    private void processStatusMessage(StatusMessage msg) {
+    private void processStatusMessage(SwapMessage msg) {
         try {
             updateNetwork(msg);
             PanStampImpl dev = (PanStampImpl) getDevice(msg.getRegisterAddress());
@@ -197,8 +190,8 @@ public final class SerialGateway extends Gateway {
 
     }
 
-    private SWAPModem modem;
-    private Receiver receiver;
+    private final SWAPModem modem;
+    private final Receiver receiver;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
@@ -219,7 +212,7 @@ public final class SerialGateway extends Gateway {
     private class Receiver implements MessageListener {
 
         @Override
-        public void messageReceived(Message msg) {
+        public void messageReceived(SwapMessage msg) {
             switch (msg.getType()) {
                 case COMMAND:
                 case QUERY:
@@ -230,14 +223,14 @@ public final class SerialGateway extends Gateway {
                     }
                     break;
                 case STATUS:
-                    processStatusMessage((StatusMessage) msg);
+                    processStatusMessage(msg);
                     break;
             }
 
         }
 
         @Override
-        public void messageSent(Message msg) {
+        public void messageSent(SwapMessage msg) {
         }
     }
 
