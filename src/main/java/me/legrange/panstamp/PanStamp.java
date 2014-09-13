@@ -52,4 +52,5 @@ public interface PanStamp {
      * @return The list of registers. 
      */
     List<Register> getRegisters() throws GatewayException;
+    
 }

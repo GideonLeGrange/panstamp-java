@@ -13,17 +13,18 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
+import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
-import me.legrange.swap.SwapMessage;
 import me.legrange.swap.MessageListener;
-import me.legrange.swap.Registers;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
+import me.legrange.swap.SwapMessage;
 import me.legrange.swap.UserMessage;
+import me.legrange.swap.serial.SerialModem;
 
 /**
  * A gateway connecting a PanStampImpl network to your code using the
@@ -113,6 +114,7 @@ public final class SerialGateway extends Gateway {
     public SWAPModem getSWAPModem() {
         return modem;
     }
+    
 
     /**
      * send a command message to a remote device
@@ -162,9 +164,9 @@ public final class SerialGateway extends Gateway {
                 isNew = true;
             }
         }
-        if (!dev.getRegister(Registers.Register.PRODUCT_CODE.position()).hasValue()) {
+/*        if (!dev.getRegister(Registers.Register.PRODUCT_CODE.position()).hasValue()) {
             dev.sendQueryMessage(Registers.Register.PRODUCT_CODE.position());
-        }
+        } */ // This should likely be gone for good
         if (isNew) {
             fireEvent(dev);
         }
