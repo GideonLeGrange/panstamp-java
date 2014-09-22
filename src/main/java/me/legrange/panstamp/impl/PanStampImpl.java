@@ -147,7 +147,7 @@ public class PanStampImpl implements PanStamp {
                     impl.addListener(productCodeListener());
                     break;
                 case SYSTEM_STATE: {
-                    Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.toString());
+                    Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
                     ep.addListener(systemStateListener());
                 }
             }
