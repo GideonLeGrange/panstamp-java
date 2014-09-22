@@ -9,6 +9,6 @@ public interface RegisterListener {
      * Receive a notice if a register is updated. 
      * @param reg
      */
-    void registerUpdated(Register reg);
+    void registerUpdated(RegisterEvent ev);
     
 }

@@ -244,7 +244,7 @@ public class XMLParser {
         for (Element node : iterable(regular.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "reg":
-                    parseRegularReg(dev, node);
+                    dev.addRegister(parseRegularReg(dev, node));
                     break;
                 default:
                     throw new ParseException(String.format("Unexpected element '%s'", node.getNodeName()));
@@ -256,19 +256,20 @@ public class XMLParser {
     /**
      * parse a reg element
      */
-    private void parseRegularReg(Device dev, Element reg) throws ParseException {
+    private RegisterDef parseRegularReg(Device dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
         RegisterDef register = new RegisterDef(id, name);
         for (Element node : iterable(reg.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "endpoint":
-                    dev.addEndpoint(parseEndpoint(register, node));
+                    register.addEndpoint(parseEndpoint(register, node));
                     break;
                 default:
                     throw new ParseException(String.format("Unexpected element '%s'", node.getNodeName()));
             }
         }
+        return register;
     }
 
     /**

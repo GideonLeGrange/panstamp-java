@@ -11,9 +11,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
-import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
@@ -24,7 +24,6 @@ import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.SwapMessage;
 import me.legrange.swap.UserMessage;
-import me.legrange.swap.serial.SerialModem;
 
 /**
  * A gateway connecting a PanStampImpl network to your code using the
@@ -114,7 +113,6 @@ public final class SerialGateway extends Gateway {
     public SWAPModem getSWAPModem() {
         return modem;
     }
-    
 
     /**
      * send a command message to a remote device
@@ -130,7 +128,7 @@ public final class SerialGateway extends Gateway {
      */
     void sendQueryMessage(PanStampImpl dev, int register) throws ModemException {
         UserMessage msg = new UserMessage(SwapMessage.Type.QUERY, 0xFF, dev.getAddress(), register, new byte[]{});
-          msg.setRegisterAddress(dev.getAddress());
+        msg.setRegisterAddress(dev.getAddress());
         send(msg);
     }
 
@@ -152,29 +150,37 @@ public final class SerialGateway extends Gateway {
     /**
      * update the network based on a received message
      */
-    private void updateNetwork(SwapMessage msg) throws ModemException {
+    private void updateNetwork(SwapMessage msg) throws GatewayException {
         int address = msg.getSender();
         boolean isNew = false;
-        PanStampImpl dev;
         synchronized (devices) {
-            dev = devices.get(address);
-            if (dev == null) {
-                dev = new PanStampImpl(this, address);
-                devices.put(address, dev);
-                isNew = true;
+            if (!hasDevice(address)) {
+                try {
+                    final PanStampImpl dev = new PanStampImpl(this, address);
+                    devices.put(address, dev);
+                    fireEvent(new GatewayEvent() {
+
+                        @Override
+                        public GatewayEvent.Type getType() {
+                            return GatewayEvent.Type.DEVICE_DETECTED;
+                        }
+
+                        @Override
+                        public PanStamp getDevice() {
+                            return dev;
+                        }
+
+                    });
+                } catch (NoSuchUnitException ex) {
+                    throw new ModemException(ex.getMessage(), ex);
+                }
             }
-        }
-/*        if (!dev.getRegister(Registers.Register.PRODUCT_CODE.position()).hasValue()) {
-            dev.sendQueryMessage(Registers.Register.PRODUCT_CODE.position());
-        } */ // This should likely be gone for good
-        if (isNew) {
-            fireEvent(dev);
         }
     }
 
-    private void fireEvent(PanStamp ps) {
+    private void fireEvent(GatewayEvent ev) {
         for (GatewayListener l : listeners) {
-            pool.submit(new ListenerTask(l, ps));
+            pool.submit(new ListenerTask(l, ev));
         }
     }
 
@@ -185,7 +191,7 @@ public final class SerialGateway extends Gateway {
         try {
             updateNetwork(msg);
             PanStampImpl dev = (PanStampImpl) getDevice(msg.getRegisterAddress());
-            dev.statusMessageReceived(msg.getRegisterID(), msg.getRegisterValue());
+            dev.statusMessageReceived(msg);
         } catch (GatewayException ex) {
             java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -220,7 +226,7 @@ public final class SerialGateway extends Gateway {
                 case QUERY:
                     try {
                         updateNetwork(msg);
-                    } catch (ModemException ex) {
+                    } catch (GatewayException ex) {
                         Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
@@ -241,15 +247,15 @@ public final class SerialGateway extends Gateway {
      */
     private class ListenerTask implements Runnable {
 
-        private ListenerTask(GatewayListener l, PanStamp ps) {
+        private ListenerTask(GatewayListener l, GatewayEvent ev) {
             this.l = l;
-            this.ps = ps;
+            this.ev = ev;
         }
 
         @Override
         public void run() {
             try {
-                l.deviceDetected(ps);
+                l.gatewayUpdated(ev);
             } catch (Throwable e) {
                 Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
 
@@ -257,6 +263,6 @@ public final class SerialGateway extends Gateway {
         }
 
         private final GatewayListener l;
-        private final PanStamp ps;
+        private final GatewayEvent ev;
     }
 }

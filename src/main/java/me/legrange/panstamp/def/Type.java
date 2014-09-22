@@ -5,7 +5,7 @@ package me.legrange.panstamp.def;
  * @author gideon
  */
 public enum Type {
-    BINARY("bin"), NUMBER("num"), STRING("str");
+    BINARY("bin"), NUMBER("num"), STRING("str"), INTEGER("int");
 
     static Type forTag(String tag) {
         for (Type type : Type.values()) {

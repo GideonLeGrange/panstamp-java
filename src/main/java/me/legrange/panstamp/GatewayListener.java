@@ -6,6 +6,6 @@ package me.legrange.panstamp;
  */
 public interface GatewayListener {
     
-    void deviceDetected(PanStamp ps);
+    void gatewayUpdated(GatewayEvent ev);
     
 }

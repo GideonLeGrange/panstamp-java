@@ -8,9 +8,11 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
@@ -36,6 +38,11 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         return res;
     }
 
+    @Override
+    public final boolean hasValue() {
+        return reg.hasValue();
+    }
+
     protected final Unit getUnit(String name) throws NoSuchUnitException {
         for (Unit u : epDef.getUnits()) {
             if (u.getName().equals(name)) {
@@ -45,8 +52,8 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         throw new NoSuchUnitException(String.format("No unit '%s' found in endpoint '%s'", name, getName()));
     }
 
-    AbstractEndpoint(PanStampImpl ps, EndpointDef epDef) {
-        this.ps = ps;
+    AbstractEndpoint(RegisterImpl reg, EndpointDef epDef) {
+        this.reg = reg;
         this.epDef = epDef;
         this.listeners = new LinkedList<>();
 
@@ -69,9 +76,25 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     }
 
     @Override
-    public void registerUpdated(Register reg) {
-        for (EndpointListener<T> l : listeners) {
-            pool().submit(new ListenerTask(l));
+    public void registerUpdated(RegisterEvent ev) {
+        switch (ev.getType()) {
+            case VALUE_RECEIVED:
+                EndpointEvent e = new EndpointEvent() {
+
+                    @Override
+                    public Endpoint getEndpoint() {
+                        return AbstractEndpoint.this;
+                    }
+
+                    @Override
+                    public EndpointEvent.Type getType() {
+                        return EndpointEvent.Type.VALUE_RECEIVED;
+                    }
+                };
+                for (EndpointListener<T> l : listeners) {
+                    pool().submit(new ListenerTask(e, l));
+                    break;
+                }
         }
     }
 
@@ -87,14 +110,14 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
 
     @Override
     public Register getRegister() {
-        return ps.getRegister(epDef.getRegister().getId());
+        return reg;
     }
-    
+
     protected abstract T transformOut(T value, Unit unit);
 
     protected abstract T transformIn(T value, Unit unit);
 
-    protected final PanStampImpl ps;
+    protected final RegisterImpl reg;
     protected final EndpointDef epDef;
 
     private ExecutorService pool() {
@@ -114,14 +137,15 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
 
     private class ListenerTask implements Runnable {
 
-        private ListenerTask(EndpointListener l) {
+        private ListenerTask(EndpointEvent e, EndpointListener l) {
             this.l = l;
+            this.e = e;
         }
 
         @Override
         public void run() {
             try {
-                l.valueReceived(AbstractEndpoint.this);
+                l.endpointUpdated(e);
             } catch (Throwable e) {
                 Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
 
@@ -129,7 +153,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         }
 
         private final EndpointListener<T> l;
-
+        private final EndpointEvent<T> e;
     }
 
 }

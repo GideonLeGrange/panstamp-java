@@ -9,8 +9,10 @@ import java.util.List;
  * @author gideon
  */
 public class EndpointDef {
+    
+    
 
-    EndpointDef(RegisterDef reg, String name, Direction direction, Type type) {
+    protected EndpointDef(RegisterDef reg, String name, Direction direction, Type type) {
         this.reg = reg;
         this.name = name;
         this.direction = direction;
@@ -38,7 +40,7 @@ public class EndpointDef {
         return position;
     }
 
-    void setPosition(Position position) {
+    protected void setPosition(Position position) {
         this.position = position;
     }
 
@@ -46,7 +48,7 @@ public class EndpointDef {
         return size;
     }
 
-    void setSize(Size size) {
+    protected void setSize(Size size) {
         this.size = size;
     }
 
@@ -54,7 +56,7 @@ public class EndpointDef {
         return units;
     }
 
-    void addUnit(Unit unit) {
+    protected void addUnit(Unit unit) {
         units.add(unit);
     }
 

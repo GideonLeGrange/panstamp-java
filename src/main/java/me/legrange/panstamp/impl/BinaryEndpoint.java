@@ -11,13 +11,12 @@ import me.legrange.panstamp.def.Unit;
  */
 public class BinaryEndpoint extends AbstractEndpoint<Boolean> {
 
-    public BinaryEndpoint(PanStampImpl ps, EndpointDef epDef) {
-        super(ps, epDef);
+    public BinaryEndpoint(RegisterImpl reg, EndpointDef epDef) {
+        super(reg, epDef);
     }
 
     @Override
     public Boolean getValue() throws GatewayException {
-        Register reg = ps.getRegister(epDef.getRegister().getId());
         byte val[] = reg.getValue();
         int byteIdx = epDef.getPosition().getBytePos();
         int bitIdx = epDef.getPosition().getBitPos();
@@ -26,7 +25,6 @@ public class BinaryEndpoint extends AbstractEndpoint<Boolean> {
 
     @Override
     public void setValue(Boolean value) throws GatewayException {
-        Register reg = ps.getRegister(epDef.getRegister().getId());
         byte val[] = reg.getValue();
         int byteIdx = epDef.getPosition().getBytePos();
         int bitIdx = epDef.getPosition().getBitPos();

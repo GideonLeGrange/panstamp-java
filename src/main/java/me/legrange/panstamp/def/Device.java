@@ -42,6 +42,13 @@ public class Device {
         return powerDownMode;
     }
     
+    public List<RegisterDef> getRegisters() {
+        List<RegisterDef> res = new ArrayList<>();
+        res.addAll(registers.values());
+        return res;
+        
+    }
+   /*  
     public EndpointDef getEndpoint(String eName) throws NoSuchEndpointException {
         EndpointDef ep = endpoints.get(eName);
         if (ep == null) throw new NoSuchEndpointException(String.format("No endpoint '%s' in definition for device %s", eName, name));
@@ -57,7 +64,9 @@ public class Device {
         res.addAll(endpoints.values());
         return res;
     }
-
+*/
+    
+    
     @Override
     public String toString() {
         return "Device{" + "id=" + id + ", developer=" + developer + ", name=" + name + ", label=" + label + ", product=" + product + ", powerDownMode=" + powerDownMode + '}';
@@ -70,9 +79,14 @@ public class Device {
     void setPowerDownMode(Boolean pdm) {
         this.powerDownMode = pdm;
     }
-    
+    /*
     void addEndpoint(EndpointDef ep) {
         endpoints.put(ep.getName(), ep);
+    }
+    */
+    
+    void addRegister(RegisterDef rd) {
+        registers.put(rd.getId(), rd);
     }
     
     private final int id;
@@ -81,6 +95,7 @@ public class Device {
     private final String label;
     private String product;
     private boolean powerDownMode;
-    private final Map<String, EndpointDef> endpoints = new HashMap<>();
+ //   private final Map<String, EndpointDef> endpoints = new HashMap<>();
+    private final Map<Integer, RegisterDef> registers = new HashMap<>();
 
 }

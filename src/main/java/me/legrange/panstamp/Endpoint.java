@@ -33,6 +33,8 @@ public interface Endpoint<T> {
      * @param el The listener to remove
      */
     void removeListener(EndpointListener<T> el);
+    
+    boolean hasValue();
 
     /**
      * returns the current value of the endpoint in the given unit.

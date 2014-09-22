@@ -10,13 +10,13 @@ import me.legrange.panstamp.def.Unit;
  */
 public class NumberEndpoint extends AbstractEndpoint<Double> {
 
-    public NumberEndpoint(PanStampImpl ps, EndpointDef epDef) {
-        super(ps, epDef); 
+    public NumberEndpoint(RegisterImpl reg, EndpointDef epDef) {
+        super(reg, epDef); 
     }
     
     @Override
     public Double getValue() throws GatewayException {
-        byte bytes[] = ps.getRegister(epDef.getRegister().getId()).getValue();
+        byte bytes[] = reg.getValue();//ps.getRegister(epDef.getRegister().getId()).getValue();
         long val = 0;
         for (int i = 0; i < epDef.getSize().getBytes(); ++i) {
             val = val << 8;
@@ -33,7 +33,7 @@ public class NumberEndpoint extends AbstractEndpoint<Double> {
             bytes[i] = (byte)(val & 0xFF);
             val = val >>> 8;
         }
-        ps.getRegister(epDef.getRegister().getId()).setValue(bytes);
+        reg.setValue(bytes);
     }
 
     @Override

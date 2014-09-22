@@ -1,19 +1,33 @@
 package me.legrange.panstamp.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.EndpointEvent;
+import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.PanStampEvent;
+import me.legrange.panstamp.PanStampEvent.Type;
+import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.RegisterEvent;
+import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.NoSuchEndpointException;
+import me.legrange.panstamp.def.RegisterDef;
+import me.legrange.swap.Registers;
+import me.legrange.swap.SwapMessage;
 
 /**
  * An implementation of a panStamp abstraction. Instances of this class
@@ -51,63 +65,31 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public List<Register> getRegisters() throws GatewayException {
-        checkEndpoints();
-        Set<Register> regs = new HashSet<>();
-        for (Endpoint ep : endpoints.values()) {
-            regs.add(ep.getRegister());
-        }
-        return new ArrayList<>(regs);
-    }
+        List<Register> all = new ArrayList<>();
+        all.addAll(registers.values());
+        Collections.sort(all, new Comparator() {
 
-    /**
-     * return the endpoint for the given name
-     *
-     * @throws me.legrange.panstamp.GatewayException
-     */
-    @Override
-    public Endpoint getEndpoint(String name) throws GatewayException {
-        checkEndpoints();
-        Endpoint ep = endpoints.get(name);
-        if (ep == null) {
-            throw new NoSuchEndpointException(String.format("No endpoint '%s' was found", name));
-        }
-        return ep;
-    }
-
-    @Override
-    public boolean hasEndpoint(String name) throws GatewayException {
-        checkEndpoints();
-        return endpoints.get(name) != null;
-    }
-
-    /**
-     * returns all the endpoints for this panStamp
-     *
-     * @return Return the list of all endpoints for the device
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
-     * problem determining endpoint information
-     */
-    @Override
-    public List<Endpoint> getEndpoints() throws GatewayException {
-        checkEndpoints();
-        List<Endpoint> res = new ArrayList<>();
-        res.addAll(endpoints.values());
-        return res;
-    }
-
-    List<Endpoint> getEndpoints(final int registerId) throws GatewayException {
-        synchronized (endpoints) {
-            if (endpoints.isEmpty()) {
-                loadEndpoints();
+            @Override
+            public int compare(Object o1, Object o2) {
+                return ((Register) o1).getId() - ((Register) o2).getId();
             }
-        }
-        List<Endpoint> res = new LinkedList<>();
-        for (Endpoint ep : endpoints.values()) {
-            if (ep.getRegister().getId() == registerId) {
-                res.add(ep);
-            }
-        }
-        return res;
+        });
+        return all;
+    }
+
+    @Override
+    public boolean hasRegister(int id) throws GatewayException {
+        return registers.get(id) != null;
+    }
+
+    @Override
+    public void addListener(PanStampListener l) {
+        listeners.add(l);
+    }
+
+    @Override
+    public void removeListener(PanStampListener l) {
+        listeners.remove(l);
     }
 
     /**
@@ -129,17 +111,92 @@ public class PanStampImpl implements PanStamp {
     /**
      * Receive a status message from the remote node.
      */
-    void statusMessageReceived(int id, byte[] value) throws GatewayException {
-        RegisterImpl reg = (RegisterImpl) getRegister(id);
-        reg.valueReceived(value);
+    void statusMessageReceived(SwapMessage msg) {
+        ((RegisterImpl) getRegister(msg.getRegisterID())).valueReceived(msg.getRegisterValue());
+    }
+
+    private void fireEvent(final PanStampEvent.Type type) {
+        PanStampEvent ev = new PanStampEvent() {
+
+            @Override
+            public Type getType() {
+                return type;
+            }
+
+            @Override
+            public PanStamp getDevice() {
+                return PanStampImpl.this;
+            }
+        };
+        for (PanStampListener l : listeners) {
+            pool.submit(new UpdateTask(ev, l));
+        }
     }
 
     /**
      * create a new mote for the given address in the given network
      */
-    PanStampImpl(SerialGateway gw, int address) {
+    PanStampImpl(SerialGateway gw, int address) throws GatewayException {
         this.gw = gw;
         this.address = address;
+        for (Registers.Register reg : Registers.Register.values()) {
+            RegisterImpl impl = new RegisterImpl(this, reg);
+            registers.put(reg.position(), impl);
+            switch (reg) {
+                case PRODUCT_CODE:
+                    impl.addListener(productCodeListener());
+                    break;
+                case SYSTEM_STATE: {
+                    Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.toString());
+                    ep.addListener(systemStateListener());
+                }
+            }
+        }
+    }
+
+    private EndpointListener systemStateListener() { 
+        return new EndpointListener<Integer>() {
+
+            @Override
+            public void endpointUpdated(EndpointEvent<Integer> ev) {
+                switch (ev.getType()) {
+                    case VALUE_RECEIVED  :
+                try {
+                    int state = ev.getEndpoint().getValue();
+                    if (state != syncState) {
+                        syncState = state;
+                        fireEvent(Type.SYNC_STATE_CHANGE);
+                    }
+                } catch (GatewayException ex) {
+                    Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                }
+            }
+        };
+    }
+    private RegisterListener productCodeListener() {
+        return new RegisterListener() {
+            @Override
+            public void registerUpdated(RegisterEvent ev) {
+                try {
+                    switch (ev.getType()) {
+                        case VALUE_RECEIVED:
+                            Register reg = ev.getRegister();
+                            int mfId = getManufacturerId(reg);
+                            int pdId = getProductId(reg);
+                            if ((mfId != manufacturerId) || (pdId != productId)) {
+                                manufacturerId = mfId;
+                                productId = pdId;
+                                loadEndpoints();
+                            }
+                            fireEvent(Type.PRODUCT_CODE_UPDATE);
+                            break;
+                    }
+                } catch (GatewayException ex) {
+                    Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
     }
 
     /**
@@ -147,25 +204,12 @@ public class PanStampImpl implements PanStamp {
      */
     private void loadEndpoints() throws GatewayException {
         Device def = getDeviceDefinition();
-        List<EndpointDef> epDefs = def.getEndpoints();
-        for (EndpointDef epDef : epDefs) {
-            endpoints.put(epDef.getName(), makeEndpoint(epDef));
-        }
-    }
-
-    /**
-     * make an endpoint object based on it's definition
-     */
-    private Endpoint makeEndpoint(EndpointDef epDef) throws NoSuchUnitException {
-        switch (epDef.getType()) {
-            case NUMBER:
-                return new NumberEndpoint(this, epDef);
-            case STRING:
-                return new StringEndpoint(this, epDef);
-            case BINARY:
-                return new BinaryEndpoint(this, epDef);
-            default:
-                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
+        List<RegisterDef> rpDefs = def.getRegisters();
+        for (RegisterDef rpDef : rpDefs) {
+            RegisterImpl reg = (RegisterImpl) getRegister(rpDef.getId());
+            for (EndpointDef epDef : rpDef.getEndpoints()) {
+                reg.addEndpoint(epDef);
+            }
         }
     }
 
@@ -173,14 +217,13 @@ public class PanStampImpl implements PanStamp {
      * get the device definition for this panStamp
      */
     private Device getDeviceDefinition() throws GatewayException {
-        return gw.getDeviceDefinition(getManufacturerId(), getProductId());
+        return gw.getDeviceDefinition(manufacturerId, productId);
     }
 
     /**
      * get the manufacturer id for this panStamp
      */
-    private int getManufacturerId() throws GatewayException {
-        Register reg = getRegister(0);
+    private int getManufacturerId(Register reg) throws GatewayException {
         byte val[] = reg.getValue();
         return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
     }
@@ -188,22 +231,47 @@ public class PanStampImpl implements PanStamp {
     /**
      * get the product id for this panStamp
      */
-    private int getProductId() throws GatewayException {
-        Register reg = getRegister(0);
+    private int getProductId(Register reg) throws GatewayException {
         byte val[] = reg.getValue();
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
-
-    }
-
-    private synchronized void checkEndpoints() throws GatewayException {
-        if (endpoints.isEmpty()) {
-            loadEndpoints();
-        }
     }
 
     private final int address;
     private final SerialGateway gw;
+    private int manufacturerId;
+    private int productId;
+    private int syncState;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
-    private final Map<String, Endpoint> endpoints = new HashMap<>();
+    private final List<PanStampListener> listeners = new LinkedList<>();
+    private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r, "PanStamp Event Task");
+            t.setDaemon(true);
+            return t;
+        }
+    });
+
+    private static class UpdateTask implements Runnable {
+
+        private UpdateTask(PanStampEvent ev, PanStampListener l) {
+            this.l = l;
+            this.ev = ev;
+        }
+
+        @Override
+        public void run() {
+            try {
+                l.deviceUpdated(ev);
+            } catch (Throwable e) {
+                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+
+            }
+        }
+
+        private final PanStampListener l;
+        private final PanStampEvent ev;
+    }
 
 }

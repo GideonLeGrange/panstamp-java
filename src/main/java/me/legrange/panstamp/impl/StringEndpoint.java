@@ -10,8 +10,8 @@ import me.legrange.panstamp.def.Unit;
  */
 class StringEndpoint extends AbstractEndpoint<String> {
 
-    public StringEndpoint(PanStampImpl ps, EndpointDef epDef) {
-        super(ps, epDef);
+    public StringEndpoint(RegisterImpl reg, EndpointDef epDef) {
+        super(reg, epDef);
         
     }
 
@@ -22,7 +22,7 @@ class StringEndpoint extends AbstractEndpoint<String> {
 
     @Override
     public String getValue() throws GatewayException {
-        byte bytes[]  = ps.getRegister(epDef.getRegister().getId()).getValue();
+        byte bytes[]  = reg.getValue();
         byte keep[] = new byte[epDef.getSize().getBytes()];
         System.arraycopy(bytes, epDef.getPosition().getBytePos(), keep, 0, epDef.getSize().getBytes());
         return new String(keep);
