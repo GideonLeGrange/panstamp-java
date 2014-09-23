@@ -18,6 +18,8 @@ public interface Register {
 
     String getName();
     
+    PanStamp getDevice();
+    
     /**
      * return the endpoints defined for this register
      *

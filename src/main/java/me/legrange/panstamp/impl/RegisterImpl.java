@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointNotFoundException;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
@@ -35,6 +36,11 @@ public class RegisterImpl implements Register {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public PanStamp getDevice() {
+        return dev;
     }
     
     
