@@ -112,10 +112,19 @@ public class PanStampImpl implements PanStamp {
      * Receive a status message from the remote node.
      */
     void statusMessageReceived(SwapMessage msg) {
-        ((RegisterImpl) getRegister(msg.getRegisterID())).valueReceived(msg.getRegisterValue());
+       RegisterImpl reg =  (RegisterImpl) getRegister(msg.getRegisterID());
+       boolean isNew = reg.hasValue();
+       reg.valueReceived(msg.getRegisterValue());
+       if (isNew) {
+           fireEvent(Type.REGISTER_DETECTED, reg);
+       }
     }
 
     private void fireEvent(final PanStampEvent.Type type) {
+        fireEvent(type, null);
+    }
+    
+    private void fireEvent(final PanStampEvent.Type type, final Register reg) {
         PanStampEvent ev = new PanStampEvent() {
 
             @Override
@@ -127,6 +136,13 @@ public class PanStampImpl implements PanStamp {
             public PanStamp getDevice() {
                 return PanStampImpl.this;
             }
+
+            @Override
+            public Register getRegister() {
+                return reg;
+            }
+            
+            
         };
         for (PanStampListener l : listeners) {
             pool.submit(new UpdateTask(ev, l));

@@ -6,10 +6,12 @@ package me.legrange.panstamp;
  */
 public interface PanStampEvent {
     
-    public enum Type { PRODUCT_CODE_UPDATE, SYNC_STATE_CHANGE; };
+    public enum Type { PRODUCT_CODE_UPDATE, SYNC_STATE_CHANGE, REGISTER_DETECTED; };
 
     public Type getType();
     
     public PanStamp getDevice();
+    
+    public Register getRegister();
     
 }
