@@ -12,20 +12,18 @@ import me.legrange.swap.SWAPModem;
  * @author gideon
  */
 public abstract class Gateway {
-    
+
     /**
-     * Open the serial modem application and return a Gateway object for the connection. 
+     * Open the serial modem application and return a Gateway object for the
+     * connection.
+     *
      * @param port Serial port to open.
      * @param baud Serial speed
      * @return
      * @throws me.legrange.panstamp.impl.ModemException
      */
     public static Gateway openSerial(String port, int baud) throws ModemException {
-        try {
-            return new SerialGateway(SWAPModem.openSerial(port, baud));
-        } catch (SWAPException ex) {
-            throw new ModemException(ex.getMessage(), ex);
-        }
+        return new SerialGateway(port, baud);
     }
 
     /**
@@ -65,17 +63,25 @@ public abstract class Gateway {
      * @param l The listener to add
      */
     public abstract void addListener(GatewayListener l);
-    
-    /** 
+
+    /**
      * remove a listener from the gateway
-     * @param l The listener to remove 
+     *
+     * @param l The listener to remove
      */
     public abstract void removeListener(GatewayListener l);
-    
-    /** 
+
+    /**
      * return the SWAP modem to gain access to the lower layer
+     *
      * @return The SWAP modem supporting this gateway
      */
     public abstract SWAPModem getSWAPModem();
-    
+
+    /**
+     * return the network ID for the network supported by this gateway
+     *
+     * @return The network ID
+     */
+    public abstract int getNetworkId() throws ModemException;
 }

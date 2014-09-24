@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -24,6 +25,9 @@ import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.SwapMessage;
 import me.legrange.swap.UserMessage;
+import me.legrange.swap.ModemSetup;
+import me.legrange.swap.serial.SerialException;
+import me.legrange.swap.serial.SerialModem;
 
 /**
  * A gateway connecting a PanStampImpl network to your code using the
@@ -33,9 +37,13 @@ import me.legrange.swap.UserMessage;
  */
 public final class SerialGateway extends Gateway {
 
-    public SerialGateway(SWAPModem modem) throws ModemException {
+    public SerialGateway(String port, int baud) throws ModemException {
         lib = new ClassLoaderLibrary();
-        this.modem = modem;
+        try {
+            this.modem = SerialModem.open(port, baud);
+        } catch (SWAPException ex) {
+            throw new ModemException(ex.getMessage(), ex);
+        }
         receiver = new Receiver();
         modem.addListener(receiver);
     }
@@ -114,6 +122,20 @@ public final class SerialGateway extends Gateway {
         return modem;
     }
 
+    @Override
+    public int getNetworkId() throws ModemException {
+        if (setup == null) {
+            try {
+                setup = modem.getSetup();
+            } catch (SerialException ex) {
+                throw new ModemException(ex.getMessage(), ex);
+            }
+        }
+        return setup.getNetworkID();
+    }
+
+    
+    
     /**
      * send a command message to a remote device
      */
@@ -198,8 +220,9 @@ public final class SerialGateway extends Gateway {
 
     }
 
-    private final SWAPModem modem;
+    private final SerialModem modem;
     private final Receiver receiver;
+    private ModemSetup setup;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
