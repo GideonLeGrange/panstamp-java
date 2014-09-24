@@ -112,18 +112,18 @@ public class PanStampImpl implements PanStamp {
      * Receive a status message from the remote node.
      */
     void statusMessageReceived(SwapMessage msg) {
-       RegisterImpl reg =  (RegisterImpl) getRegister(msg.getRegisterID());
-       boolean isNew = reg.hasValue();
-       reg.valueReceived(msg.getRegisterValue());
-       if (isNew) {
-           fireEvent(Type.REGISTER_DETECTED, reg);
-       }
+        RegisterImpl reg = (RegisterImpl) getRegister(msg.getRegisterID());
+        boolean isNew = !reg.hasValue();
+        reg.valueReceived(msg.getRegisterValue());
+        if (isNew) {
+            fireEvent(Type.REGISTER_DETECTED, reg);
+        }
     }
 
     private void fireEvent(final PanStampEvent.Type type) {
         fireEvent(type, null);
     }
-    
+
     private void fireEvent(final PanStampEvent.Type type, final Register reg) {
         PanStampEvent ev = new PanStampEvent() {
 
@@ -141,8 +141,7 @@ public class PanStampImpl implements PanStamp {
             public Register getRegister() {
                 return reg;
             }
-            
-            
+
         };
         for (PanStampListener l : listeners) {
             pool.submit(new UpdateTask(ev, l));
@@ -165,31 +164,34 @@ public class PanStampImpl implements PanStamp {
                 case SYSTEM_STATE: {
                     Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
                     ep.addListener(systemStateListener());
+                    break;
                 }
             }
         }
     }
 
-    private EndpointListener systemStateListener() { 
+    private EndpointListener systemStateListener() {
         return new EndpointListener<Integer>() {
 
             @Override
             public void endpointUpdated(EndpointEvent<Integer> ev) {
                 switch (ev.getType()) {
-                    case VALUE_RECEIVED  :
-                try {
-                    int state = ev.getEndpoint().getValue();
-                    if (state != syncState) {
-                        syncState = state;
-                        fireEvent(Type.SYNC_STATE_CHANGE);
-                    }
-                } catch (GatewayException ex) {
-                    Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    case VALUE_RECEIVED:
+                        try {
+                            int state = ev.getEndpoint().getValue();
+                            if (state != syncState) {
+                                syncState = state;
+                                fireEvent(Type.SYNC_STATE_CHANGE);
+                            }
+                        } catch (GatewayException ex) {
+                            Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    break;
                 }
             }
         };
     }
+
     private RegisterListener productCodeListener() {
         return new RegisterListener() {
             @Override
