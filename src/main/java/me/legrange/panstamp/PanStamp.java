@@ -14,6 +14,7 @@ public interface PanStamp {
      */
     public int getAddress();
 
+     public String getName();
     /**
      * @return the register for the given id
      * @param id ID of register to return

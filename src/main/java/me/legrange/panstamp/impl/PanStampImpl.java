@@ -47,6 +47,14 @@ public class PanStampImpl implements PanStamp {
         return address;
     }
 
+    @Override
+    public String getName() {
+        if (def != null) {
+            return def.getProduct();
+        }
+        return "Unknown";
+    }
+    
     /**
      * @return the register for the given id
      * @param id Register to read
@@ -92,7 +100,11 @@ public class PanStampImpl implements PanStamp {
     public void removeListener(PanStampListener l) {
         listeners.remove(l);
     }
-
+    
+    Device getDefinition() { 
+        return def;
+    }
+    
     /**
      * send a query message to the remote node
      */
@@ -222,7 +234,7 @@ public class PanStampImpl implements PanStamp {
      * load all endpoints
      */
     private void loadEndpoints() throws GatewayException {
-        Device def = getDeviceDefinition();
+        def = getDeviceDefinition();
         List<RegisterDef> rpDefs = def.getRegisters();
         for (RegisterDef rpDef : rpDefs) {
             RegisterImpl reg = (RegisterImpl) getRegister(rpDef.getId());
@@ -256,6 +268,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     private final int address;
+    private Device def;
     private final SerialGateway gw;
     private int manufacturerId;
     private int productId;

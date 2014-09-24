@@ -48,24 +48,14 @@ public class Device {
         return res;
         
     }
-   /*  
-    public EndpointDef getEndpoint(String eName) throws NoSuchEndpointException {
-        EndpointDef ep = endpoints.get(eName);
-        if (ep == null) throw new NoSuchEndpointException(String.format("No endpoint '%s' in definition for device %s", eName, name));
-        return ep;
+ 
+    public boolean hasRegister(int id) {
+        return registers.get(id) != null;
     }
     
-    public boolean hasEndpoint(String eName) { 
-        return  endpoints.get(eName) != null;
+    public RegisterDef getRegister(int id) {
+        return registers.get(id);
     }
-    
-    public List<EndpointDef> getEndpoints() {
-        List<EndpointDef> res = new ArrayList<>();
-        res.addAll(endpoints.values());
-        return res;
-    }
-*/
-    
     
     @Override
     public String toString() {

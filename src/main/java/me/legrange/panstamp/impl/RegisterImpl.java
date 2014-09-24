@@ -19,6 +19,7 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
+import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.swap.Registers;
 
@@ -36,6 +37,12 @@ public class RegisterImpl implements Register {
 
     @Override
     public String getName() {
+        Device def = dev.getDefinition();
+        if (def != null) {
+            if (def.hasRegister(id)) {
+                return def.getRegister(id).getName();
+            }
+        }
         return name;
     }
 
