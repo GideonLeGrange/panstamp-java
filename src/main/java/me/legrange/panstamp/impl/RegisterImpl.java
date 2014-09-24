@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -245,7 +246,7 @@ public class RegisterImpl implements Register {
     private final int id;
     private String name = "";
     private final Map<String, Endpoint> endpoints = new HashMap<>();
-    private final List<RegisterListener> listeners = new LinkedList<>();
+    private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] value;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
