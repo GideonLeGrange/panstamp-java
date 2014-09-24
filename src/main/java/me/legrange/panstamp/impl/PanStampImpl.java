@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -260,7 +261,7 @@ public class PanStampImpl implements PanStamp {
     private int productId;
     private int syncState;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
-    private final List<PanStampListener> listeners = new LinkedList<>();
+    private final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
         @Override
