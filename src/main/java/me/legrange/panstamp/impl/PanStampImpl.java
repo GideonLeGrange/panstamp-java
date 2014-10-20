@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,6 +15,7 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
+import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
@@ -45,6 +45,11 @@ public class PanStampImpl implements PanStamp {
     @Override
     public int getAddress() {
         return address;
+    }
+
+    @Override
+    public Gateway getGateway() {
+        return gw;
     }
 
     @Override

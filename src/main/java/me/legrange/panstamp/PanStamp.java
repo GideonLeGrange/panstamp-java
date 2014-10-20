@@ -13,6 +13,8 @@ public interface PanStamp {
      * @return address of this mote
      */
     public int getAddress();
+    
+    public Gateway getGateway();
 
      public String getName();
     /**
