@@ -93,9 +93,10 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
                 };
                 for (EndpointListener<T> l : listeners) {
                     pool().submit(new ListenerTask(e, l));
-                    break;
                 }
+            break;
         }
+        
     }
 
     @Override
@@ -112,6 +113,8 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     public Register getRegister() {
         return reg;
     }
+    
+    
 
     protected abstract T transformOut(T value, Unit unit);
 
@@ -146,8 +149,8 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         public void run() {
             try {
                 l.endpointUpdated(e);
-            } catch (Throwable e) {
-                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+            } catch (Throwable ex) {
+                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         }

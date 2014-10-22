@@ -1,7 +1,6 @@
 package me.legrange.panstamp.impl;
 
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
@@ -13,6 +12,11 @@ public class BinaryEndpoint extends AbstractEndpoint<Boolean> {
 
     public BinaryEndpoint(RegisterImpl reg, EndpointDef epDef) {
         super(reg, epDef);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.BINARY;
     }
 
     @Override

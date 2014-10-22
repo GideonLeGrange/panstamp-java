@@ -9,11 +9,19 @@ import java.util.List;
  * @param <T> type of value supported by the endpoint
  */
 public interface Endpoint<T> {
-
+    
+    public enum Type { NUMBER, INTEGER, STRING, BINARY; };
+    
+   
     /** Return the name of this endpoint.
      * @return  The endpoint name */
     String getName();
 
+    /** Return the type of the data supported by this endpoint 
+     * 
+     */
+    Type getType();
+    
     /**
      * Get the units supported by this endpoint
      *

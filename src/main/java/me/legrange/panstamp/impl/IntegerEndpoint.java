@@ -15,6 +15,11 @@ public class IntegerEndpoint extends AbstractEndpoint<Integer> {
     }
 
     @Override
+    public Type getType() {
+        return Type.INTEGER;
+    }
+    
+    @Override
     public Integer getValue() throws GatewayException {
         byte bytes[] = reg.getValue();//ps.getRegister(epDef.getRegister().getId()).getValue();
         int val = 0;

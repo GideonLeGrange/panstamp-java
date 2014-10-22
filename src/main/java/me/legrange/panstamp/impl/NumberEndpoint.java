@@ -13,6 +13,11 @@ public class NumberEndpoint extends AbstractEndpoint<Double> {
     public NumberEndpoint(RegisterImpl reg, EndpointDef epDef) {
         super(reg, epDef); 
     }
+
+    @Override
+    public Type getType() {
+        return Type.NUMBER;
+    }
     
     @Override
     public Double getValue() throws GatewayException {

@@ -16,6 +16,11 @@ class StringEndpoint extends AbstractEndpoint<String> {
     }
 
     @Override
+    public Type getType() {
+        return Type.STRING;
+    }
+    
+    @Override
     protected String transformIn(String value, Unit unit) {
         return value;
     }
