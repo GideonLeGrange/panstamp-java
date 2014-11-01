@@ -13,10 +13,19 @@ public interface PanStamp {
      * @return address of this mote
      */
     public int getAddress();
-    
+
+    public int getChannel() throws GatewayException; ;
+
+    public int getNetwork() throws GatewayException;
+
+    public int getSecurityOption() throws GatewayException;
+
+    public int getTxInterval() throws GatewayException;
+
     public Gateway getGateway();
 
-     public String getName();
+    public String getName();
+
     /**
      * @return the register for the given id
      * @param id ID of register to return
@@ -26,15 +35,16 @@ public interface PanStamp {
     Register getRegister(int id) throws GatewayException;
 
     boolean hasRegister(int id) throws GatewayException;
-    
-    /** returns the list of registers defined for this device 
-     * 
-     * @return The list of registers. 
+
+    /**
+     * returns the list of registers defined for this device
+     *
+     * @return The list of registers.
      */
     List<Register> getRegisters() throws GatewayException;
-    
-    
+
     void addListener(PanStampListener l);
-    
+
     void removeListener(PanStampListener l);
+
 }

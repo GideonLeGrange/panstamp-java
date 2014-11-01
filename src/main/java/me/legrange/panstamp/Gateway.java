@@ -83,5 +83,5 @@ public abstract class Gateway {
      *
      * @return The network ID
      */
-    public abstract int getNetworkId() throws ModemException;
+      public abstract int getNetworkId() throws ModemException;
 }

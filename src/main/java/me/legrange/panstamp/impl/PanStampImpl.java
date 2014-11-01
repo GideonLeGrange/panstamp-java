@@ -47,6 +47,47 @@ public class PanStampImpl implements PanStamp {
         return address;
     }
 
+    /**
+     *
+     * @return The network address
+     * @throws GatewayException Thrown if there is an error trying to figure out
+     * the network address.
+     */
+    public int getNetwork() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
+        if (v != null) {
+            return v;
+        }
+        return gw.getNetworkId();
+    }
+
+    @Override
+    public int getChannel() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.FREQUENCY_CHANNEL);
+        if (v != null) {
+            return v;
+        }
+        return gw.getChannel();
+    }
+
+    @Override
+    public int getTxInterval() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL);
+        if (v != null) {
+            return v;
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSecurityOption() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.SECURITY_OPTION);
+        if (v != null) {
+            return v;
+        }
+        return 0;
+    }
+
     @Override
     public Gateway getGateway() {
         return gw;
@@ -59,7 +100,7 @@ public class PanStampImpl implements PanStamp {
         }
         return "Unknown";
     }
-    
+
     /**
      * @return the register for the given id
      * @param id Register to read
@@ -105,11 +146,11 @@ public class PanStampImpl implements PanStamp {
     public void removeListener(PanStampListener l) {
         listeners.remove(l);
     }
-    
-    Device getDefinition() { 
+
+    Device getDefinition() {
         return def;
     }
-    
+
     /**
      * send a query message to the remote node
      */
@@ -204,7 +245,7 @@ public class PanStampImpl implements PanStamp {
                         } catch (GatewayException ex) {
                             Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    break;
+                        break;
                 }
             }
         };
@@ -270,6 +311,15 @@ public class PanStampImpl implements PanStamp {
     private int getProductId(Register reg) throws GatewayException {
         byte val[] = reg.getValue();
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
+    }
+
+    private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
+        Register reg = getRegister(epDef.getRegister().getId());
+        if (reg.hasValue()) {
+            Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
+            return ep.getValue();
+        }
+        return null;
     }
 
     private final int address;

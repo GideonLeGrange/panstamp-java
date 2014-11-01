@@ -57,7 +57,7 @@ public class StandardEndpoint extends EndpointDef {
         DEVICE_ADDRESS = new StandardEndpoint(StandardRegister.DEVICE_ADDRESS, "Device address", Direction.OUT, Type.INTEGER);
         DEVICE_ADDRESS.setSize(new Size(1, 0));
        
-        PERIODIC_TX_INTERVAL = new StandardEndpoint(StandardRegister.DEVICE_ADDRESS, "Periodic Tx interval", Direction.OUT, Type.INTEGER);
+        PERIODIC_TX_INTERVAL = new StandardEndpoint(StandardRegister.PERIODIC_TX_INTERVAL, "Periodic Tx interval", Direction.OUT, Type.INTEGER);
         PERIODIC_TX_INTERVAL.setSize(new Size(2, 0));
     }
 

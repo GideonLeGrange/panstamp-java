@@ -2,6 +2,7 @@ package me.legrange.panstamp.impl;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -55,7 +56,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     AbstractEndpoint(RegisterImpl reg, EndpointDef epDef) {
         this.reg = reg;
         this.epDef = epDef;
-        this.listeners = new LinkedList<>();
+        this.listeners = new CopyOnWriteArrayList<>();
 
     }
 

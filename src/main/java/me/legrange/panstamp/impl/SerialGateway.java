@@ -123,18 +123,13 @@ public final class SerialGateway extends Gateway {
 
     @Override
     public int getNetworkId() throws ModemException {
-        if (setup == null) {
-            try {
-                setup = modem.getSetup();
-            } catch (SerialException ex) {
-                throw new ModemException(ex.getMessage(), ex);
-            }
-        }
-        return setup.getNetworkID();
+        return getSetup().getNetworkID();
     }
 
-    
-    
+    int getChannel() throws ModemException {
+        return getSetup().getChannel();
+    }
+
     /**
      * send a command message to a remote device
      */
@@ -217,6 +212,17 @@ public final class SerialGateway extends Gateway {
             java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    private synchronized ModemSetup getSetup() throws ModemException {
+        if (setup == null) {
+            try {
+                setup = modem.getSetup();
+            } catch (SerialException ex) {
+                throw new ModemException(ex.getMessage(), ex);
+            }
+        }
+        return setup;
     }
 
     private final SerialModem modem;
