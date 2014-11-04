@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.legrange.panstamp.DeviceConfig;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
@@ -46,6 +47,15 @@ public class PanStampImpl implements PanStamp {
     public int getAddress() {
         return address;
     }
+    
+    @Override
+    public DeviceConfig getConfig() throws GatewayException {
+        if (config == null) {
+            config  = new RegisterDeviceConfig(getNetwork(), getAddress(), getChannel(), getSecurityOption(), getTxInterval());
+        }
+        return config;
+    }
+
 
     /**
      *
@@ -53,7 +63,7 @@ public class PanStampImpl implements PanStamp {
      * @throws GatewayException Thrown if there is an error trying to figure out
      * the network address.
      */
-    public int getNetwork() throws GatewayException {
+    private int getNetwork() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
         if (v != null) {
             return v;
@@ -61,8 +71,7 @@ public class PanStampImpl implements PanStamp {
         return gw.getNetworkId();
     }
 
-    @Override
-    public int getChannel() throws GatewayException {
+    private int getChannel() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.FREQUENCY_CHANNEL);
         if (v != null) {
             return v;
@@ -70,8 +79,7 @@ public class PanStampImpl implements PanStamp {
         return gw.getChannel();
     }
 
-    @Override
-    public int getTxInterval() throws GatewayException {
+    private int getTxInterval() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL);
         if (v != null) {
             return v;
@@ -79,8 +87,7 @@ public class PanStampImpl implements PanStamp {
         return 0;
     }
 
-    @Override
-    public int getSecurityOption() throws GatewayException {
+    private int getSecurityOption() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.SECURITY_OPTION);
         if (v != null) {
             return v;
@@ -323,6 +330,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     private final int address;
+    private DeviceConfig config;
     private Device def;
     private final SerialGateway gw;
     private int manufacturerId;

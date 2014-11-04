@@ -13,18 +13,14 @@ public interface PanStamp {
      * @return address of this mote
      */
     public int getAddress();
-
-    public int getChannel() throws GatewayException; ;
-
-    public int getNetwork() throws GatewayException;
-
-    public int getSecurityOption() throws GatewayException;
-
-    public int getTxInterval() throws GatewayException;
-
-    public Gateway getGateway();
+    
 
     public String getName();
+
+    public DeviceConfig getConfig() throws GatewayException;
+    
+
+    public Gateway getGateway();
 
     /**
      * @return the register for the given id
