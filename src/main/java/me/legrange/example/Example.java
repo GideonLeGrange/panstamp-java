@@ -27,10 +27,12 @@ public abstract class Example implements GatewayListener {
     }
     
     protected void connect() throws GatewayException {
-
+        say("Opening gateway on %s:%d", PORT, BAUD);
          gw = Gateway.openSerial(PORT, BAUD);
-        gw.addListener(this);
-
+    }
+    
+    protected void close() throws GatewayException { 
+        gw.close();
     }
     
     protected void say(String fmt, Object... args) {

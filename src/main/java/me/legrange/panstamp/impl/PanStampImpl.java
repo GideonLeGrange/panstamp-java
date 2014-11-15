@@ -47,15 +47,14 @@ public class PanStampImpl implements PanStamp {
     public int getAddress() {
         return address;
     }
-    
+
     @Override
     public DeviceConfig getConfig() throws GatewayException {
         if (config == null) {
-            config  = new RegisterDeviceConfig(getNetwork(), getAddress(), getChannel(), getSecurityOption(), getTxInterval());
+            config = new RegisterDeviceConfig(getNetwork(), getAddress(), getChannel(), getSecurityOption(), getTxInterval());
         }
         return config;
     }
-
 
     /**
      *
@@ -244,11 +243,8 @@ public class PanStampImpl implements PanStamp {
                 switch (ev.getType()) {
                     case VALUE_RECEIVED:
                         try {
-                            int state = ev.getEndpoint().getValue();
-                            if (state != syncState) {
-                                syncState = state;
-                                fireEvent(Type.SYNC_STATE_CHANGE);
-                            }
+                            syncState = ev.getEndpoint().getValue();
+                            fireEvent(Type.SYNC_STATE_CHANGE);
                         } catch (GatewayException ex) {
                             Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }

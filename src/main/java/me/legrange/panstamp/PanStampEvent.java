@@ -14,4 +14,5 @@ public interface PanStampEvent {
     
     public Register getRegister();
     
+    
 }

@@ -134,7 +134,8 @@ public final class SerialGateway extends Gateway {
      * send a command message to a remote device
      */
     void sendCommandMessage(PanStampImpl dev, int register, byte[] value) throws ModemException {
-        UserMessage msg = new UserMessage(SwapMessage.Type.COMMAND, 0xFF, dev.getAddress(), register, value);
+//        UserMessage msg = new UserMessage(SwapMessage.Type.COMMAND, 0xFF, dev.getAddress(), register, value);
+        UserMessage msg = new UserMessage(SwapMessage.Type.COMMAND, getSetup().getDeviceAddress(), dev.getAddress(), register, value);
         msg.setRegisterAddress(dev.getAddress());
         send(msg);
     }
@@ -195,7 +196,7 @@ public final class SerialGateway extends Gateway {
     }
 
     private void fireEvent(GatewayEvent ev) {
-        for (GatewayListener l : listeners) {
+         for (GatewayListener l : listeners) {
             pool.submit(new ListenerTask(l, ev));
         }
     }

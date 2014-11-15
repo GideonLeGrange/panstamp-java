@@ -23,8 +23,8 @@ public class OnWake implements PanStampListener {
         init();
     }
 
-    public void queue(Update update) {
-        updates.offer(update);
+    public <T> void queue(Endpoint<T> ep, T val) {
+        updates.offer(new Update(ep, val));
     }
 
     @Override
@@ -32,6 +32,7 @@ public class OnWake implements PanStampListener {
         switch (ev.getType()) {
             case SYNC_STATE_CHANGE: {
                 try {
+                    System.out.printf("Detected sync state %d for node %d\n", ep.getValue(), ps.getAddress());
                     if (!updates.isEmpty()) {
                         switch (ep.getValue()) {
                             case 1:
@@ -45,9 +46,9 @@ public class OnWake implements PanStampListener {
             }
         }
     }
-    
+
     private void sendUpdates() throws GatewayException {
-        while (!updates.isEmpty()) {
+        while (!updates.isEmpty() && ((ep.getValue() == 3) || (ep.getValue() == 1))) {
             Update update = updates.remove();
             update.getEndpoint().setValue(update.getValue());
             System.out.println("Sent update");
@@ -62,5 +63,25 @@ public class OnWake implements PanStampListener {
     private final PanStamp ps;
     private Endpoint<Integer> ep;
     private final Queue<Update> updates = new LinkedList<>();
+
+    private class Update {
+
+        public Update(Endpoint ep, Object value) {
+            this.ep = ep;
+            this.value = value;
+        }
+
+        public Endpoint getEndpoint() {
+            return ep;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        private final Endpoint ep;
+        private final Object value;
+
+    }
 
 }
