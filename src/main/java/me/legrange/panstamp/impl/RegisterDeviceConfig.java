@@ -1,6 +1,9 @@
 package me.legrange.panstamp.impl;
 
 import me.legrange.panstamp.DeviceConfig;
+import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Register;
 
 /**
  *
@@ -8,42 +11,68 @@ import me.legrange.panstamp.DeviceConfig;
  */
 public class RegisterDeviceConfig implements DeviceConfig {
 
-    RegisterDeviceConfig(int network, int address, int channel, int securityOption, int txInterval) {
-        this.network = network;
-        this.address = address;
-        this.channel = channel;
-        this.securityOption = securityOption;
-        this.txInterval = txInterval;
-    }
-
-    @Override
-    public int getNetwork() {
-        return network;
+    public RegisterDeviceConfig(PanStampImpl ps) {
+        this.ps = ps;
     }
 
     @Override
     public int getAddress() {
-        return address;
+        return ps.getAddress();
     }
 
     @Override
-    public int getChannel() {
-        return channel;
+    public int getChannel() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.FREQUENCY_CHANNEL);
+        if (v != null) {
+            return v;
+        }
+        return ps.getGateway().getChannel();
     }
 
     @Override
-    public int getSecurityOption() {
-        return securityOption;
+    public int getTxInterval() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL);
+        if (v != null) {
+            return v;
+        }
+        return 0;
     }
 
     @Override
-    public int getTxInterval() {
-        return txInterval;
+    public int getSecurityOption() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.SECURITY_OPTION);
+        if (v != null) {
+            return v;
+        }
+        return 0;
+    }
+    
+        /**
+     *
+     * @return The network address
+     * @throws GatewayException Thrown if there is an error trying to figure out
+     * the network address.
+     */
+    @Override
+    public int getNetwork() throws GatewayException {
+        Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
+        if (v != null) {
+            return v;
+        }
+        return ps.getGateway().getNetworkId();
     }
 
-    private final int network;
-    private final int address;
-    private final int channel;
-    private final int securityOption;
-    private final int txInterval;
+    
+
+    private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
+        Register reg = ps.getRegister(epDef.getRegister().getId());
+        if (reg.hasValue()) {
+            Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
+            return ep.getValue();
+        }
+        return null;
+    }
+
+    private final PanStampImpl ps;
+
 }

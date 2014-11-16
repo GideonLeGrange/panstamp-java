@@ -51,51 +51,13 @@ public class PanStampImpl implements PanStamp {
     @Override
     public DeviceConfig getConfig() throws GatewayException {
         if (config == null) {
-            config = new RegisterDeviceConfig(getNetwork(), getAddress(), getChannel(), getSecurityOption(), getTxInterval());
+            config = new RegisterDeviceConfig(this);
         }
         return config;
     }
 
-    /**
-     *
-     * @return The network address
-     * @throws GatewayException Thrown if there is an error trying to figure out
-     * the network address.
-     */
-    private int getNetwork() throws GatewayException {
-        Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
-        if (v != null) {
-            return v;
-        }
-        return gw.getNetworkId();
-    }
-
-    private int getChannel() throws GatewayException {
-        Integer v = getIntValue(StandardEndpoint.FREQUENCY_CHANNEL);
-        if (v != null) {
-            return v;
-        }
-        return gw.getChannel();
-    }
-
-    private int getTxInterval() throws GatewayException {
-        Integer v = getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL);
-        if (v != null) {
-            return v;
-        }
-        return 0;
-    }
-
-    private int getSecurityOption() throws GatewayException {
-        Integer v = getIntValue(StandardEndpoint.SECURITY_OPTION);
-        if (v != null) {
-            return v;
-        }
-        return 0;
-    }
-
     @Override
-    public Gateway getGateway() {
+    public SerialGateway getGateway() {
         return gw;
     }
 
@@ -316,14 +278,6 @@ public class PanStampImpl implements PanStamp {
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
     }
 
-    private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
-        Register reg = getRegister(epDef.getRegister().getId());
-        if (reg.hasValue()) {
-            Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
-            return ep.getValue();
-        }
-        return null;
-    }
 
     private final int address;
     private DeviceConfig config;
