@@ -131,8 +131,12 @@ public class PanStampImpl implements PanStamp {
      *
      * @param value Value to send
      */
-    void sendCommandMessage(int id, byte[] value) throws ModemException {
-        gw.sendCommandMessage(this, id, value);
+    void sendCommandMessage(int id, byte[] value) throws GatewayException {
+        if (isSleeper()) {
+            queue(id, value);
+        } else {
+            gw.sendCommandMessage(this, id, value);
+        }
     }
 
     /**
@@ -145,6 +149,24 @@ public class PanStampImpl implements PanStamp {
         if (isNew) {
             fireEvent(Type.REGISTER_DETECTED, reg);
         }
+    }
+
+    private void queue(int id, byte[] value) {
+        addListener(new UpdateOnSync(id, value));
+        fireEvent(Type.SYNC_REQUIRED, getRegister(id));
+    }
+
+    private boolean isSleeper() throws GatewayException {
+        if (def != null) {
+            return def.isPowerDownMode();
+        } else {
+            Endpoint<Integer> ep = getRegister(StandardRegister.SYSTEM_STATE.getId()).getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
+            if (ep.hasValue()) {
+                int v = ep.getValue();
+                return (v != 3) && (v != 1);
+            }
+        }
+        return false;
     }
 
     private void fireEvent(final PanStampEvent.Type type) {
@@ -278,7 +300,6 @@ public class PanStampImpl implements PanStamp {
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
     }
 
-
     private final int address;
     private DeviceConfig config;
     private Device def;
@@ -319,4 +340,31 @@ public class PanStampImpl implements PanStamp {
         private final PanStampEvent ev;
     }
 
+    private class UpdateOnSync implements PanStampListener {
+
+        private UpdateOnSync(int id, byte[] val) {
+            this.id = id;
+            this.val = val;
+        }
+        private final int id;
+        private final byte[] val;
+
+        @Override
+        public void deviceUpdated(PanStampEvent ev) {
+            if (ev.getType() == Type.SYNC_STATE_CHANGE) {
+                switch (syncState) {
+                    case 1:
+                    case 3:
+                        try {
+                            gw.sendCommandMessage(PanStampImpl.this, id, val);
+                        } catch (ModemException ex) {
+                            Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        finally {
+                            removeListener(this);
+                        }
+                }
+            }
+        }
+    }
 }

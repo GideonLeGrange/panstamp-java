@@ -49,8 +49,6 @@ public class RegisterImpl implements Register {
     public PanStamp getDevice() {
         return dev;
     }
-    
-    
 
     @Override
     public List<Endpoint> getEndpoints() throws GatewayException {
@@ -161,7 +159,6 @@ public class RegisterImpl implements Register {
         addStandardEndpoints(reg);
     }
 
-
     private void fireEvent(final RegisterEvent.Type type) {
         fireEvent(type, null);
     }
@@ -183,11 +180,10 @@ public class RegisterImpl implements Register {
             public Endpoint getEndpoint() {
                 return ep;
             }
-            
-            
+
         };
         for (RegisterListener l : listeners) {
-            pool.submit(new UpdateTask(ev,l));
+            pool.submit(new UpdateTask(ev, l));
         }
     }
 
@@ -266,7 +262,7 @@ public class RegisterImpl implements Register {
 
     private class UpdateTask implements Runnable {
 
-        private UpdateTask(RegisterEvent e,RegisterListener l) {
+        private UpdateTask(RegisterEvent e, RegisterListener l) {
             this.l = l;
             this.e = e;
         }

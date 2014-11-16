@@ -6,7 +6,7 @@ package me.legrange.panstamp;
  */
 public interface PanStampEvent {
     
-    public enum Type { PRODUCT_CODE_UPDATE, SYNC_STATE_CHANGE, REGISTER_DETECTED; };
+    public enum Type { PRODUCT_CODE_UPDATE, SYNC_STATE_CHANGE, REGISTER_DETECTED, SYNC_REQUIRED; };
 
     public Type getType();
     

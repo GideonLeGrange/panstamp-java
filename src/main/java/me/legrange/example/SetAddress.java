@@ -2,11 +2,13 @@ package me.legrange.example;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.PanStampEvent;
+import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.impl.StandardEndpoint;
-import me.legrange.panstamp.util.OnWake;
 import me.legrange.panstamp.util.Util;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
@@ -17,8 +19,8 @@ import me.legrange.swap.SWAPException;
  */
 public class SetAddress extends Example {
 
-    public static int NEW_ADDR = 0x04;
-    public static int OLD_ADDR = 0x01;
+    public static int NEW_ADDR = 0x03;
+    public static int OLD_ADDR = 0x04;
 
     public static void main(String... args) throws Exception {
         SetAddress app = new SetAddress();
@@ -63,9 +65,18 @@ public class SetAddress extends Example {
                     }
                     else if (addr == OLD_ADDR) {
                         try {
-                            say("Detected %2x so scheduling update", OLD_ADDR);
-                            OnWake ow = new OnWake(ps);
-                            ow.queue(Util.getEndpoint(ps, StandardEndpoint.DEVICE_ADDRESS), NEW_ADDR);
+                            ps.addListener(new PanStampListener() {
+
+                                @Override
+                                public void deviceUpdated(PanStampEvent ev) {
+                                    switch (ev.getType()) {
+                                        case SYNC_REQUIRED : 
+                                            System.out.printf("Device %2x needs to sync. Press the button\n", ev.getDevice().getAddress());
+                                    }
+                                }
+                            }) ;
+                            Endpoint ep = Util.getEndpoint(ps, StandardEndpoint.DEVICE_ADDRESS);
+                            ep.setValue(NEW_ADDR);
                         } catch (GatewayException ex) {
                             Logger.getLogger(SetAddress.class.getName()).log(Level.SEVERE, null, ex);
                         }
