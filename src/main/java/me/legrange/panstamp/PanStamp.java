@@ -14,12 +14,15 @@ public interface PanStamp {
      */
     public int getAddress();
     
-
+    /** 
+     * return the device name (as defined by the endpoint definition). 
+     */
     public String getName();
 
+    /** return the device configuration for this mote */
     public DeviceConfig getConfig() throws GatewayException;
     
-
+    /** return the gateway this device is attached to. */
     public Gateway getGateway();
 
     /**
@@ -39,8 +42,10 @@ public interface PanStamp {
      */
     List<Register> getRegisters() throws GatewayException;
 
+    /** add an event listener */
     void addListener(PanStampListener l);
 
+    /** remove an event listener */
     void removeListener(PanStampListener l);
 
 }

@@ -52,7 +52,6 @@ public class SetAddress extends Example {
 
     @Override
     public synchronized void gatewayUpdated(GatewayEvent ev) {
-            if (false) throw new RuntimeException();
             switch (ev.getType()) {
                 case DEVICE_DETECTED : {
                     PanStamp ps = ev.getDevice();
