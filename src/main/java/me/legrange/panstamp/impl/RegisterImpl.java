@@ -272,7 +272,7 @@ public class RegisterImpl implements Register {
             try {
                 l.registerUpdated(e);
             } catch (Throwable e) {
-                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
 
             }
         }

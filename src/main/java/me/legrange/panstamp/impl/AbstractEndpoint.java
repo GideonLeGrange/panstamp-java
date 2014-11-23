@@ -151,7 +151,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
             try {
                 l.endpointUpdated(e);
             } catch (Throwable ex) {
-                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         }

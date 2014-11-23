@@ -25,8 +25,6 @@ import me.legrange.swap.SWAPModem;
 import me.legrange.swap.SwapMessage;
 import me.legrange.swap.UserMessage;
 import me.legrange.swap.ModemSetup;
-import me.legrange.swap.serial.SerialException;
-import me.legrange.swap.serial.SerialModem;
 
 /**
  * A gateway connecting a PanStampImpl network to your code using the
@@ -34,15 +32,11 @@ import me.legrange.swap.serial.SerialModem;
  *
  * @author gideon
  */
-public final class SerialGateway extends Gateway {
+public final class GatewayImpl extends Gateway {
 
-    public SerialGateway(String port, int baud) throws ModemException {
+    public GatewayImpl(SWAPModem modem)  {
+        this.modem = modem;
         lib = new ClassLoaderLibrary();
-        try {
-            this.modem = SerialModem.open(port, baud);
-        } catch (SWAPException ex) {
-            throw new ModemException(ex.getMessage(), ex);
-        }
         receiver = new Receiver();
         modem.addListener(receiver);
     }
@@ -56,7 +50,7 @@ public final class SerialGateway extends Gateway {
     public void close() throws ModemException {
         try {
             modem.close();
-        } catch (SerialException ex) {
+        } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
 
         }
@@ -158,7 +152,7 @@ public final class SerialGateway extends Gateway {
     void send(SwapMessage msg) throws ModemException {
         try {
             modem.send(msg);
-        } catch (SerialException ex) {
+        } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
     }
@@ -209,7 +203,7 @@ public final class SerialGateway extends Gateway {
             PanStampImpl dev = (PanStampImpl) getDevice(msg.getRegisterAddress());
             dev.statusMessageReceived(msg);
         } catch (GatewayException ex) {
-            java.util.logging.Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -218,19 +212,20 @@ public final class SerialGateway extends Gateway {
         if (setup == null) {
             try {
                 setup = modem.getSetup();
-            } catch (SerialException ex) {
+            } catch (SWAPException ex) {
                 throw new ModemException(ex.getMessage(), ex);
-            }
+            } 
+            
         }
         return setup;
     }
 
-    private final SerialModem modem;
+    private final SWAPModem modem;
     private final Receiver receiver;
     private ModemSetup setup;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
-    private static final Logger logger = Logger.getLogger(SerialGateway.class.getName());
+    private static final Logger logger = Logger.getLogger(GatewayImpl.class.getName());
     private final DeviceLibrary lib;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
@@ -255,7 +250,7 @@ public final class SerialGateway extends Gateway {
                     try {
                         updateNetwork(msg);
                     } catch (GatewayException ex) {
-                        Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
                 case STATUS:
@@ -285,7 +280,7 @@ public final class SerialGateway extends Gateway {
             try {
                 l.gatewayUpdated(ev);
             } catch (Throwable e) {
-                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
 
             }
         }

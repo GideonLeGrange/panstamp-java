@@ -1,10 +1,13 @@
 package me.legrange.panstamp;
 
 import java.util.List;
+import me.legrange.panstamp.impl.GatewayImpl;
 import me.legrange.panstamp.impl.ModemException;
-import me.legrange.panstamp.impl.SerialGateway;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
+import me.legrange.swap.serial.SerialModem;
+import me.legrange.swap.tcp.TcpModem;
+import me.legrange.swap.tcp.TcpException;
 
 /**
  * A PanStamp network gateway
@@ -23,8 +26,34 @@ public abstract class Gateway {
      * @throws me.legrange.panstamp.impl.ModemException
      */
     public static Gateway openSerial(String port, int baud) throws ModemException {
-        return new SerialGateway(port, baud);
+        SerialModem sm;
+        try {
+            sm = SerialModem.open(port, baud);
+        } catch (SWAPException ex) {
+            throw new ModemException(ex.getMessage(), ex);
+        }
+        return new GatewayImpl(sm);
     }
+    
+      /**
+     * Open the TCP modem application and return a Gateway object for the
+     * connection.
+     *
+     * @param host Host address to open.
+     * @param port TCP port to connect to
+     * @return The gateway
+     * @throws me.legrange.panstamp.impl.ModemException
+     */
+    public static Gateway openTcp(String host, int port) throws ModemException {
+        TcpModem sm;
+        try {
+            sm = TcpModem.open(host, port);
+        } catch (TcpException ex) {
+            throw new ModemException(ex.getMessage(), ex);
+        }
+        return new GatewayImpl(sm);
+    }
+
 
     /**
      * Disconnect the connection and close the gateway
@@ -83,5 +112,5 @@ public abstract class Gateway {
      *
      * @return The network ID
      */
-      public abstract int getNetworkId() throws ModemException;
+    public abstract int getNetworkId() throws ModemException;
 }

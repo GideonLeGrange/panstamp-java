@@ -16,7 +16,6 @@ import me.legrange.panstamp.DeviceConfig;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
-import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
@@ -57,7 +56,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     @Override
-    public SerialGateway getGateway() {
+    public GatewayImpl getGateway() {
         return gw;
     }
 
@@ -200,7 +199,7 @@ public class PanStampImpl implements PanStamp {
     /**
      * create a new mote for the given address in the given network
      */
-    PanStampImpl(SerialGateway gw, int address) throws GatewayException {
+    PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
         this.gw = gw;
         this.address = address;
         for (Registers.Register reg : Registers.Register.values()) {
@@ -303,7 +302,7 @@ public class PanStampImpl implements PanStamp {
     private final int address;
     private DeviceConfig config;
     private Device def;
-    private final SerialGateway gw;
+    private final GatewayImpl gw;
     private int manufacturerId;
     private int productId;
     private int syncState;
@@ -331,7 +330,7 @@ public class PanStampImpl implements PanStamp {
             try {
                 l.deviceUpdated(ev);
             } catch (Throwable e) {
-                Logger.getLogger(SerialGateway.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
 
             }
         }
