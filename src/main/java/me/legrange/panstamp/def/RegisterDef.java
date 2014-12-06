@@ -30,12 +30,26 @@ public class RegisterDef {
         return all;
     }
     
+    public List<Param> getParameters() { 
+        List<Param> all = new ArrayList<>();
+        all.addAll(params.values());
+        return all;
+    }
+    
     void addEndpoint(EndpointDef ep) {
         endpoints.put(ep.getName(), ep);
     }
     
+
+    void addParameter(Param par) {
+        params.put(par.getName(), par);
+    }
+
+    
     private final int id;
     private final String name;
     private final Map<String, EndpointDef> endpoints = new HashMap<>();
+    private final Map<String, Param> params = new HashMap<>();
+
     
 }
