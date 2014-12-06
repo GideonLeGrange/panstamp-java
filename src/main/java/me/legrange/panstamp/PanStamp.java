@@ -16,13 +16,17 @@ public interface PanStamp {
     
     /** 
      * return the device name (as defined by the endpoint definition). 
+     * @return The name of the device
      */
     public String getName();
 
-    /** return the device configuration for this mote */
+    /** return the device configuration for this mote
+     * @return The device configuration
+     * @throws me.legrange.panstamp.GatewayException */
     public DeviceConfig getConfig() throws GatewayException;
     
-    /** return the gateway this device is attached to. */
+    /** return the gateway this device is attached to.
+     * @return  The gateway */
     public Gateway getGateway();
 
     /**

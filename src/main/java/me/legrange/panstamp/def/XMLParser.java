@@ -199,6 +199,7 @@ public class XMLParser {
                     throw new ParseException(String.format("Unexpected element '%s' in element '%s'", node.getNodeName(), param.getNodeName()));
             }
         }
+        register.addParameter(par);
     }
 
     /**

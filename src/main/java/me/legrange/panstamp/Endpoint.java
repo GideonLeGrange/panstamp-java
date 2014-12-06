@@ -19,6 +19,7 @@ public interface Endpoint<T> {
 
     /** Return the type of the data supported by this endpoint 
      * 
+     * @return Type of endpoint 
      */
     Type getType();
     

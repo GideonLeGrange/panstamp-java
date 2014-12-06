@@ -24,6 +24,7 @@ public interface Register {
      * return the endpoints defined for this register
      *
      * @return The endpoints
+     * @throws me.legrange.panstamp.GatewayException
      */
     List<Endpoint> getEndpoints() throws GatewayException;
 
@@ -79,7 +80,8 @@ public interface Register {
     byte[] getValue() throws GatewayException;
 
     /**
-     * return true if the register has a currently set value
+     * return true if the register has a currently known value
+     * @return True if the register's value is known.
      */
     boolean hasValue();
 
