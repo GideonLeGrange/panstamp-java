@@ -7,7 +7,7 @@ package me.legrange.panstamp;
  */
 public interface Parameter<T> {
     
-    public enum Type { NUMBER, STRING, BINARY; };
+    public enum Type { NUMBER, INTEGER, STRING, BINARY; };
   
     String getName();
     
@@ -15,17 +15,7 @@ public interface Parameter<T> {
     
     boolean hasValue();
 
-    /**
-     * returns the current value of the parameter in the given unit.
-     *
-     * @param unit Unit in which to receive the value
-     * @return The value
-     * @throws me.legrange.panstamp.impl.NoSuchUnitException
-     */
-    T getValue(String unit) throws GatewayException;
-
-    /**
-     * returns the current value of the parameter.
+     /* returns the current value of the parameter.
      *
      * @return The value
      * @throws me.legrange.panstamp.impl.NoSuchUnitException

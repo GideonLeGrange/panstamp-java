@@ -14,12 +14,14 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointNotFoundException;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
+import me.legrange.panstamp.def.Param;
 import me.legrange.swap.Registers;
 
 /**
@@ -128,6 +130,13 @@ public class RegisterImpl implements Register {
         return endpoints.get(name) != null;
     }
 
+    @Override
+    public List<Parameter> getParameters() {
+        List<Parameter> all = new ArrayList<>();
+        all.addAll(parameters.values());
+        return all;
+    }
+
     /**
      * update the abstracted register value and notify listeners
      */
@@ -143,6 +152,12 @@ public class RegisterImpl implements Register {
         Endpoint ep = makeEndpoint(def);
         endpoints.put(def.getName(), ep);
         fireEvent(Type.ENDPOINT_ADDED, ep);
+    }
+
+    void addRegister(Param def) throws NoSuchUnitException {
+        Parameter par = makeParameter(def);
+        parameters.put(def.getName(), par);
+        fireEvent(Type.PARAMETER_ADDED);
     }
 
     /**
@@ -205,6 +220,24 @@ public class RegisterImpl implements Register {
         }
     }
 
+    /**
+     * make a parameter object based on it's definition
+     */
+    private Parameter makeParameter(Param def) throws NoSuchUnitException {
+        switch (def.getType()) {
+            case NUMBER:
+                return new NumberParameter(this, def);
+            case STRING:
+                return new StringParameter(this, def);
+            case BINARY:
+                return new BinaryParameter(this, def);
+            case INTEGER:
+                return new IntegerParameter(this, def);
+            default:
+                throw new NoSuchUnitException(String.format("Unknown parameter type '%s'. BUG!", def.getType()));
+        }
+    }
+
     private void addStandardEndpoints(Registers.Register reg) throws NoSuchUnitException {
         switch (reg) {
             case DEVICE_ADDRESS:
@@ -248,6 +281,7 @@ public class RegisterImpl implements Register {
     private final int id;
     private String name = "";
     private final Map<String, Endpoint> endpoints = new HashMap<>();
+    private final Map<String, Parameter> parameters = new HashMap<>();
     private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] value;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {

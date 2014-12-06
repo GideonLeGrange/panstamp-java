@@ -6,7 +6,7 @@ package me.legrange.panstamp;
  */
 public interface RegisterEvent {
     
-    public enum Type { VALUE_RECEIVED, ENDPOINT_ADDED; }
+    public enum Type { VALUE_RECEIVED, ENDPOINT_ADDED, PARAMETER_ADDED; }
     
     Type getType();
     

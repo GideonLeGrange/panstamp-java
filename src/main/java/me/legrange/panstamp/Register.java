@@ -46,6 +46,12 @@ public interface Register {
      * experienced
      */
     boolean hasEndpoint(String name) throws GatewayException;
+    
+    /** 
+     * Returns the parameters (if any) for this endpoint 
+     * @return The list of parameters
+     */
+    List<Parameter> getParameters();
 
     /**
      * Add a listener to receive register updates
