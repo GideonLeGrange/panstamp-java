@@ -1,7 +1,5 @@
 package me.legrange.panstamp.def;
 
-import java.util.List;
-
 /**
  * A device param 
  * @author gideon
