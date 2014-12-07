@@ -11,7 +11,7 @@
         <default>0</default>
         <verif>([1-9]|1[0-5])</verif>
       </param>
-    </reg>
+     </reg>
   </config>
   <regular>
     <reg name="Binary output 0" id="12">

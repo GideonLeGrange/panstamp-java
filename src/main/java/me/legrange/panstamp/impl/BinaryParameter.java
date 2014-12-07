@@ -2,13 +2,12 @@ package me.legrange.panstamp.impl;
 
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.def.Param;
-import me.legrange.panstamp.def.Unit;
 
 /**
  *
  * @author gideon
  */
-public class BinaryParameter extends AbstractParameter<Boolean> {
+class BinaryParameter extends AbstractParameter<Boolean> {
 
     public BinaryParameter(RegisterImpl reg, Param par) {
         super(reg, par);
@@ -35,6 +34,17 @@ public class BinaryParameter extends AbstractParameter<Boolean> {
         val[byteIdx] = (byte)(val[byteIdx] & ~(0b1 << bitIdx) |                                  ((byte)(value ? 0b1 : 0b0) << bitIdx));  
         reg.setValue(val);
     }
+
+    @Override
+    public Boolean getDefault() {
+        String val = par.getDefault().trim();
+        if (val.toLowerCase().equals("true") || val.toLowerCase().equals("yes")) return true;
+        if (val.toLowerCase().equals("false") || val.toLowerCase().equals("no")) return false;
+        if (val.equals("1")) return true;
+        if (val.equals("0")) return false;
+        return false;
+    }
+
 
     
 }

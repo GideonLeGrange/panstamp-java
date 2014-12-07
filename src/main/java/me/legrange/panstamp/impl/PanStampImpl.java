@@ -26,6 +26,7 @@ import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
+import me.legrange.panstamp.def.Param;
 import me.legrange.panstamp.def.RegisterDef;
 import me.legrange.swap.Registers;
 import me.legrange.swap.SwapMessage;
@@ -250,7 +251,7 @@ public class PanStampImpl implements PanStamp {
                             if ((mfId != manufacturerId) || (pdId != productId)) {
                                 manufacturerId = mfId;
                                 productId = pdId;
-                                loadEndpoints();
+                                loadDefinition();
                             }
                             fireEvent(Type.PRODUCT_CODE_UPDATE);
                             break;
@@ -265,13 +266,16 @@ public class PanStampImpl implements PanStamp {
     /**
      * load all endpoints
      */
-    private void loadEndpoints() throws GatewayException {
+    private void loadDefinition() throws GatewayException {
         def = getDeviceDefinition();
         List<RegisterDef> rpDefs = def.getRegisters();
         for (RegisterDef rpDef : rpDefs) {
             RegisterImpl reg = (RegisterImpl) getRegister(rpDef.getId());
             for (EndpointDef epDef : rpDef.getEndpoints()) {
                 reg.addEndpoint(epDef);
+            }
+            for (Param par : rpDef.getParameters()) {
+                reg.addParameter(par);
             }
         }
     }

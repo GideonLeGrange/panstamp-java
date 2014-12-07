@@ -35,11 +35,11 @@ public class Param {
         this.size = size;
     }
 
-    public String getDef() {
+    public String getDefault() {
         return def;
     }
 
-     void setDef(String def) {
+     void setDefault(String def) {
         this.def = def;
     }
 

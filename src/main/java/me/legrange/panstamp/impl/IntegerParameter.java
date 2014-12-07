@@ -1,15 +1,13 @@
 package me.legrange.panstamp.impl;
 
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
-import me.legrange.panstamp.def.Unit;
 
 /**
  *
  * @author gideon
  */
-public class IntegerParameter extends AbstractParameter<Integer> {
+class IntegerParameter extends AbstractParameter<Integer> {
 
     public IntegerParameter(RegisterImpl reg, Param par) {
         super(reg, par);
@@ -41,4 +39,11 @@ public class IntegerParameter extends AbstractParameter<Integer> {
         }
         reg.setValue(bytes);
     }
+
+    @Override
+    public Integer getDefault() {
+        return Integer.parseInt(par.getDefault());
+    }
+
+    
 }

@@ -8,7 +8,7 @@ import me.legrange.panstamp.def.Unit;
  *
  * @author gideon
  */
-public class NumberEndpoint extends AbstractEndpoint<Double> {
+class NumberEndpoint extends AbstractEndpoint<Double> {
 
     public NumberEndpoint(RegisterImpl reg, EndpointDef epDef) {
         super(reg, epDef); 

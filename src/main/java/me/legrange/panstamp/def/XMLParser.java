@@ -145,7 +145,7 @@ public class XMLParser {
         for (Element node : iterable(config.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "reg":
-                    parseConfigReg(dev, node);
+                    dev.addRegister(parseConfigReg(dev, node));
                     break;
                 default:
                     throw new ParseException(String.format(String.format("Unexpected element '%s'", node.getNodeName())));
@@ -156,7 +156,7 @@ public class XMLParser {
     /**
      * parse a config/reg element
      */
-    private void parseConfigReg(Device dev, Element reg) throws ParseException {
+    private RegisterDef parseConfigReg(Device dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
         RegisterDef register = new RegisterDef(id, name);
@@ -169,6 +169,7 @@ public class XMLParser {
                     throw new ParseException(String.format("Unexpected element '%s'", node.getNodeName()));
             }
         }
+        return register;
     }
 
     /**
@@ -190,7 +191,7 @@ public class XMLParser {
                     parseSize(par, node);
                     break;
                 case "default":
-                    par.setDef(requireText(node));
+                    par.setDefault(requireText(node));
                     break;
                 case "verif":
                     par.setVerif(requireText(node));

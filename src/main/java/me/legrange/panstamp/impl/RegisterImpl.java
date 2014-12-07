@@ -154,7 +154,7 @@ public class RegisterImpl implements Register {
         fireEvent(Type.ENDPOINT_ADDED, ep);
     }
 
-    void addRegister(Param def) throws NoSuchUnitException {
+    void addParameter(Param def) throws NoSuchUnitException {
         Parameter par = makeParameter(def);
         parameters.put(def.getName(), par);
         fireEvent(Type.PARAMETER_ADDED);

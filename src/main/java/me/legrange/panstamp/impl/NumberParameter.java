@@ -7,11 +7,11 @@ import me.legrange.panstamp.def.Param;
  *
  * @author gideon
  */
-public class NumberParameter extends AbstractParameter<Double> {
+class NumberParameter extends AbstractParameter<Double> {
 
     @Override
     public Double getValue() throws GatewayException {
-        byte bytes[] = reg.getValue();//ps.getRegister(epDef.getRegister().getId()).getValue();
+        byte bytes[] = reg.getValue();
         long val = 0;
         for (int i = 0; i < par.getSize().getBytes(); ++i) {
             val = val << 8;
@@ -39,5 +39,12 @@ public class NumberParameter extends AbstractParameter<Double> {
     NumberParameter(RegisterImpl reg, Param par) {
         super(reg, par);
     }
+
+    @Override
+    public Double getDefault() {
+        return Double.valueOf(par.getDefault());
+    }
+    
+    
 
 }
