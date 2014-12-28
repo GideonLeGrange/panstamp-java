@@ -1,4 +1,4 @@
-package me.legrange.panstamp.util;
+package me.legrange.example;
 
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;

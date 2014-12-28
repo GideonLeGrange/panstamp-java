@@ -9,7 +9,6 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.impl.StandardEndpoint;
-import me.legrange.panstamp.util.Util;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 

@@ -15,7 +15,7 @@ import me.legrange.swap.tcp.TcpException;
  * @author gideon
  */
 public abstract class Gateway {
-
+    
     /**
      * Open the serial modem application and return a Gateway object for the
      * connection.

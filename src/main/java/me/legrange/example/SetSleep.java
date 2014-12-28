@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.impl.StandardEndpoint;
-import me.legrange.panstamp.util.Util;
 
 /**
  *
