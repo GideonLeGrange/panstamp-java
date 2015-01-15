@@ -1,7 +1,7 @@
 package me.legrange.panstamp;
 
 /**
- * Thrown when a SWAP mote cannot be found 
+ * Thrown when a panStamp device cannot be found in the network. 
  * @author gideon
  */
 public class NodeNotFoundException extends GatewayException {

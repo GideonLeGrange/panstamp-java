@@ -1,7 +1,7 @@
 package me.legrange.panstamp;
 
 /**
- *
+ * A parameter that can be set for a panStamp device. 
  * @author gideon
  * @param <T> Type of parameter
  */

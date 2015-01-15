@@ -16,8 +16,16 @@ public interface Register {
      */
     int getId();
 
+    /** Get the register name as defined in XML.
+     * 
+     * @return The name of the register.
+     */
     String getName();
     
+    /** Get the device to which this register belongs. 
+     * 
+     * @return The panStamp device.  
+     */
     PanStamp getDevice();
     
     /**
