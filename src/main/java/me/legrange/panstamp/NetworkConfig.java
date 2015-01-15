@@ -4,25 +4,28 @@ package me.legrange.panstamp;
  * An abstraction of the network configuration for a PanStamp network
  * @author gideon
  */
-public class Network {
+public class NetworkConfig {
 
-    public Network(int networkId, int frequencyChannel, int securityOption) {
+    public NetworkConfig(int networkId, int frequencyChannel, int securityOption) {
         this.networkId = networkId;
         this.frequencyChannel = frequencyChannel;
         this.securityOption = securityOption;
     }
 
-    /** return the network ID */
+    /** Get the network ID
+     * @return network ID */
     public int getNetworkId() {
         return networkId;
     }
 
-    /** return the frequency channel */
+    /** Get the frequency channel
+     * @return TThe channel  */
     public int getFrequencyChannel() {
         return frequencyChannel;
     }
 
-    /** return the security option */
+    /** Get the security option
+     * @return the security option value. */
     public int getSecurityOption() {
         return securityOption;
     }
