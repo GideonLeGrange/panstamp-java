@@ -34,11 +34,39 @@ public interface DeviceConfig {
      * @throws me.legrange.panstamp.GatewayException  */
     int getTxInterval() throws GatewayException;
 
-    
+    /** 
+     * Set the address of the panStamp 
+     * @param addr The address to set
+     * @throws GatewayException Thrown if there is a problem setting the address
+     */
     void setAddress(int addr) throws GatewayException;
+    
+    /** 
+     * Set the network id of the device
+     * @param network The network id
+     * @throws GatewayException Thrown if there is a problem setting the ID
+     */
     void setNetwork(int network) throws GatewayException;
+
+    /**
+     * Set the network channel of the device 
+     * @param channel The channel to set.
+     * @throws GatewayException  Thrown if there is a problem setting the channel
+     */
     void setChannel(int channel) throws GatewayException;
+
+    /**
+     * Set the security option of the device.
+     * @param option The security option to set.
+     * @throws GatewayException  Thrown if there is a problem setting the option.
+     */
     void setSecurityOption(int option) throws GatewayException;
+
+    /** 
+     * Set the transmit interval (in seconds) of the device.
+     * @param txInterval The interval to set. 
+     * @throws GatewayException Thrown if there is a problem setting the interval.
+     */
     void setTxInterva(int txInterval)throws GatewayException;
 
 

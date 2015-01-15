@@ -10,7 +10,8 @@ import me.legrange.swap.tcp.TcpModem;
 import me.legrange.swap.tcp.TcpException;
 
 /**
- * A PanStamp network gateway
+ * A PanStamp network gateway. This object represents the interface to a network of 
+ * Panstamp devices accessible via a SWAP modem. 
  *
  * @author gideon
  */
@@ -111,6 +112,7 @@ public abstract class Gateway {
      * return the network ID for the network supported by this gateway
      *
      * @return The network ID
+     * @throws me.legrange.panstamp.impl.ModemException Thrown if there is a problem determining the network ID 
      */
     public abstract int getNetworkId() throws ModemException;
 }

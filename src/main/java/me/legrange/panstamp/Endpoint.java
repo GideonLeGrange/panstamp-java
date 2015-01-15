@@ -26,7 +26,7 @@ public interface Endpoint<T> {
     /**
      * Get the units supported by this endpoint
      *
-     * @return The supported units.
+     * @return The supported units. This can be empty
      */
     List<String> getUnits();
 
@@ -43,6 +43,10 @@ public interface Endpoint<T> {
      */
     void removeListener(EndpointListener<T> el);
     
+    /** 
+     * Checks if the endpoint has a value available.
+     * @return True if the endpoint has a value 
+     */
     boolean hasValue();
 
     /**
@@ -79,6 +83,10 @@ public interface Endpoint<T> {
      */
     void setValue(T value) throws GatewayException;
     
+    /** 
+     * Get the register to which this endpoint is associated. 
+     * @return The register containing this endpoint. 
+     */
     Register getRegister();
 
 }
