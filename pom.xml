@@ -43,9 +43,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>swap</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.neuronrobotics</groupId>
+            <artifactId>nrjavaserial</artifactId>
+            <version>3.7.5.1</version>
         </dependency>
     </dependencies>
 </project>
