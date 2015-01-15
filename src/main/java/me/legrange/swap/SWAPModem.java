@@ -53,10 +53,13 @@ public abstract class SWAPModem {
      * get the network setup
      *
      * @return The setup data
+     * @throws me.legrange.swap.SWAPException Thrown if there is a problem retrieving the setup
      */
     public abstract ModemSetup getSetup() throws SWAPException;
 
-    /** set the network setup */
+    /** set the network setup
+     * @param setup The modem setup to apply
+     * @throws me.legrange.swap.SWAPException  Thrown if there is a problem applying the setup */
     public abstract void setSetup(ModemSetup setup) throws SWAPException;
 
 }
