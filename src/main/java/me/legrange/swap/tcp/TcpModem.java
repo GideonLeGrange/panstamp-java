@@ -22,7 +22,11 @@ import me.legrange.swap.serial.SerialModem;
  */
 public class TcpModem implements SWAPModem {
 
-    /** Open a new TcpModem with the given host and port */
+    /** Open a new TcpModem with the given host and port
+     * @param host The host to which to connect.
+     * @param port The port to which to connect.
+     * @return The new TCP modem created.
+     * @throws me.legrange.swap.tcp.TcpException Thrown if there is a problem opening the modem. */
     public static TcpModem open(String host, int port) throws TcpException {
         TcpModem tc = new TcpModem();
         tc.start(host, port);
