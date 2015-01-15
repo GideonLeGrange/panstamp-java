@@ -20,7 +20,7 @@ import me.legrange.swap.serial.SerialModem;
  * A SWAP modem implementation that works over TCP.
  * @author gideon
  */
-public class TcpModem extends SWAPModem {
+public class TcpModem implements SWAPModem {
 
     /** Open a new TcpModem with the given host and port */
     public static TcpModem open(String host, int port) throws TcpException {
@@ -63,6 +63,10 @@ public class TcpModem extends SWAPModem {
     @Override
     public void setSetup(ModemSetup newSetup) throws SWAPException {
         trans.sendSetup(newSetup);
+    }
+    
+    public Type getType() { 
+        return Type.TCP_IP;
     }
 
     private TcpModem() {

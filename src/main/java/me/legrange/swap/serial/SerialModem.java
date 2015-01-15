@@ -21,7 +21,7 @@ import me.legrange.swap.SWAPModem;
  *
  * @author gideon
  */
-public final class SerialModem extends SWAPModem {
+public final class SerialModem implements SWAPModem {
 
     public static SerialModem open(String port, int baud) throws SWAPException {
         SerialModem modem = new SerialModem(port, baud);
@@ -79,6 +79,11 @@ public final class SerialModem extends SWAPModem {
             leaveCommandMode();
             this.setup = setup;
         }
+    }
+    
+    @Override
+    public Type getType() {
+        return Type.SERIAL;
     }
     
     private int readATasInt(String cmd) throws SerialException {

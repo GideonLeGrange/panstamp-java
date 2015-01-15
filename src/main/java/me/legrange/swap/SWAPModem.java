@@ -3,29 +3,24 @@ package me.legrange.swap;
 import me.legrange.swap.serial.SerialModem;
 
 /**
+ * A virtual modem that provides access to a SWAP transport. Currently we
+ * implement two kinds, serial and TCP/IP.
  *
  * @author gideon
  */
-public abstract class SWAPModem {
+public interface SWAPModem {
 
-    /**
-     * An interface abstracting a SWAP modem.
-     *
-     * @param port
-     * @param baud
-     * @return
-     * @throws SWAPException
-     */
-    public static SWAPModem openSerial(String port, int baud) throws SWAPException {
-        return SerialModem.open(port, baud);
-    }
+    public enum Type {
+
+        SERIAL, TCP_IP
+    };
 
     /**
      * disconnect and close the modem
      *
      * @throws me.legrange.swap.SWAPException
      */
-    public abstract void close() throws SWAPException;
+    void close() throws SWAPException;
 
     /**
      * send a message out onto the network
@@ -33,33 +28,45 @@ public abstract class SWAPModem {
      * @param msg Message to send.
      * @throws me.legrange.swap.SWAPException
      */
-    public abstract void send(SwapMessage msg) throws SWAPException;
+    void send(SwapMessage msg) throws SWAPException;
 
     /**
      * add a message listener to receive messages
      *
      * @param l listener to add.
      */
-    public abstract void addListener(MessageListener l);
+    void addListener(MessageListener l);
 
     /**
      * remove a listener
      *
      * @param l listener to remove
      */
-    public abstract void removeListener(MessageListener l);
+    void removeListener(MessageListener l);
 
     /**
      * get the network setup
      *
      * @return The setup data
-     * @throws me.legrange.swap.SWAPException Thrown if there is a problem retrieving the setup
+     * @throws me.legrange.swap.SWAPException Thrown if there is a problem
+     * retrieving the setup
      */
-    public abstract ModemSetup getSetup() throws SWAPException;
+    ModemSetup getSetup() throws SWAPException;
 
-    /** set the network setup
+    /**
+     * set the network setup
+     *
      * @param setup The modem setup to apply
-     * @throws me.legrange.swap.SWAPException  Thrown if there is a problem applying the setup */
-    public abstract void setSetup(ModemSetup setup) throws SWAPException;
+     * @throws me.legrange.swap.SWAPException Thrown if there is a problem
+     * applying the setup
+     */
+    void setSetup(ModemSetup setup) throws SWAPException;
+
+    /**
+     * determine the type of virtual modem
+     *
+     * @return The type of the modem
+     */
+    Type getType();
 
 }
