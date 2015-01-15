@@ -166,6 +166,4 @@ public class SerialMessage implements SwapMessage {
     private final byte registerValue[];
     private final String text;
 
-
-
 }

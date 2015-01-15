@@ -13,7 +13,7 @@ public class TcpException extends SWAPException {
      * @param msg Message to use
      * @param cause Causing exception
      */
-    public TcpException(String msg, Throwable cause) {
+    TcpException(String msg, Throwable cause) {
         super(msg, cause);
     }
     
