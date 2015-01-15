@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 /**
- *
+ * A device library that uses a directory with XML files to find device 
+ * configurations. 
+ * 
  * @author gideon
  */
 public class FileLibrary extends DeviceLibrary {
