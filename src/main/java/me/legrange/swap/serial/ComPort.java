@@ -33,7 +33,7 @@ final class ComPort  {
     /**
      * send a line of text to the com port
      */
-    public void send(String msg) throws SerialException {
+    void send(String msg) throws SerialException {
         try {
             synchronized (outLock) {
                 out.write(msg.getBytes());
@@ -48,7 +48,7 @@ final class ComPort  {
     /**
      * read a line of text from the com port
      */
-     public String read() throws SerialException {
+     String read() throws SerialException {
         try {
             synchronized (inLock) {
                 return in.readLine();
@@ -61,7 +61,7 @@ final class ComPort  {
     /**
      * Close serial port
      */
-    public void close() throws SerialException {
+     void close() throws SerialException {
         try {
             in.close();
             out.close();
