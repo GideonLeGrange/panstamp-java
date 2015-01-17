@@ -69,8 +69,24 @@ public class TcpModem implements SWAPModem {
         trans.sendSetup(newSetup);
     }
     
+    @Override
     public Type getType() { 
         return Type.TCP_IP;
+    }
+    
+    /**
+     * Get the host the modem is connected to.
+     */
+    public String getHost() { 
+        return host;
+    }
+    
+    /**
+     * Get the TCP port the modem is connected to.
+     * @return The port.
+     */
+    public int getPort() { 
+        return port;
     }
 
     private TcpModem() {
@@ -82,6 +98,8 @@ public class TcpModem implements SWAPModem {
             running = true;
             setup = new ModemSetup(0, 0, 0);
             sock = new Socket(host, port);
+            this.host = host;
+            this.port = port;
             trans = new TcpTransport(sock);
             trans.addListener(new Listener());
 
@@ -144,6 +162,8 @@ public class TcpModem implements SWAPModem {
     }
 
     private Socket sock;
+    private String host;
+    private int port;
     private TcpTransport trans;
     private boolean running;
     private final List<MessageListener> listeners;

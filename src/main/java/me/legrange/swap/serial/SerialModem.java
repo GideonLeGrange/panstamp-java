@@ -86,6 +86,22 @@ public final class SerialModem implements SWAPModem {
         return Type.SERIAL;
     }
     
+    /**
+     * Get the name of the serial port used by this modem. 
+     * @return The name of the serial port
+     */
+    public String getPort() { 
+        return port;
+    }
+    
+    /**
+     * Get the serial speed this modem connects at 
+     * @return The serial speed
+     */
+    public int getBaud() { 
+        return baud;
+    }
+    
     private int readATasInt(String cmd) throws SerialException {
         String res = readAT(cmd);
         try {
