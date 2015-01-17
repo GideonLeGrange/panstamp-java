@@ -63,6 +63,14 @@ public abstract class Gateway {
      */
     public abstract void close() throws GatewayException;
 
+    /** 
+     * Return the configuration for the network accessed by this gateway.
+     * 
+     * @return
+     * @throws GatewayException 
+     */
+    public abstract NetworkConfig getNetworkConfig() throws GatewayException;
+    
     /**
      * use to check if a device with the given address is known
      *
