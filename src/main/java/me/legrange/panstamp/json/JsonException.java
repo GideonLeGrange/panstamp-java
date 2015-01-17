@@ -1,4 +1,4 @@
-package me.legrange.panstamp.store;
+package me.legrange.panstamp.json;
 
 /**
  * Exception thrown if there is a problem serializing Panstamp structures to Json.
