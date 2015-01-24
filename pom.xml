@@ -47,10 +47,5 @@
             <artifactId>nrjavaserial</artifactId>
             <version>3.7.5.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.jillesvangurp</groupId>
-            <artifactId>jsonj</artifactId>
-            <version>1.51</version>
-        </dependency>
     </dependencies>
 </project>
