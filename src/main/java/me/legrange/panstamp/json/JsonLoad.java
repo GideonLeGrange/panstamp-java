@@ -37,6 +37,9 @@ public class JsonLoad {
             case "SERIAL" : 
                 String port = o.getString("port");
                 int baud = o.getInt("baud");
+                return new SerialModem(port, baud);
+            case "TCP" : 
+                String host = o.getString("host");
         }
         return null;
     }

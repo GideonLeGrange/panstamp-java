@@ -30,7 +30,7 @@ public class JsonStore {
                 field("networkId", gw.getNetworkId()),
                 field("swapModem", modemAsJson(gw.getSWAPModem())),
                 field("devices", devicesAsJson(gw.getDevices()))
-        ).prettyPrint();
+        ).prettyPrint(); 
     }
 
     private static JsonObject modemAsJson(SWAPModem modem) throws SWAPException {
