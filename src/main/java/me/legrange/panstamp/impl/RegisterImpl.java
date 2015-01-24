@@ -11,7 +11,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointNotFoundException;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
