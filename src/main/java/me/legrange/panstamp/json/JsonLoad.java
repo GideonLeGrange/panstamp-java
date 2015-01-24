@@ -8,6 +8,7 @@ import me.legrange.panstamp.Gateway;
 
 import static com.github.jsonj.JsonType.object;
 import me.legrange.swap.SWAPModem;
+import me.legrange.swap.serial.SerialModem;
 
 /**
  *
@@ -36,7 +37,6 @@ public class JsonLoad {
             case "SERIAL" : 
                 String port = o.getString("port");
                 int baud = o.getInt("baud");
-               System.out.printf("port = %s, baud = %d\n", port, baud);
         }
         return null;
     }

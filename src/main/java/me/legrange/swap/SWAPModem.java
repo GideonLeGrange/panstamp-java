@@ -1,7 +1,5 @@
 package me.legrange.swap;
 
-import me.legrange.swap.serial.SerialModem;
-
 /**
  * A virtual modem that provides access to a SWAP transport. Currently we
  * implement two kinds, serial and TCP/IP.
@@ -14,6 +12,12 @@ public interface SWAPModem {
 
         SERIAL, TCP_IP
     };
+    
+    /** 
+     * connect to the modem. 
+     * 
+     */
+    void open() throws SWAPException;
 
     /**
      * disconnect and close the modem

@@ -22,15 +22,25 @@ import me.legrange.swap.serial.SerialModem;
  */
 public class TcpModem implements SWAPModem {
 
-    /** Open a new TcpModem with the given host and port
-     * @param host The host to which to connect.
-     * @param port The port to which to connect.
-     * @return The new TCP modem created.
-     * @throws me.legrange.swap.tcp.TcpException Thrown if there is a problem opening the modem. */
-    public static TcpModem open(String host, int port) throws TcpException {
-        TcpModem tc = new TcpModem();
-        tc.start(host, port);
-        return tc;
+
+    public TcpModem(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    @Override
+    public void open() throws TcpException {
+        try {
+            running = true;
+            setup = new ModemSetup(0, 0, 0);
+            sock = new Socket(host, port);
+            trans = new TcpTransport(sock);
+            trans.addListener(new Listener());
+
+        } catch (IOException ex) {
+            throw new TcpException(ex.getMessage(), ex);
+        }
+
     }
 
     @Override
@@ -87,26 +97,6 @@ public class TcpModem implements SWAPModem {
      */
     public int getPort() { 
         return port;
-    }
-
-    private TcpModem() {
-        this.listeners = new CopyOnWriteArrayList<>();
-    }
-
-    private void start(String host, int port) throws TcpException {
-        try {
-            running = true;
-            setup = new ModemSetup(0, 0, 0);
-            sock = new Socket(host, port);
-            this.host = host;
-            this.port = port;
-            trans = new TcpTransport(sock);
-            trans.addListener(new Listener());
-
-        } catch (IOException ex) {
-            throw new TcpException(ex.getMessage(), ex);
-        }
-
     }
 
     private void fireEvent(SwapMessage msg, ReceiveTask.Direction dir) {
@@ -166,7 +156,7 @@ public class TcpModem implements SWAPModem {
     private int port;
     private TcpTransport trans;
     private boolean running;
-    private final List<MessageListener> listeners;
+    private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
     private ModemSetup setup;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 

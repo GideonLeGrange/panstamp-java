@@ -29,7 +29,8 @@ public abstract class Gateway {
     public static Gateway openSerial(String port, int baud) throws ModemException {
         SerialModem sm;
         try {
-            sm = SerialModem.open(port, baud);
+            sm = new SerialModem(port, baud);
+            sm.open();
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
@@ -46,13 +47,14 @@ public abstract class Gateway {
      * @throws me.legrange.panstamp.impl.ModemException
      */
     public static Gateway openTcp(String host, int port) throws ModemException {
-        TcpModem sm;
+        TcpModem tm;
         try {
-            sm = TcpModem.open(host, port);
+            tm =  new TcpModem(host, port);
+            tm.open();
         } catch (TcpException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
-        return new GatewayImpl(sm);
+        return new GatewayImpl(tm);
     }
 
 
@@ -66,7 +68,7 @@ public abstract class Gateway {
     /** 
      * Return the configuration for the network accessed by this gateway.
      * 
-     * @return
+     * @return the configuration.
      * @throws GatewayException 
      */
     public abstract NetworkConfig getNetworkConfig() throws GatewayException;

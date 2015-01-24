@@ -1,9 +1,9 @@
 package me.legrange.swap.serial;
 
 import me.legrange.swap.ModemSetup;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,12 +23,21 @@ import me.legrange.swap.SWAPModem;
  */
 public final class SerialModem implements SWAPModem {
 
-    public static SerialModem open(String port, int baud) throws SWAPException {
-        SerialModem modem = new SerialModem(port, baud);
-        modem.open();
-        return modem;
+    public SerialModem(String port, int baud) {
+        this.port = port;
+        this.baud = baud;
     }
 
+    @Override
+    public void open() throws SWAPException {
+        com = ComPort.open(port, baud);
+        running = true;
+        reader = new Reader();
+        reader.setDaemon(true);
+        reader.setName(String.format("%s Reader Thread", getClass().getSimpleName()));
+        reader.start();
+    }
+    
     @Override
     public void close() throws SerialException {
         running = false;
@@ -177,26 +186,6 @@ public final class SerialModem implements SWAPModem {
         }
     }
 
-    private SerialModem(String port, int baud) {
-        this.listeners = new LinkedList<>();
-        this.port = port;
-        this.baud = baud;
-    }
-
-    /**
-     * open the modem
-     *
-     * @throws me.legrange.swap.SWAPException Thrown if the gateway has problems
-     * starting
-     */
-    private void open() throws SWAPException {
-        com = ComPort.open(port, baud);
-        running = true;
-        reader = new Reader();
-        reader.setDaemon(true);
-        reader.setName(String.format("%s Reader Thread", getClass().getSimpleName()));
-        reader.start();
-    }
 
     /**
      * send the received message to listeners
@@ -220,7 +209,7 @@ public final class SerialModem implements SWAPModem {
     private final BlockingQueue<String> results = new LinkedBlockingQueue<>();
     private Reader reader;
     private boolean running;
-    private final List<MessageListener> listeners;
+    private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
     private final int baud;
     private final String port;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {

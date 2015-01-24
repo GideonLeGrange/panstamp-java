@@ -15,7 +15,8 @@ public class testServer {
     public static final String PORT = "/dev/tty.usbserial-A800HNMV";
     
         public static void main(String...args) throws Exception {
-            SWAPModem m = SerialModem.open(PORT,38400);
+            SWAPModem m =  new SerialModem(PORT,38400);
+            m.open();
             TcpServer s = new TcpServer(m, 3333);
             System.out.println("Press enter to quit");
             BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
