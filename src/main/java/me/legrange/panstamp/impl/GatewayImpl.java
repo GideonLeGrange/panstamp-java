@@ -16,9 +16,12 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
+import me.legrange.panstamp.store.DataStore;
+import me.legrange.panstamp.store.RegisterState;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -34,7 +37,7 @@ import me.legrange.swap.ModemSetup;
  */
 public final class GatewayImpl extends Gateway {
 
-    public GatewayImpl(SWAPModem modem)  {
+    public GatewayImpl(SWAPModem modem) {
         this.modem = modem;
         lib = new ClassLoaderLibrary();
         receiver = new Receiver();
@@ -129,12 +132,10 @@ public final class GatewayImpl extends Gateway {
         return getSetup().getDeviceAddress();
     }
 
-
     @Override
     public int getSecurityOption() {
         return 0; // FIX ME
     }
-    
 
     /**
      * send a command message to a remote device
@@ -193,6 +194,19 @@ public final class GatewayImpl extends Gateway {
                         }
 
                     });
+                    // TODO - Decide if we want the code here as an if-condition, 
+                    // or if we want to attach a listener that will lookup and update
+                    if (store != null) {
+                        RegisterState state = store.load(address);
+                        for (StandardRegister sr : StandardRegister.ALL) {
+                            byte val[] = state.getState(sr);
+                            if (val.length > 0) {
+                                RegisterImpl reg = (RegisterImpl) dev.getRegister(sr.getId());
+                                reg.valueReceived(val);
+                            }
+                        }
+                    }
+
                 } catch (NoSuchUnitException ex) {
                     throw new ModemException(ex.getMessage(), ex);
                 }
@@ -201,7 +215,7 @@ public final class GatewayImpl extends Gateway {
     }
 
     private void fireEvent(GatewayEvent ev) {
-         for (GatewayListener l : listeners) {
+        for (GatewayListener l : listeners) {
             pool.submit(new ListenerTask(l, ev));
         }
     }
@@ -226,8 +240,8 @@ public final class GatewayImpl extends Gateway {
                 setup = modem.getSetup();
             } catch (SWAPException ex) {
                 throw new ModemException(ex.getMessage(), ex);
-            } 
-            
+            }
+
         }
         return setup;
     }
@@ -235,6 +249,7 @@ public final class GatewayImpl extends Gateway {
     private final SWAPModem modem;
     private final Receiver receiver;
     private ModemSetup setup;
+    private DataStore store;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(GatewayImpl.class.getName());
