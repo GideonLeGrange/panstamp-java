@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.EndpointNotFoundException;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
@@ -116,7 +117,7 @@ public class RegisterImpl implements Register {
     }
 
     @Override
-    public Endpoint getEndpoint(String name) throws GatewayException {
+    public Endpoint getEndpoint(String name) throws EndpointNotFoundException {
         Endpoint ep = endpoints.get(name);
         if (ep == null) {
             throw new EndpointNotFoundException(String.format("Could not find endpoint '%s' in register %d", name, id));

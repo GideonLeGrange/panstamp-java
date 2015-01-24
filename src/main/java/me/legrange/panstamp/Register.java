@@ -43,7 +43,7 @@ public interface Register {
      * @return
      * @throws me.legrange.panstamp.GatewayException
      */
-    Endpoint getEndpoint(String name) throws GatewayException;
+    Endpoint getEndpoint(String name) throws EndpointNotFoundException;
 
     /**
      * returns true if the device has an endpoint with the given name

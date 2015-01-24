@@ -1,6 +1,4 @@
-package me.legrange.panstamp.impl;
-
-import me.legrange.panstamp.GatewayException;
+package me.legrange.panstamp;
 
 /**
  * Exception thrown in cases where it is expected to find an endpoint, and it does't exist.
