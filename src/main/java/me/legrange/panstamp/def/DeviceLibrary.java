@@ -4,13 +4,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import me.legrange.panstamp.PanStamp;
 
 /**
  * A device library implementation is used to find and load panStamp XML device definitions. 
  * @author gideon
  */
-public abstract class DeviceLibrary {                                   
-
+public abstract class DeviceLibrary {      
+    
     public Device findDevice(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
         if (devices == null) {
             devices = new HashMap<>();
