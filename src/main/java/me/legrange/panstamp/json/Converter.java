@@ -9,11 +9,11 @@ public interface Converter<T> {
     /** 
      * Convert object to JSON 
      */
-    String toJson(T val);
+    String toJson(T val) throws ConversionException;
     
     /** 
      * Convert from JSON to object. 
      */
-    T fromJson(String text);
+    T fromJson(String text) throws ConversionException;
     
 }

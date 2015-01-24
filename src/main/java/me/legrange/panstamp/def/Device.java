@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A Panstamp device configuration 
+ * A panStamp device configuration 
  * @author gideon
  */
 public class Device {

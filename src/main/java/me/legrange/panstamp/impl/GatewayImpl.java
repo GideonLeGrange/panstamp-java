@@ -14,7 +14,6 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
-import me.legrange.panstamp.NetworkConfig;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
@@ -56,15 +55,6 @@ public final class GatewayImpl extends Gateway {
 
         }
         devices.clear();
-    }
-
-    @Override
-    public NetworkConfig getNetworkConfig() throws GatewayException {
-        try {                
-            return new NetworkConfigImpl(modem.getSetup().getNetworkID(), modem.getSetup().getChannel(), 0); // FIX ME: Security option == 0
-        } catch (SWAPException ex) {
-            throw new GatewayException(ex.getMessage(), ex);
-        }
     }
 
     /**
@@ -130,9 +120,21 @@ public final class GatewayImpl extends Gateway {
         return getSetup().getNetworkID();
     }
 
-    int getChannel() throws ModemException {
+    public int getChannel() throws ModemException {
         return getSetup().getChannel();
     }
+
+    @Override
+    public int getDeviceAddress() throws ModemException {
+        return getSetup().getDeviceAddress();
+    }
+
+
+    @Override
+    public int getSecurityOption() {
+        return 0; // FIX ME
+    }
+    
 
     /**
      * send a command message to a remote device

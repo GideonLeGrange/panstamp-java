@@ -65,14 +65,6 @@ public abstract class Gateway {
      */
     public abstract void close() throws GatewayException;
 
-    /** 
-     * Return the configuration for the network accessed by this gateway.
-     * 
-     * @return the configuration.
-     * @throws GatewayException 
-     */
-    public abstract NetworkConfig getNetworkConfig() throws GatewayException;
-    
     /**
      * use to check if a device with the given address is known
      *
@@ -125,4 +117,17 @@ public abstract class Gateway {
      * @throws me.legrange.panstamp.impl.ModemException Thrown if there is a problem determining the network ID 
      */
     public abstract int getNetworkId() throws ModemException;
+    
+     /** get the gateway panStamp's address 
+      * @return the gateway address
+      */
+     public abstract int getDeviceAddress() throws ModemException;
+    
+    /** Get the frequency channel
+     * @return TThe channel  */
+    public abstract int getChannel() throws ModemException;
+
+    /** Get the security option
+     * @return the security option value. */
+    public abstract int getSecurityOption() throws ModemException;
 }
