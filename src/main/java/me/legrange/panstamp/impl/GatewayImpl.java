@@ -61,7 +61,7 @@ public final class GatewayImpl extends Gateway {
     @Override
     public NetworkConfig getNetworkConfig() throws GatewayException {
         try {                
-            return new NetworkConfig(modem.getSetup().getNetworkID(), modem.getSetup().getChannel(), 0); // FIX ME: Security option == 0
+            return new NetworkConfigImpl(modem.getSetup().getNetworkID(), modem.getSetup().getChannel(), 0); // FIX ME: Security option == 0
         } catch (SWAPException ex) {
             throw new GatewayException(ex.getMessage(), ex);
         }
