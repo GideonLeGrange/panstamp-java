@@ -6,7 +6,9 @@ import static com.github.jsonj.tools.JsonBuilder.object;
 import com.github.jsonj.tools.JsonParser;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class JsonDataStore implements DataStore {
              );
         JsonObject entries = getStateEntries();
         entries.put(key(addr), jEntry);
+        write();
     }
 
     @Override
@@ -131,6 +134,18 @@ public class JsonDataStore implements DataStore {
         return buf.toString();
     }
 
+    private void write() throws DataStoreException {
+                // now write to file
+        try {
+            try (PrintWriter out = new PrintWriter(new FileWriter(fileName))) {
+                out.println(data.prettyPrint());
+            }
+        }
+        catch (IOException ex) {
+            throw new DataStoreException(String.format("IO error writing JSON file '%s': %s", fileName, ex.getMessage()), ex);
+        }
+    }
+    
     private final String fileName;
     private JsonObject data;
     
