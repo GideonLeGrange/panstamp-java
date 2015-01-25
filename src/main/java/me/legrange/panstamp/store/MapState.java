@@ -1,4 +1,4 @@
-package me.legrange.panstamp.json;
+package me.legrange.panstamp.store;
 
 import java.util.Map;
 import me.legrange.panstamp.impl.StandardRegister;

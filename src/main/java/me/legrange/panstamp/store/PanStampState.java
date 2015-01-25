@@ -1,4 +1,4 @@
-package me.legrange.panstamp.json;
+package me.legrange.panstamp.store;
 
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;

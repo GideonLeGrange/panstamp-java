@@ -1,5 +1,6 @@
-package me.legrange.panstamp.json;
+package me.legrange.panstamp.store;
 
+import me.legrange.panstamp.store.MapState;
 import com.github.jsonj.JsonObject;
 import static com.github.jsonj.tools.JsonBuilder.field;
 import static com.github.jsonj.tools.JsonBuilder.object;

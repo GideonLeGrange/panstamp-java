@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.json.JsonDataStore;
-import me.legrange.panstamp.json.PanStampState;
+import me.legrange.panstamp.store.JsonDataStore;
+import me.legrange.panstamp.store.PanStampState;
 import me.legrange.panstamp.store.DataStoreException;
 
 /**
