@@ -143,7 +143,6 @@ public class RegisterImpl implements Register {
     void valueReceived(byte value[]) {
         synchronized (this) {
             this.value = value;
-            notify();
         }
         fireEvent(RegisterEvent.Type.VALUE_RECEIVED);
     }
