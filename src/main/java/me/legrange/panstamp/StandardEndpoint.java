@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
 import me.legrange.panstamp.def.Direction;
 import me.legrange.panstamp.def.EndpointDef;

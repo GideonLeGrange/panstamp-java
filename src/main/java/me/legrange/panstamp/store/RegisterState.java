@@ -1,6 +1,6 @@
 package me.legrange.panstamp.store;
 
-import me.legrange.panstamp.impl.StandardRegister;
+import me.legrange.panstamp.StandardRegister;
 
 /**
  * This interface specifies the format in which panStamp state data is exchanged. The idea

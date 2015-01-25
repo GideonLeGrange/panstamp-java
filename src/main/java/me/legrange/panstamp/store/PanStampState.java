@@ -3,7 +3,7 @@ package me.legrange.panstamp.store;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.impl.StandardRegister;
+import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.store.RegisterState;
 
 /**
