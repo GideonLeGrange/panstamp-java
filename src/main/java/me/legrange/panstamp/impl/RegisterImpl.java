@@ -299,8 +299,8 @@ public class RegisterImpl implements Register {
         public void run() {
             try {
                 l.registerUpdated(e);
-            } catch (Throwable e) {
-                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
+            } catch (Throwable ex) {
+                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         }

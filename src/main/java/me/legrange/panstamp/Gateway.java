@@ -81,14 +81,17 @@ public interface Gateway {
     
      /** get the gateway panStamp's address 
       * @return the gateway address
+     * @throws me.legrange.panstamp.impl.ModemException
       */
      int getDeviceAddress() throws ModemException;
     
     /** Get the frequency channel
-     * @return TThe channel  */
+     * @return TThe channel
+     * @throws me.legrange.panstamp.impl.ModemException  */
     int getChannel() throws ModemException;
 
     /** Get the security option
-     * @return the security option value. */
+     * @return the security option value.
+     * @throws me.legrange.panstamp.impl.ModemException */
     int getSecurityOption() throws ModemException;
 }

@@ -113,8 +113,6 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
         return reg;
     }
     
-    
-
     protected abstract T transformOut(T value, Unit unit);
 
     protected abstract T transformIn(T value, Unit unit);

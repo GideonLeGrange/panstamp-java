@@ -177,19 +177,19 @@ public final class GatewayImpl implements Gateway {
         return lib.findDevice(manId, prodId);
     }
 
+    ExecutorService getPool() { 
+        return pool;
+    }
+    
     /**
      * send a message to a mote
      */
-    void send(SwapMessage msg) throws ModemException {
+    private void send(SwapMessage msg) throws ModemException {
         try {
             modem.send(msg);
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
-    }
-
-    ExecutorService getPool() { 
-        return pool;
     }
     
     /**
