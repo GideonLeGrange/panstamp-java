@@ -234,6 +234,32 @@ public class PanStampImpl implements PanStamp {
             fireEvent(Type.REGISTER_DETECTED, reg);
         }
     }
+    
+    ExecutorService getPool() {
+        return gw.getPool();
+    }
+
+    /**
+     * create a new mote for the given address in the given network
+     */
+    PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
+        this.gw = gw;
+        this.address = address;
+        for (Registers.Register reg : Registers.Register.values()) {
+            RegisterImpl impl = new RegisterImpl(this, reg);
+            registers.put(reg.position(), impl);
+            switch (reg) {
+                case PRODUCT_CODE:
+                    impl.addListener(productCodeListener());
+                    break;
+                case SYSTEM_STATE: {
+                    Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
+                    ep.addListener(systemStateListener());
+                    break;
+                }
+            }
+        }
+    }
 
     private void queue(int id, byte[] value) {
         addListener(new UpdateOnSync(id, value));
@@ -277,29 +303,7 @@ public class PanStampImpl implements PanStamp {
 
         };
         for (PanStampListener l : listeners) {
-            pool.submit(new UpdateTask(ev, l));
-        }
-    }
-
-    /**
-     * create a new mote for the given address in the given network
-     */
-    PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
-        this.gw = gw;
-        this.address = address;
-        for (Registers.Register reg : Registers.Register.values()) {
-            RegisterImpl impl = new RegisterImpl(this, reg);
-            registers.put(reg.position(), impl);
-            switch (reg) {
-                case PRODUCT_CODE:
-                    impl.addListener(productCodeListener());
-                    break;
-                case SYSTEM_STATE: {
-                    Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
-                    ep.addListener(systemStateListener());
-                    break;
-                }
-            }
+            getPool().submit(new UpdateTask(ev, l));
         }
     }
 
@@ -395,7 +399,8 @@ public class PanStampImpl implements PanStamp {
     private int syncState;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
     private final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
-    private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
+
+    /*private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
         @Override
         public Thread newThread(Runnable r) {
@@ -404,7 +409,7 @@ public class PanStampImpl implements PanStamp {
             return t;
         }
     });
-
+*/
     private static class UpdateTask implements Runnable {
 
         private UpdateTask(PanStampEvent ev, PanStampListener l) {

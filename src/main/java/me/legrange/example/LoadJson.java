@@ -11,7 +11,13 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.impl.StandardRegister;
 import me.legrange.panstamp.json.GatewayConverter;
+import me.legrange.panstamp.json.JsonDataStore;
+import me.legrange.panstamp.json.PanStampState;
+import me.legrange.panstamp.store.DataStore;
+import me.legrange.panstamp.store.DataStoreException;
+import me.legrange.panstamp.store.RegisterState;
 
 /**
  *
@@ -21,50 +27,47 @@ public class LoadJson extends Example {
 
     public static void main(String... args) throws Exception {
         LoadJson app = new LoadJson();
-//        app.connect();
+        app.connect();
         app.run();
     }
 
     private static final int SLEEP = 10;
     private boolean done = false;
+    private DataStore store;
 
     @Override
     protected void run() throws GatewayException {
-        BufferedReader in = null;
+         gw.addListener(this);
+         store = new JsonDataStore("store.json");
         try {
-            GatewayConverter gc = new GatewayConverter();
-            StringBuilder buf = new StringBuilder();
-            in = new BufferedReader(new FileReader("gateway.json"));
-            while (in.ready()) {
-                buf.append(in.readLine());
-                buf.append("\n");
-            }
-            in.close();
-            gc.fromJson(buf.toString());
-                    } catch (FileNotFoundException ex) {
+            Thread.sleep(20000);
+        } catch (InterruptedException ex) {
             Logger.getLogger(LoadJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(LoadJson.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(LoadJson.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
+        
     }
 
     @Override
     public void gatewayUpdated(GatewayEvent ev) {
         PanStamp ps = ev.getDevice();
-   /*     try {
-            say("Detected device %d", ps.getAddress());
-            OnWake ow = new OnWake(ps); 
-            ow.queue(Util.getEndpoint(ps, StandardEndpoint.PERIODIC_TX_INTERVAL), SLEEP);
-            say("Queued change of sleep for %2x to 10", ps.getAddress());
-        } catch (GatewayException ex) {
-            Logger.getLogger(SetSleep.class.getName()).log(Level.SEVERE, null, ex);
-        } */
+        try {
+            RegisterState load = store.load(ps.getAddress());
+            System.out.printf("Saved state for %d: %s\n", ps.getAddress(), printState(load));
+        } catch (DataStoreException ex) {
+            Logger.getLogger(LoadJson.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    private String printState(RegisterState s) {
+        StringBuilder buf = new StringBuilder();
+        for (StandardRegister sr : StandardRegister.ALL) {
+            byte val[] = s.getState(sr);
+            if (val.length > 0) {
+                buf.append(sr.getName());
+            }
+        }
+        return buf.toString();
     }
 
 }

@@ -1,13 +1,8 @@
 package me.legrange.panstamp;
 
 import java.util.List;
-import me.legrange.panstamp.impl.GatewayImpl;
 import me.legrange.panstamp.impl.ModemException;
-import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
-import me.legrange.swap.serial.SerialModem;
-import me.legrange.swap.tcp.TcpModem;
-import me.legrange.swap.tcp.TcpException;
 
 /**
  * A PanStamp network gateway. This object represents the interface to a network of 
@@ -15,48 +10,14 @@ import me.legrange.swap.tcp.TcpException;
  *
  * @author gideon
  */
-public abstract class Gateway {
+public interface Gateway {
     
-    /**
-     * Open the serial modem application and return a Gateway object for the
-     * connection.
-     *
-     * @param port Serial port to open.
-     * @param baud Serial speed
-     * @return
-     * @throws me.legrange.panstamp.impl.ModemException
+    /** Open the gateway. 
+     * This will open the underlying modem and internal processes that are needed. 
+     * 
+     * @throws GatewayException  Thrown if there is a problem opening the modem.
      */
-    public static Gateway openSerial(String port, int baud) throws ModemException {
-        SerialModem sm;
-        try {
-            sm = new SerialModem(port, baud);
-            sm.open();
-        } catch (SWAPException ex) {
-            throw new ModemException(ex.getMessage(), ex);
-        }
-        return new GatewayImpl(sm);
-    }
-    
-      /**
-     * Open the TCP modem application and return a Gateway object for the
-     * connection.
-     *
-     * @param host Host address to open.
-     * @param port TCP port to connect to
-     * @return The gateway
-     * @throws me.legrange.panstamp.impl.ModemException
-     */
-    public static Gateway openTcp(String host, int port) throws ModemException {
-        TcpModem tm;
-        try {
-            tm =  new TcpModem(host, port);
-            tm.open();
-        } catch (TcpException ex) {
-            throw new ModemException(ex.getMessage(), ex);
-        }
-        return new GatewayImpl(tm);
-    }
-
+    void open() throws GatewayException;
 
     /**
      * Disconnect the connection and close the gateway

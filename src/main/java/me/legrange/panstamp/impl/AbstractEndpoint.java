@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
@@ -125,19 +123,11 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     protected final EndpointDef epDef;
 
     private ExecutorService pool() {
-        return pool;
+        return reg.getPool();
     }
 
     private final List<EndpointListener<T>> listeners;
-    private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(r, "Endpoint Notification Task");
-            t.setDaemon(true);
-            return t;
-        }
-    });
+ 
 
     private class ListenerTask implements Runnable {
 

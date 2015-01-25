@@ -158,6 +158,10 @@ public class RegisterImpl implements Register {
         parameters.put(def.getName(), par);
         fireEvent(Type.PARAMETER_ADDED);
     }
+    
+    ExecutorService getPool() { 
+        return dev.getPool();
+    }
 
     /**
      * create a new register for the given dev and register address
@@ -197,7 +201,7 @@ public class RegisterImpl implements Register {
 
         };
         for (RegisterListener l : listeners) {
-            pool.submit(new UpdateTask(ev, l));
+            getPool().submit(new UpdateTask(ev, l));
         }
     }
 
@@ -283,15 +287,7 @@ public class RegisterImpl implements Register {
     private final Map<String, Parameter> parameters = new HashMap<>();
     private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] value;
-    private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(r, "Register Event Task");
-            t.setDaemon(true);
-            return t;
-        }
-    });
+   
 
     private class UpdateTask implements Runnable {
 

@@ -29,7 +29,7 @@ public class PanStampState implements RegisterState {
     public PanStampState(PanStamp ps) {
         this.ps = ps;
     }
-
+        
     private final PanStamp ps;
 
 }

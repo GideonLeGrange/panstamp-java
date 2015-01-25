@@ -44,3 +44,5 @@ _site/
 .classpath
 
 .project
+
+*.json

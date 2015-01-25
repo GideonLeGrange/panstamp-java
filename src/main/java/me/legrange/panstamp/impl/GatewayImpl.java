@@ -16,7 +16,6 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
@@ -35,12 +34,21 @@ import me.legrange.swap.ModemSetup;
  *
  * @author gideon
  */
-public final class GatewayImpl extends Gateway {
+public final class GatewayImpl implements Gateway {
 
     public GatewayImpl(SWAPModem modem) {
+        this(modem, new ClassLoaderLibrary(), null);
+    }
+
+    public GatewayImpl(SWAPModem modem, DeviceLibrary lib, DataStore store) {
         this.modem = modem;
-        lib = new ClassLoaderLibrary();
+        this.lib = lib;
+        this.store = store;
         receiver = new Receiver();
+    }
+    
+    @Override
+    public void open() throws GatewayException {
         modem.addListener(receiver);
     }
 
@@ -170,6 +178,10 @@ public final class GatewayImpl extends Gateway {
         }
     }
 
+    ExecutorService getPool() { 
+        return pool;
+    }
+    
     /**
      * update the network based on a received message
      */
@@ -248,12 +260,12 @@ public final class GatewayImpl extends Gateway {
 
     private final SWAPModem modem;
     private final Receiver receiver;
-    private ModemSetup setup;
-    private DataStore store;
+    private final DeviceLibrary lib;
+    private final DataStore store;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(GatewayImpl.class.getName());
-    private final DeviceLibrary lib;
+    private ModemSetup setup;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
         @Override
