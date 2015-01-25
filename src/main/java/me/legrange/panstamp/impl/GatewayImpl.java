@@ -50,6 +50,11 @@ public final class GatewayImpl implements Gateway {
     @Override
     public void open() throws GatewayException {
         modem.addListener(receiver);
+        try {
+            modem.open();
+        } catch (SWAPException ex) {
+            throw new GatewayException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
+        }
     }
 
     /**
@@ -65,7 +70,10 @@ public final class GatewayImpl implements Gateway {
             throw new ModemException(ex.getMessage(), ex);
 
         }
-        devices.clear();
+        finally {
+            modem.removeListener(receiver);
+            devices.clear();
+        }
     }
 
     /**
@@ -131,6 +139,7 @@ public final class GatewayImpl implements Gateway {
         return getSetup().getNetworkID();
     }
 
+    @Override
     public int getChannel() throws ModemException {
         return getSetup().getChannel();
     }
@@ -270,7 +279,7 @@ public final class GatewayImpl implements Gateway {
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(r, "SerialGateway Task");
+            Thread t = new Thread(r, "PanStamp Library Task");
             t.setDaemon(true);
             return t;
         }

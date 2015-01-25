@@ -29,7 +29,8 @@ public abstract class Example implements GatewayListener {
     
     protected void connect() throws GatewayException {
         say("Opening gateway on %s:%d", PORT, BAUD);
-         gw = Factory.openSerial(PORT, BAUD);
+         gw = Factory.createSerial(PORT, BAUD);
+         gw.open();
     }
     
     protected void close() throws GatewayException { 

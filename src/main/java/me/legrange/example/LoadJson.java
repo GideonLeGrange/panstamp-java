@@ -1,20 +1,12 @@
 package me.legrange.example;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.impl.StandardRegister;
-import me.legrange.panstamp.json.GatewayConverter;
 import me.legrange.panstamp.store.JsonDataStore;
-import me.legrange.panstamp.store.PanStampState;
 import me.legrange.panstamp.store.DataStore;
 import me.legrange.panstamp.store.DataStoreException;
 import me.legrange.panstamp.store.RegisterState;
@@ -31,8 +23,6 @@ public class LoadJson extends Example {
         app.run();
     }
 
-    private static final int SLEEP = 10;
-    private boolean done = false;
     private DataStore store;
 
     @Override

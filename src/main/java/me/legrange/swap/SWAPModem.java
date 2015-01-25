@@ -15,7 +15,6 @@ public interface SWAPModem {
     
     /** 
      * connect to the modem. 
-     * 
      */
     void open() throws SWAPException;
 

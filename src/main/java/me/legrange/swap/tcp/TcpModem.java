@@ -35,7 +35,8 @@ public class TcpModem implements SWAPModem {
             setup = new ModemSetup(0, 0, 0);
             sock = new Socket(host, port);
             trans = new TcpTransport(sock);
-            trans.addListener(new Listener());
+            listener = new Listener();
+            trans.addListener(listener);
 
         } catch (IOException ex) {
             throw new TcpException(ex.getMessage(), ex);
@@ -51,6 +52,9 @@ public class TcpModem implements SWAPModem {
             sock.close();
         } catch (IOException ex) {
             throw new TcpException(ex.getMessage(), ex);
+        }
+        finally {
+            trans.removeListener(listener);
         }
     }
 
@@ -152,12 +156,13 @@ public class TcpModem implements SWAPModem {
     }
 
     private Socket sock;
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
     private TcpTransport trans;
     private boolean running;
     private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
     private ModemSetup setup;
+    private Listener listener;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
         @Override
