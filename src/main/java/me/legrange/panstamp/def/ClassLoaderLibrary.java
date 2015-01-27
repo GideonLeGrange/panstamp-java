@@ -7,7 +7,7 @@ import java.io.InputStream;
  *
  * @author gideon
  */
-public final class ClassLoaderLibrary extends DeviceLibrary {
+public final class ClassLoaderLibrary extends AbstractDeviceLibrary {
 
     @Override
     public InputStream getStream(String path) {

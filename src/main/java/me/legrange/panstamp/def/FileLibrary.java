@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * 
  * @author gideon
  */
-public class FileLibrary extends DeviceLibrary {
+public class FileLibrary extends AbstractDeviceLibrary {
 
     public FileLibrary(File dir) {
         this.dir = dir;

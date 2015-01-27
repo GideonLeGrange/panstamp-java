@@ -1,6 +1,4 @@
-package me.legrange.panstamp.store;
-
-import me.legrange.panstamp.GatewayException;
+package me.legrange.panstamp;
 
 /**
  * Exception thrown if there is a problem loading from or saving to a DataStore

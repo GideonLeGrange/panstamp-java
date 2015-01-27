@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.def.Device;
+import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
 import me.legrange.panstamp.def.RegisterDef;
@@ -201,7 +201,7 @@ public class PanStampImpl implements PanStamp {
         listeners.remove(l);
     }
 
-    Device getDefinition() {
+    DeviceDef getDefinition() {
         return def;
     }
 
@@ -373,7 +373,7 @@ public class PanStampImpl implements PanStamp {
     /**
      * get the device definition for this panStamp
      */
-    private Device getDeviceDefinition() throws GatewayException {
+    private DeviceDef getDeviceDefinition() throws GatewayException {
         return gw.getDeviceDefinition(manufacturerId, productId);
     }
 
@@ -394,7 +394,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     private final int address;
-    private Device def;
+    private DeviceDef def;
     private final GatewayImpl gw;
     private int manufacturerId;
     private int productId;

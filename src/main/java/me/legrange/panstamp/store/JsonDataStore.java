@@ -13,7 +13,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import me.legrange.panstamp.DataStore;
+import me.legrange.panstamp.DataStoreException;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.RegisterState;
 import me.legrange.panstamp.StandardRegister;
 
 /**

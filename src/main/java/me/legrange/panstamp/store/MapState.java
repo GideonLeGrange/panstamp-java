@@ -1,6 +1,7 @@
 package me.legrange.panstamp.store;
 
 import java.util.Map;
+import me.legrange.panstamp.RegisterState;
 import me.legrange.panstamp.StandardRegister;
 
 /**

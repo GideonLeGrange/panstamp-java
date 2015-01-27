@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.core;
 
 import java.util.LinkedList;
 import java.util.List;

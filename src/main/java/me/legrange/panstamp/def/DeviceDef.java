@@ -9,9 +9,9 @@ import java.util.Map;
  * A panStamp device configuration 
  * @author gideon
  */
-public class Device {
+public class DeviceDef {
     
-    public Device(Developer developer, int id, String name, String label) {
+    public DeviceDef(Developer developer, int id, String name, String label) {
         this.id = id;
         this.developer = developer;
         this.name = name;

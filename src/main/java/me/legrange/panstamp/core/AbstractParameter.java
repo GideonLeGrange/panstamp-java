@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.core;
 
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;

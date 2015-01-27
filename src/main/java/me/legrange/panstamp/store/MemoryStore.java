@@ -3,7 +3,10 @@ package me.legrange.panstamp.store;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import me.legrange.panstamp.DataStore;
+import me.legrange.panstamp.DataStoreException;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.RegisterState;
 
 /**
  * A simple non-persistent in-memory implementation of DataStore to use in 

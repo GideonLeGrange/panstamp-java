@@ -1,7 +1,5 @@
+package me.legrange.panstamp;
 
-package me.legrange.panstamp.store;
-
-import java.util.List;
 import java.util.Set;
 
 /**

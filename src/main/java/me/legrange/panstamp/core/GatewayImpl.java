@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,15 +10,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.legrange.panstamp.DataStore;
+import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.def.Device;
-import me.legrange.panstamp.def.DeviceLibrary;
-import me.legrange.panstamp.store.DataStore;
+import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -61,7 +61,7 @@ public final class GatewayImpl implements Gateway {
     /**
      * Disconnect from the modem and close the gateway
      *
-     * @throws me.legrange.panstamp.impl.ModemException
+     * @throws me.legrange.panstamp.core.ModemException
      */
     @Override
     public void close() throws ModemException {
@@ -173,7 +173,7 @@ public final class GatewayImpl implements Gateway {
         send(msg);
     }
 
-    Device getDeviceDefinition(int manId, int prodId) throws GatewayException {
+    DeviceDef getDeviceDefinition(int manId, int prodId) throws GatewayException {
         return lib.findDevice(manId, prodId);
     }
 
@@ -256,7 +256,7 @@ public final class GatewayImpl implements Gateway {
 
     private final SWAPModem modem;
     private final Receiver receiver;
-    private final DeviceLibrary lib;
+    private final  DeviceLibrary lib;
     private final DataStore store;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();

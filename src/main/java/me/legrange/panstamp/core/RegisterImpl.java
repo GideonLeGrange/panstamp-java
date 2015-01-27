@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
-import me.legrange.panstamp.def.Device;
+import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
 import me.legrange.swap.Registers;
@@ -37,7 +37,7 @@ public class RegisterImpl implements Register {
 
     @Override
     public String getName() {
-        Device def = dev.getDefinition();
+        DeviceDef def = dev.getDefinition();
         if (def != null) {
             if (def.hasRegister(id)) {
                 return def.getRegister(id).getName();
@@ -82,7 +82,7 @@ public class RegisterImpl implements Register {
      * set the register value and send to remote node
      *
      * @param value the new value
-     * @throws me.legrange.panstamp.impl.MoteException
+     * @throws me.legrange.panstamp.core.MoteException
      */
     @Override
     public void setValue(byte value[]) throws GatewayException {

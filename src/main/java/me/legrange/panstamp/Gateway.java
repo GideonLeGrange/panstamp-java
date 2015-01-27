@@ -1,7 +1,6 @@
 package me.legrange.panstamp;
 
 import java.util.List;
-import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.SWAPModem;
 
 /**
@@ -75,23 +74,23 @@ public interface Gateway {
      * return the network ID for the network supported by this gateway
      *
      * @return The network ID
-     * @throws me.legrange.panstamp.impl.ModemException Thrown if there is a problem determining the network ID 
+     * @throws me.legrange.panstamp.core.ModemException Thrown if there is a problem determining the network ID 
      */
-    int getNetworkId() throws ModemException;
+    int getNetworkId() throws GatewayException;
     
      /** get the gateway panStamp's address 
       * @return the gateway address
-     * @throws me.legrange.panstamp.impl.ModemException
+     * @throws me.legrange.panstamp.core.ModemException
       */
-     int getDeviceAddress() throws ModemException;
+     int getDeviceAddress() throws GatewayException;
     
     /** Get the frequency channel
      * @return TThe channel
-     * @throws me.legrange.panstamp.impl.ModemException  */
-    int getChannel() throws ModemException;
+     * @throws me.legrange.panstamp.core.ModemException  */
+    int getChannel() throws GatewayException;
 
     /** Get the security option
      * @return the security option value.
-     * @throws me.legrange.panstamp.impl.ModemException */
-    int getSecurityOption() throws ModemException;
+     * @throws me.legrange.panstamp.core.ModemException */
+    int getSecurityOption() throws GatewayException;
 }

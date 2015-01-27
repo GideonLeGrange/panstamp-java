@@ -7,9 +7,9 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.store.JsonDataStore;
-import me.legrange.panstamp.store.DataStore;
-import me.legrange.panstamp.store.DataStoreException;
-import me.legrange.panstamp.store.RegisterState;
+import me.legrange.panstamp.DataStore;
+import me.legrange.panstamp.DataStoreException;
+import me.legrange.panstamp.RegisterState;
 
 /**
  *

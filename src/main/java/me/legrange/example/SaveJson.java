@@ -7,7 +7,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.store.JsonDataStore;
 import me.legrange.panstamp.store.PanStampState;
-import me.legrange.panstamp.store.DataStoreException;
+import me.legrange.panstamp.DataStoreException;
 
 /**
  *
@@ -38,13 +38,12 @@ public class SaveJson extends Example {
 
     @Override
     public void gatewayUpdated(GatewayEvent ev) {
+        PanStamp ps = ev.getDevice();
+        System.out.printf("Storing for %d\n", ps.getAddress());
         try {
-            PanStamp ps = ev.getDevice();
-            System.out.printf("Storing for %d\n", ps.getAddress());
             store.save( new PanStampState(ps));
         } catch (DataStoreException ex) {
             Logger.getLogger(SaveJson.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
         }
     }
 

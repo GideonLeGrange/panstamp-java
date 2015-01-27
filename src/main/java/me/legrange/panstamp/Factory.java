@@ -1,11 +1,7 @@
 package me.legrange.panstamp;
 
-import java.io.File;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
-import me.legrange.panstamp.def.DeviceLibrary;
-import me.legrange.panstamp.impl.GatewayImpl;
-import me.legrange.panstamp.store.DataStore;
-import me.legrange.panstamp.store.JsonDataStore;
+import me.legrange.panstamp.core.GatewayImpl;
 import me.legrange.panstamp.store.MemoryStore;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;

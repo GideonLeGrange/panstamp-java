@@ -1,7 +1,4 @@
-package me.legrange.panstamp.store;
-
-import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.StandardRegister;
+package me.legrange.panstamp;
 
 /**
  * This interface specifies the format in which panStamp state data is exchanged. The idea
