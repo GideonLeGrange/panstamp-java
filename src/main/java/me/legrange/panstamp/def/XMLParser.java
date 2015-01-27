@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
  *
  * @author gideon
  */
-public class XMLParser {
+ class XMLParser {
 
     public static List<DeviceDef> parse(AbstractDeviceLibrary lib) throws ParseException {
         XMLParser parser = new XMLParser(lib);

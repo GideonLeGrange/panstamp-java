@@ -13,7 +13,7 @@ import me.legrange.panstamp.GatewayException;
  *
  * @author gideon
  */
-public abstract class AbstractDeviceLibrary implements DeviceLibrary {
+abstract class AbstractDeviceLibrary implements DeviceLibrary {
 
     @Override
     public boolean hasDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
