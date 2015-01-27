@@ -15,6 +15,7 @@ public interface SWAPModem {
     
     /** 
      * connect to the modem. 
+     * @throws me.legrange.swap.SWAPException Thrown if there is a problem opening the modem.
      */
     void open() throws SWAPException;
 

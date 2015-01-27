@@ -146,7 +146,6 @@ public final class SerialModem implements SWAPModem {
             return;
         }
         while (mode == Mode.INIT)  {
-            System.out.println("Waiting for modem");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
@@ -236,7 +235,6 @@ public final class SerialModem implements SWAPModem {
                     if (in.length() == 0) {
                         continue; 
                     }
-                    System.out.printf("R: [%s]\n", in);
                     if ((in.length() >= 12) && in.startsWith("(")) {
                         mode = Mode.DATA;
                         fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
