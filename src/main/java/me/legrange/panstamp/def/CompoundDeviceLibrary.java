@@ -15,7 +15,7 @@ import me.legrange.panstamp.GatewayException;
  */
 public class CompoundDeviceLibrary implements DeviceLibrary {
 
-    public CompoundDeviceLibrary(DeviceLibrary... sources) {
+    public CompoundDeviceLibrary(DeviceLibrary...sources) {
         this.sources = sources;
     }
 
