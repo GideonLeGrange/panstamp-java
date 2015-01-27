@@ -174,7 +174,7 @@ public final class GatewayImpl implements Gateway {
     }
 
     DeviceDef getDeviceDefinition(int manId, int prodId) throws GatewayException {
-        return lib.findDevice(manId, prodId);
+        return lib.getDeviceDefinition(manId, prodId);
     }
 
     ExecutorService getPool() { 
