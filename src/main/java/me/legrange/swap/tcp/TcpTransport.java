@@ -40,7 +40,7 @@ class TcpTransport {
         reader = new Reader();
         start();
     }
-    
+
     boolean isClosed() {
         return sock.isClosed();
     }
@@ -57,6 +57,7 @@ class TcpTransport {
 
     /**
      * Remove a listener from the transport
+     *
      * @param l The listener to remove
      */
     void removeListener(TcpListener l) {
@@ -65,6 +66,7 @@ class TcpTransport {
 
     /**
      * Send a SWAP message through the transport
+     *
      * @param msg The message to send
      */
     void sendMessage(SwapMessage msg) {
@@ -76,7 +78,8 @@ class TcpTransport {
 
     /**
      * Send the modem setup through the transport
-     * @param setup The setup to send 
+     *
+     * @param setup The setup to send
      */
     void sendSetup(ModemSetup setup) {
         out.write(SETUP_START);
@@ -87,20 +90,36 @@ class TcpTransport {
         out.flush();
     }
 
-    /** Close the transport. */
+    /**
+     * Close the transport.
+     */
     void close() throws IOException {
+        sendCommand("quit");
+        stop();
+    }
+
+    private void sendCommand(String cmd) {
+        out.write(COMMAND_START);
+        out.write(cmd);
+        out.write("\n");
+        out.flush();
+    }
+
+    /**
+     * start the transport
+     */
+    private void start() {
+        running = true;
+        reader.start();
+    }
+
+    private void stop() throws IOException {
         running = false;
         in.close();
         out.close();
         sock.close();
         reader.interrupt();
         listeners.clear();
-    }
-
-    /** start the transport */
-    private void start() {
-        running = true;
-        reader.start();
     }
 
     private void fireEvent(SwapMessage msg) {
@@ -124,14 +143,14 @@ class TcpTransport {
             String bits[] = part.split("=");
             if (bits.length == 2) {
                 String name = bits[0];
-                switch (name) { 
-                    case SETUP_DEVICE_ADDRESS : 
+                switch (name) {
+                    case SETUP_DEVICE_ADDRESS:
                         addr = Integer.parseInt(bits[1]);
                         break;
-                    case SETUP_CHANNEL : 
+                    case SETUP_CHANNEL:
                         chan = Integer.parseInt(bits[1]);
                         break;
-                    case SETUP_NETWORK_ID : 
+                    case SETUP_NETWORK_ID:
                         netId = Integer.parseInt(bits[1]);
                         break;
                 }
@@ -140,11 +159,11 @@ class TcpTransport {
         ModemSetup setup = new ModemSetup(chan, netId, addr);
         fireEvent(setup);
     }
-    
+
     private void decodeCommand(String cmd) throws IOException {
         switch (cmd.toLowerCase()) {
-            case "quit" :
-                close();
+            case "quit":
+                stop();
                 break;
         }
     }
@@ -174,7 +193,7 @@ class TcpTransport {
                             case SETUP_START:
                                 decodeSetup(line.substring(1));
                                 break;
-                            case COMMAND_START : 
+                            case COMMAND_START:
                                 decodeCommand(line.substring(1));
                                 break;
                             default:
