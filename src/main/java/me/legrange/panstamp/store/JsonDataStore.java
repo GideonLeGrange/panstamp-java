@@ -1,6 +1,5 @@
 package me.legrange.panstamp.store;
 
-import me.legrange.panstamp.store.MapState;
 import com.github.jsonj.JsonObject;
 import static com.github.jsonj.tools.JsonBuilder.field;
 import static com.github.jsonj.tools.JsonBuilder.object;
@@ -14,10 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import me.legrange.panstamp.impl.StandardRegister;
-import me.legrange.panstamp.store.DataStore;
-import me.legrange.panstamp.store.DataStoreException;
-import me.legrange.panstamp.store.RegisterState;
+import me.legrange.panstamp.StandardRegister;
 
 /**
  * A data store that saves and loads PanStamp information to and from a JSON

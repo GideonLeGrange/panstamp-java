@@ -16,6 +16,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
@@ -176,19 +177,19 @@ public final class GatewayImpl implements Gateway {
         return lib.findDevice(manId, prodId);
     }
 
+    ExecutorService getPool() { 
+        return pool;
+    }
+    
     /**
      * send a message to a mote
      */
-    void send(SwapMessage msg) throws ModemException {
+    private void send(SwapMessage msg) throws ModemException {
         try {
             modem.send(msg);
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
-    }
-
-    ExecutorService getPool() { 
-        return pool;
     }
     
     /**

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
@@ -19,6 +17,7 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
+import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
@@ -300,8 +299,8 @@ public class RegisterImpl implements Register {
         public void run() {
             try {
                 l.registerUpdated(e);
-            } catch (Throwable e) {
-                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
+            } catch (Throwable ex) {
+                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         }
