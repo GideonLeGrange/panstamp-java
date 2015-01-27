@@ -6,6 +6,7 @@ import me.legrange.panstamp.def.DeviceLibrary;
 import me.legrange.panstamp.impl.GatewayImpl;
 import me.legrange.panstamp.store.DataStore;
 import me.legrange.panstamp.store.JsonDataStore;
+import me.legrange.panstamp.store.MemoryStore;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;
 import me.legrange.swap.tcp.TcpModem;
@@ -25,7 +26,7 @@ public final class Factory {
      * @return The newly created gateway. 
      */
     public static Gateway createSerial(String port, int baud) {
-        return createSerial(port, baud, new ClassLoaderLibrary(), new JsonDataStore(storeFile()));
+        return createSerial(port, baud, new ClassLoaderLibrary(), new MemoryStore());
     }
  
     /** Create a new serial gateway (gateway attached to a serial port) with the given port and speed, 
@@ -47,36 +48,27 @@ public final class Factory {
      * 
      * @param host The host name to which to connect, for example 'localhost' or '192.168.1.1'
      * @param port The TCP port to which to connect.
+     * @return The newly created gateway 
      */
     public static Gateway createTcp(String host, int port) {
-        return createTcp(host, port, new ClassLoaderLibrary(), new JsonDataStore(storeFile()));
+        return createTcp(host, port, new ClassLoaderLibrary(), new MemoryStore());
     }
     
     /** Create a new TCP/IP gateway (gateway attached to a remote TCP service) with the given host and port, 
      * and with the given device library and data store. 
      * 
-     * @param host The host name to which to connect, for example 'localhost' or '192.168.1.1'
+     * @param host the host to which to connect. 
      * @param port The TCP port to which to connect.
      * @param lib The device library to use with the gateway. 
      * @param store The data store to use for keeping track of devices. 
      * @return The newly created gateway. 
      */
-    public static Gateway createTcp(String port, int baud, DeviceLibrary lib, DataStore store) {
-        TcpModem tm = new TcpModem(port, baud);
+    public static Gateway createTcp(String host, int port, DeviceLibrary lib, DataStore store) {
+        TcpModem tm = new TcpModem(host, port);
         return createGateway(tm, lib, store);
     }
     
     private static Gateway createGateway(SWAPModem modem, DeviceLibrary lib, DataStore store) {
         return new GatewayImpl(modem, lib, store);
     }
-    
-    private static String storeFile() {
-        String home = System.getProperty("user.home");
-        String name = "panstamp";
-        if (!System.getProperty("os.name", "").toLowerCase().startsWith("windows")) {
-            name = "."  +name;
-        }
-        return home + File.separator + name;
-    }
-    
 }

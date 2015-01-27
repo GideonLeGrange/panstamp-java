@@ -16,12 +16,9 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.Device;
 import me.legrange.panstamp.def.DeviceLibrary;
 import me.legrange.panstamp.store.DataStore;
-import me.legrange.panstamp.store.RegisterState;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -30,13 +27,20 @@ import me.legrange.swap.UserMessage;
 import me.legrange.swap.ModemSetup;
 
 /**
- * A gateway connecting a PanStampImpl network to your code using the
- * PanStampImpl modem connected to the local serial port.
+ * A gateway connecting a panStamp network to your code using the
+ * SWAP modem supplied. 
  *
  * @author gideon
  */
 public final class GatewayImpl implements Gateway {
 
+    /** Create an new gateway implementation using the given modem implementation,
+     * XML library and data store. 
+     * 
+     * @param modem The SWAP modem to use to connect to the panStamp wireless network.
+     * @param lib The XML library to use to find device definitions.
+     * @param store The data store to which to store panStamp state.
+     */
     public GatewayImpl(SWAPModem modem, DeviceLibrary lib, DataStore store) {
         this.modem = modem;
         this.lib = lib;
@@ -193,7 +197,6 @@ public final class GatewayImpl implements Gateway {
      */
     private void updateNetwork(SwapMessage msg) throws GatewayException {
         int address = msg.getSender();
-        boolean isNew = false;
         synchronized (devices) {
             if (!hasDevice(address)) {
                 try {
@@ -212,20 +215,7 @@ public final class GatewayImpl implements Gateway {
                         }
 
                     });
-                    // TODO - Decide if we want the code here as an if-condition, 
-                    // or if we want to attach a listener that will lookup and update
-                    if (store != null) {
-                        RegisterState state = store.load(getNetworkId(), address);
-                        for (StandardRegister sr : StandardRegister.ALL) {
-                            byte val[] = state.getState(sr);
-                            if (val.length > 0) {
-                                RegisterImpl reg = (RegisterImpl) dev.getRegister(sr.getId());
-                                reg.valueReceived(val);
-                            }
-                        }
-                    }
-
-                } catch (NoSuchUnitException ex) {
+            } catch (NoSuchUnitException ex) {
                     throw new ModemException(ex.getMessage(), ex);
                 }
             }
