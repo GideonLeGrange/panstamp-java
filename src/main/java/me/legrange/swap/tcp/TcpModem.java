@@ -90,6 +90,7 @@ public class TcpModem implements SWAPModem {
     
     /**
      * Get the host the modem is connected to.
+     * @return The host name.
      */
     public String getHost() { 
         return host;
