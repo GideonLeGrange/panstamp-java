@@ -14,6 +14,7 @@ public interface RegisterState {
     /** Return the network id of the network in which the device is with which this network 
      * is associated. 
      * @return 
+     * @throws me.legrange.panstamp.GatewayException 
      */
     int getNetworkId() throws GatewayException;
     
@@ -28,7 +29,7 @@ public interface RegisterState {
      * register values defined by Register work. 
      * 
      * @param sr The standard register for which the state is requested.
-     * @return  The state as byte[] value. If not state is available for the specifc register, an empty array is returned.
+     * @return  The state as byte[] value. If not state is available for the specific register, an empty array is returned.
      */
     byte[] getState(StandardRegister sr);
     

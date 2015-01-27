@@ -10,11 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.StandardRegister;
 
@@ -31,9 +29,9 @@ public class JsonDataStore implements DataStore {
     }
 
     @Override
-    public List<Integer> getAddresses(int networkId) throws DataStoreException {
+    public Set<Integer> getAddresses(Integer networkId) throws DataStoreException {
         JsonObject entries = getStateEntries(networkId);
-        List<Integer> addrs = new LinkedList<>();
+        Set<Integer> addrs = new HashSet<>();
         for (String key : entries.keySet()) {
             addrs.add(Integer.parseInt(key));
         }
@@ -166,4 +164,5 @@ public class JsonDataStore implements DataStore {
     private static final String DEVICES = "devices";
     private static final String ADDRESS = "address";
     private static final String REGISTERS = "registers";
+
 }
