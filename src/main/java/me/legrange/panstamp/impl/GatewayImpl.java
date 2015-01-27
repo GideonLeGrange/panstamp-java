@@ -37,10 +37,6 @@ import me.legrange.swap.ModemSetup;
  */
 public final class GatewayImpl implements Gateway {
 
-    public GatewayImpl(SWAPModem modem) {
-        this(modem, new ClassLoaderLibrary(), null);
-    }
-
     public GatewayImpl(SWAPModem modem, DeviceLibrary lib, DataStore store) {
         this.modem = modem;
         this.lib = lib;
@@ -219,7 +215,7 @@ public final class GatewayImpl implements Gateway {
                     // TODO - Decide if we want the code here as an if-condition, 
                     // or if we want to attach a listener that will lookup and update
                     if (store != null) {
-                        RegisterState state = store.load(address);
+                        RegisterState state = store.load(getNetworkId(), address);
                         for (StandardRegister sr : StandardRegister.ALL) {
                             byte val[] = state.getState(sr);
                             if (val.length > 0) {

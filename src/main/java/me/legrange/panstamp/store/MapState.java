@@ -17,11 +17,25 @@ class MapState implements RegisterState {
         }
         return bytes;
     }
-    
-    MapState(Map<StandardRegister, byte[]> state) {
-       this.state = state;
+
+    @Override
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    @Override
+    public int getAddress() {
+        return address;
+    }
+
+    MapState(int networkId, int address, Map<StandardRegister, byte[]> state) {
+        this.networkId = networkId;
+        this.address = address;
+        this.state = state;
     }
     
+    private final int networkId;
+    private final int address;
     private final Map<StandardRegister, byte[]> state;
     
 }

@@ -41,7 +41,7 @@ public class SaveJson extends Example {
         try {
             PanStamp ps = ev.getDevice();
             System.out.printf("Storing for %d\n", ps.getAddress());
-            store.save(ps.getAddress(), new PanStampState(ps));
+            store.save( new PanStampState(ps));
         } catch (DataStoreException ex) {
             Logger.getLogger(SaveJson.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

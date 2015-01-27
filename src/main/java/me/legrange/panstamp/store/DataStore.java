@@ -15,7 +15,7 @@ public interface DataStore {
      * 
      * @return The list of addresses. 
      */
-    List<Integer> getAddresses() throws DataStoreException;
+    List<Integer> getAddresses(int networkId) throws DataStoreException;
     
     /** Save the state supplied for the given address. 
      * 
@@ -23,7 +23,7 @@ public interface DataStore {
      * @param state The state
      * @throws DataStoreException Thrown if there is a problem storing the state.
      */ 
-    void save(Integer addr, RegisterState state) throws DataStoreException;
+    void save(RegisterState state) throws DataStoreException;
     
     /** Load the state stored for the given address. 
      * 
@@ -31,6 +31,6 @@ public interface DataStore {
      * @return The state found. If nothing is found, a valid entry with empty states for all standard registers must be returned.     * @throws DataStoreException 
      * @throws me.legrange.panstamp.store.DataStoreException Thrown if there is a problem loading the state.
      */
-    RegisterState load(Integer addr) throws DataStoreException;
+    RegisterState load(Integer networkId, Integer addr) throws DataStoreException;
     
 }

@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.StandardRegister;
 
 /**
@@ -28,8 +31,8 @@ public class JsonDataStore implements DataStore {
     }
 
     @Override
-    public List<Integer> getAddresses() throws DataStoreException {
-        JsonObject entries = getStateEntries();
+    public List<Integer> getAddresses(int networkId) throws DataStoreException {
+        JsonObject entries = getStateEntries(networkId);
         List<Integer> addrs = new LinkedList<>();
         for (String key : entries.keySet()) {
             addrs.add(Integer.parseInt(key));
@@ -38,34 +41,47 @@ public class JsonDataStore implements DataStore {
     }
 
     @Override
-    public void save(Integer addr, RegisterState state) throws DataStoreException {
+    public void save(RegisterState state) throws DataStoreException {
         JsonObject jState = stateToJson(state);
         JsonObject jEntry = object(
-                field(ADDRESS, addr),
+                field(ADDRESS, state.getAddress()),
                 field(REGISTERS, jState)
              );
-        JsonObject entries = getStateEntries();
-        entries.put(key(addr), jEntry);
+        JsonObject entries;
+        try {
+            entries = getStateEntries(state.getNetworkId());
+        } catch (GatewayException ex) {
+            throw new DataStoreException(ex.getMessage(), ex);
+        }
+        entries.put(key(state.getAddress()), jEntry);
         write();
     }
 
     @Override
-    public RegisterState load(Integer addr) throws DataStoreException {
-        JsonObject entries = getStateEntries();
+    public RegisterState load(Integer networkId, Integer addr) throws DataStoreException {
+        JsonObject entries = getStateEntries(networkId);
         if (entries.containsKey(key(addr))) {
             JsonObject jEntry = entries.getObject(key(addr));
             JsonObject jState = jEntry.getObject(REGISTERS);
-            return jsonToState(jState);
+            return new MapState(networkId, addr,  jsonToState(jState));
         }
         throw new DataStoreException(String.format("Could not find saved state for address %d", addr));
     }
     
-    private JsonObject getStateEntries() throws DataStoreException {
+    private JsonObject getStateEntries(int networkId) throws DataStoreException {
         JsonObject root = getRoot();
-        if (!root.containsKey(ENTRIES)) {
-            root.put(ENTRIES, object());
+        if (!root.containsKey(NETWORKS)) {
+            root.put(NETWORKS, object());
+        }
+        JsonObject networks = root.getObject(NETWORKS);
+        if (!networks.containsKey("" + networkId)) {
+            networks.put("" + networkId, object());
         } 
-        return root.getObject(ENTRIES);
+        JsonObject network = root.getObject("" + networkId);
+        if (!network.containsKey(DEVICES)) {
+            network.put(DEVICES, object());
+        }
+        return root.getObject(DEVICES);
     }
 
     private JsonObject getRoot() throws DataStoreException {
@@ -89,14 +105,14 @@ public class JsonDataStore implements DataStore {
         return "" + addr;
     }
     
-    private RegisterState jsonToState(JsonObject jState) {
+    private Map<StandardRegister, byte[]>  jsonToState(JsonObject jState) {
         Map<StandardRegister, byte[]> state = new HashMap<>();
         for (StandardRegister sr : StandardRegister.ALL) {
             if (jState.containsKey(sr.getName())) {
                 state.put(sr, parseBytes(jState.getString(sr.getName())));
             }
         }
-        return new MapState(state);
+        return state;
     }
     
     private JsonObject stateToJson(RegisterState state) {
@@ -145,8 +161,9 @@ public class JsonDataStore implements DataStore {
     
     private final String fileName;
     private JsonObject data;
-    
-    private static final String ENTRIES = "motes";
+
+    private static final String NETWORKS = "networks";
+    private static final String DEVICES = "devices";
     private static final String ADDRESS = "address";
     private static final String REGISTERS = "registers";
 }

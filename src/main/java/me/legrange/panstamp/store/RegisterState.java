@@ -1,5 +1,6 @@
 package me.legrange.panstamp.store;
 
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.StandardRegister;
 
 /**
@@ -9,6 +10,18 @@ import me.legrange.panstamp.StandardRegister;
  * @author gideon
  */
 public interface RegisterState {
+    
+    /** Return the network id of the network in which the device is with which this network 
+     * is associated. 
+     * @return 
+     */
+    int getNetworkId() throws GatewayException;
+    
+    /** Return the panStamp address of the device with which this state is associated. 
+     * 
+     * @return The device address
+     */
+    int getAddress();
     
     /** Return the state for the standard register specified. The array of
      * bytes represents the state as register value in exactly the same way that

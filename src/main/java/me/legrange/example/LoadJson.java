@@ -41,9 +41,11 @@ public class LoadJson extends Example {
     public void gatewayUpdated(GatewayEvent ev) {
         PanStamp ps = ev.getDevice();
         try {
-            RegisterState load = store.load(ps.getAddress());
+            RegisterState load = store.load(ps.getNetwork(), ps.getAddress());
             System.out.printf("Saved state for %d: %s\n", ps.getAddress(), printState(load));
         } catch (DataStoreException ex) {
+            Logger.getLogger(LoadJson.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GatewayException ex) {
             Logger.getLogger(LoadJson.class.getName()).log(Level.SEVERE, null, ex);
         }
         

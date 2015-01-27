@@ -4,13 +4,22 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.store.RegisterState;
 
 /**
  *
  * @author gideon
  */
 public class PanStampState implements RegisterState {
+
+    @Override
+    public int getNetworkId() throws GatewayException {
+        return ps.getNetwork();
+    }
+
+    @Override
+    public int getAddress() {
+        return ps.getAddress();
+    }
 
     @Override
     public byte[] getState(StandardRegister sr) {
