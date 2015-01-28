@@ -19,8 +19,12 @@ public interface PanStampEvent {
     public PanStamp getDevice();
     
     /** get the register involved in this event, if applicable *
-     * @return The register. May be null 
-     */
+     * @return The register. May be null */
     public Register getRegister();
+    
+    /** get the sync state represented by this event 
+     * @return The sync state
+     */
+    int getSyncState();
     
 }

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
@@ -282,10 +280,18 @@ public class PanStampImpl implements PanStamp {
     }
 
     private void fireEvent(final PanStampEvent.Type type) {
-        fireEvent(type, null);
+        fireEvent(type, null, this.syncState);
     }
 
     private void fireEvent(final PanStampEvent.Type type, final Register reg) {
+        fireEvent(type, reg, this.syncState);
+    }
+
+    private void fireEvent(final PanStampEvent.Type type, int syncState) {
+        fireEvent(type, null, syncState);
+    }
+
+    private void fireEvent(final PanStampEvent.Type type, final Register reg, final int syncState) {
         PanStampEvent ev = new PanStampEvent() {
 
             @Override
@@ -301,6 +307,10 @@ public class PanStampImpl implements PanStamp {
             @Override
             public Register getRegister() {
                 return reg;
+            }
+            
+            public int getSyncState() {
+                return syncState;
             }
 
         };
@@ -402,16 +412,6 @@ public class PanStampImpl implements PanStamp {
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
     private final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
 
-    /*private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(r, "PanStamp Event Task");
-            t.setDaemon(true);
-            return t;
-        }
-    });
-*/
     private static class UpdateTask implements Runnable {
 
         private UpdateTask(PanStampEvent ev, PanStampListener l) {
@@ -445,7 +445,8 @@ public class PanStampImpl implements PanStamp {
         @Override
         public void deviceUpdated(PanStampEvent ev) {
             if (ev.getType() == Type.SYNC_STATE_CHANGE) {
-                switch (syncState) {
+                System.out.printf("sync state changed to %d\n", ev.getSyncState());
+                switch (ev.getSyncState()) {
                     case 1:
                     case 3:
                         try {
@@ -456,6 +457,8 @@ public class PanStampImpl implements PanStamp {
                         finally {
                             removeListener(this);
                         }
+                    break;
+                    default :
                 }
             }
         }
