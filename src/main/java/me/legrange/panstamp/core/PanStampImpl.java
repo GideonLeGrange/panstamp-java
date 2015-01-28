@@ -342,8 +342,8 @@ public class PanStampImpl implements PanStamp {
                                 manufacturerId = mfId;
                                 productId = pdId;
                                 loadDefinition();
+                                fireEvent(Type.PRODUCT_CODE_UPDATE);
                             }
-                            fireEvent(Type.PRODUCT_CODE_UPDATE);
                             break;
                     }
                 } catch (GatewayException ex) {

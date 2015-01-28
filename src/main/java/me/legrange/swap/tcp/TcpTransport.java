@@ -70,10 +70,12 @@ class TcpTransport {
      * @param msg The message to send
      */
     void sendMessage(SwapMessage msg) {
-        out.write(MESSAGE_START);
-        out.write(msg.getText());
-        out.write("\n");
-        out.flush();
+        synchronized (out) {
+            out.write(MESSAGE_START);
+            out.write(msg.getText());
+            out.write("\n");
+            out.flush();
+        }
     }
 
     /**
@@ -82,12 +84,14 @@ class TcpTransport {
      * @param setup The setup to send
      */
     void sendSetup(ModemSetup setup) {
-        out.write(SETUP_START);
-        out.write(String.format("%s=%d,", SETUP_DEVICE_ADDRESS, setup.getDeviceAddress()));
-        out.write(String.format("%s=%d,", SETUP_CHANNEL, setup.getChannel()));
-        out.write(String.format("%s=%d", SETUP_NETWORK_ID, setup.getNetworkID()));
-        out.write("\n");
-        out.flush();
+        synchronized (out) {
+            out.write(SETUP_START);
+            out.write(String.format("%s=%d,", SETUP_DEVICE_ADDRESS, setup.getDeviceAddress()));
+            out.write(String.format("%s=%d,", SETUP_CHANNEL, setup.getChannel()));
+            out.write(String.format("%s=%d", SETUP_NETWORK_ID, setup.getNetworkID()));
+            out.write("\n");
+            out.flush();
+        }
     }
 
     /**
@@ -99,10 +103,12 @@ class TcpTransport {
     }
 
     private void sendCommand(String cmd) {
-        out.write(COMMAND_START);
-        out.write(cmd);
-        out.write("\n");
-        out.flush();
+        synchronized (out) {
+            out.write(COMMAND_START);
+            out.write(cmd);
+            out.write("\n");
+            out.flush();
+        }
     }
 
     /**
