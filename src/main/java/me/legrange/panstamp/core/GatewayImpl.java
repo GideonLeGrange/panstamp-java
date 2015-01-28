@@ -186,6 +186,7 @@ public final class GatewayImpl implements Gateway {
      */
     private void send(SwapMessage msg) throws ModemException {
         try {
+            System.out.printf("Sending command: %s\n", msg);
             modem.send(msg);
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);

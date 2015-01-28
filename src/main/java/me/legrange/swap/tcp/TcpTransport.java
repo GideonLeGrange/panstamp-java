@@ -76,6 +76,7 @@ class TcpTransport {
             out.write("\n");
             out.flush();
         }
+        System.out.printf("Tcp transport sent message: %s\n", msg);
     }
 
     /**

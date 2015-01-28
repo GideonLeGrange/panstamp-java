@@ -309,6 +309,7 @@ public class PanStampImpl implements PanStamp {
                 return reg;
             }
             
+            @Override
             public int getSyncState() {
                 return syncState;
             }
@@ -422,6 +423,7 @@ public class PanStampImpl implements PanStamp {
         @Override
         public void run() {
             try {
+                System.out.printf("Calling deviceUpdated() => %s on %s\n", ev.getType(), l.getClass().getSimpleName());
                 l.deviceUpdated(ev);
             } catch (Throwable e) {
                 Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
