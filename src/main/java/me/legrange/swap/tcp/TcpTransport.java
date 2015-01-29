@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import me.legrange.swap.DecodingException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SwapMessage;
+import me.legrange.swap.UserMessage;
 import me.legrange.swap.serial.SerialMessage;
 
 /**
@@ -76,7 +77,6 @@ class TcpTransport {
             out.write("\n");
             out.flush();
         }
-        System.out.printf("Tcp transport sent message: %s\n", msg);
     }
 
     /**
@@ -194,7 +194,6 @@ class TcpTransport {
                         String c = line.substring(0, 1);
                         switch (c) {
                             case MESSAGE_START:
-                                System.out.printf("Forward received tcp: %s\n", line);
                                 fireEvent(new SerialMessage(line.substring(1)));
                                 break;
                             case SETUP_START:

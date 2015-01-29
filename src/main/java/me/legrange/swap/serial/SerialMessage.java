@@ -95,7 +95,12 @@ public class SerialMessage implements SwapMessage {
 
     public SerialMessage(String text) throws DecodingException {
         this.text = text;
-        text = text.replace("(", "").replace(")", ""); // get rid of the brackets around RSSI,LQI, WTF is up with that?
+        if (text.contains(("("))) {
+           text = text.replace("(", "").replace(")", ""); // get rid of the brackets around RSSI,LQI, WTF is up with that?
+        }
+        else {
+            text = "0000" + text;
+        }
         // convert the hex data to ints and pack it in an array
         int data[] = new int[text.length() / 2];
         for (int i = 0; i < text.length(); i = i + 2) {
