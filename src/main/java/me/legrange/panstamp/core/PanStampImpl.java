@@ -55,7 +55,7 @@ public class PanStampImpl implements PanStamp {
         }
         return getGateway().getChannel();
     }
-    
+
     @Override
     public int getTxInterval() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL);
@@ -64,7 +64,7 @@ public class PanStampImpl implements PanStamp {
         }
         return 0;
     }
-    
+
     @Override
     public int getSecurityOption() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.SECURITY_OPTION);
@@ -88,48 +88,48 @@ public class PanStampImpl implements PanStamp {
         }
         return getGateway().getNetworkId();
     }
-    
+
     @Override
     public void setAddress(int addr) throws GatewayException {
         if (addr != getAddress()) {
             setIntValue(StandardEndpoint.DEVICE_ADDRESS, addr);
         }
     }
-    
+
     @Override
     public void setNetwork(int network) throws GatewayException {
         if (network != getNetwork()) {
             setIntValue(StandardEndpoint.NETWORK_ID, network);
         }
     }
-    
+
     @Override
     public void setChannel(int channel) throws GatewayException {
         if (channel != getChannel()) {
             setIntValue(StandardEndpoint.FREQUENCY_CHANNEL, channel);
         }
     }
-    
+
     @Override
     public void setSecurityOption(int option) throws GatewayException {
         if (option != getSecurityOption()) {
             setIntValue(StandardEndpoint.SECURITY_OPTION, option);
         }
     }
-    
+
     @Override
     public void setTxInterval(int txInterval) throws GatewayException {
         if (txInterval != getTxInterval()) {
             setIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL, txInterval);
         }
     }
-    
+
     private void setIntValue(StandardEndpoint epDef, int val) throws GatewayException {
         Register reg = getRegister(epDef.getRegister().getId());
         Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
         ep.setValue(val);
     }
-    
+
     private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
         Register reg = getRegister(epDef.getRegister().getId());
         if (reg.hasValue()) {
@@ -138,7 +138,6 @@ public class PanStampImpl implements PanStamp {
         }
         return null;
     }
-    
 
     @Override
     public GatewayImpl getGateway() {
@@ -234,7 +233,7 @@ public class PanStampImpl implements PanStamp {
             fireEvent(Type.REGISTER_DETECTED, reg);
         }
     }
-    
+
     ExecutorService getPool() {
         return gw.getPool();
     }
@@ -271,12 +270,12 @@ public class PanStampImpl implements PanStamp {
             return def.isPowerDownMode();
         } else {
             Endpoint<Integer> ep = getRegister(StandardRegister.SYSTEM_STATE.getId()).getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
-            if (ep.hasValue()) {
-                int v = ep.getValue();
-                return (v != 3) && (v != 1);
+            if (!ep.hasValue()) { // if we can't confirm sleep mode, we assume it is true so we rather ask for sync
+                return true;
             }
+            int v = ep.getValue();
+            return (v != 3) && (v != 1);
         }
-        return false;
     }
 
     private void fireEvent(final PanStampEvent.Type type) {
@@ -308,7 +307,7 @@ public class PanStampImpl implements PanStamp {
             public Register getRegister() {
                 return reg;
             }
-            
+
             @Override
             public int getSyncState() {
                 return syncState;
@@ -455,12 +454,11 @@ public class PanStampImpl implements PanStamp {
                             gw.sendCommandMessage(PanStampImpl.this, id, val);
                         } catch (ModemException ex) {
                             Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        finally {
+                        } finally {
                             removeListener(this);
                         }
-                    break;
-                    default :
+                        break;
+                    default:
                 }
             }
         }
