@@ -422,7 +422,6 @@ public class PanStampImpl implements PanStamp {
         @Override
         public void run() {
             try {
-                System.out.printf("Calling deviceUpdated() => %s on %s\n", ev.getType(), l.getClass().getSimpleName());
                 l.deviceUpdated(ev);
             } catch (Throwable e) {
                 Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
@@ -446,7 +445,6 @@ public class PanStampImpl implements PanStamp {
         @Override
         public void deviceUpdated(PanStampEvent ev) {
             if (ev.getType() == Type.SYNC_STATE_CHANGE) {
-                System.out.printf("sync state changed to %d\n", ev.getSyncState());
                 switch (ev.getSyncState()) {
                     case 1:
                     case 3:
