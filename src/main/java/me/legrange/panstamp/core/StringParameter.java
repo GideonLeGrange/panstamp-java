@@ -38,6 +38,7 @@ class StringParameter extends AbstractParameter<String> {
         }
         byte bytes[] = new byte[len];
         System.arraycopy(value.getBytes(), 0, bytes, par.getPosition().getBytePos(), value.length());
+        reg.setValue(bytes);
     }
 
     @Override

@@ -9,6 +9,10 @@ public class Size {
     
     public enum Type { BITS, BYTES; }
 
+    public Size(int sizeByte) { 
+        this(sizeByte, 0);
+    }
+    
     public Size(int sizeByte, int sizeBit) {
         if (sizeBit == 0) {
             type = Type.BYTES;
