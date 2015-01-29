@@ -231,7 +231,7 @@ import org.xml.sax.SAXException;
                 String parts[] = text.split("\\.");
                 par.setSize(new Size(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
             } else {
-                par.setPosition(new Position(Integer.parseInt(text)));
+                par.setSize(new Size(Integer.parseInt(text),0));
             }
 
         } catch (NumberFormatException e) {
