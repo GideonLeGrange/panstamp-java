@@ -37,7 +37,7 @@ public final class SerialModem implements SWAPModem {
         reader.setName(String.format("%s Reader Thread", getClass().getSimpleName()));
         reader.start();
     }
-    
+
     @Override
     public void close() throws SerialException {
         running = false;
@@ -77,10 +77,10 @@ public final class SerialModem implements SWAPModem {
         }
         return setup;
     }
-    
+
     @Override
     public void setSetup(ModemSetup setup) throws SerialException {
-        synchronized(this) {
+        synchronized (this) {
             enterCommandMode();
             sendATCommand(String.format("ATCH=%2d", setup.getChannel()));
             sendATCommand(String.format("ATSW=%4h", setup.getNetworkID()));
@@ -89,28 +89,30 @@ public final class SerialModem implements SWAPModem {
             this.setup = setup;
         }
     }
-    
+
     @Override
     public Type getType() {
         return Type.SERIAL;
     }
-    
+
     /**
-     * Get the name of the serial port used by this modem. 
+     * Get the name of the serial port used by this modem.
+     *
      * @return The name of the serial port
      */
-    public String getPort() { 
+    public String getPort() {
         return port;
     }
-    
+
     /**
-     * Get the serial speed this modem connects at 
+     * Get the serial speed this modem connects at
+     *
      * @return The serial speed
      */
-    public int getBaud() { 
+    public int getBaud() {
         return baud;
     }
-    
+
     private int readATasInt(String cmd) throws SerialException {
         String res = readAT(cmd);
         try {
@@ -145,20 +147,38 @@ public final class SerialModem implements SWAPModem {
         if (mode == Mode.COMMAND) {
             return;
         }
-        while (mode == Mode.INIT)  {
+        while (mode == Mode.INIT) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        int count = 3;
+        while (count > 0) {
+            if (tryCommandMode()) {
+                return;
+            }
+            count --;
+        }
+        throw new SerialException("Timed out waiting for command mode");
+    }
+
+    private boolean tryCommandMode() throws SerialException {
+        int count = 0;
         com.send("+++");
-        while (mode != Mode.COMMAND) {
+        while ((mode != Mode.COMMAND) && (count < 15)) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
+                if (!running) {
+                    throw new SerialException("Modem stopped while entering command mode");
+                }
+
             }
+            count++;
         }
+        return (mode == Mode.COMMAND);
     }
 
     private void leaveCommandMode() throws SerialException {
@@ -184,7 +204,6 @@ public final class SerialModem implements SWAPModem {
             throw new SerialException("Interruped waiting for AT response");
         }
     }
-
 
     /**
      * send the received message to listeners
@@ -233,7 +252,7 @@ public final class SerialModem implements SWAPModem {
                 try {
                     String in = com.read();
                     if (in.length() == 0) {
-                        continue; 
+                        continue;
                     }
                     if ((in.length() >= 12) && in.startsWith("(")) {
                         mode = Mode.DATA;

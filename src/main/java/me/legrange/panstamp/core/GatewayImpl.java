@@ -53,6 +53,7 @@ public final class GatewayImpl implements Gateway {
         modem.addListener(receiver);
         try {
             modem.open();
+            getSetup();
         } catch (SWAPException ex) {
             throw new GatewayException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
         }
