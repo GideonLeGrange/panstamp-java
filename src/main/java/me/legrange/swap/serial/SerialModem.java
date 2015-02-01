@@ -36,6 +36,9 @@ public final class SerialModem implements SWAPModem {
         reader.setDaemon(true);
         reader.setName(String.format("%s Reader Thread", getClass().getSimpleName()));
         reader.start();
+        if (setup != null) {
+            setSetup(setup);
+        }
     }
 
     @Override
@@ -67,12 +70,16 @@ public final class SerialModem implements SWAPModem {
     @Override
     public ModemSetup getSetup() throws SerialException {
         if (setup == null) {
-            synchronized (this) {
-
-                enterCommandMode();
-                setup = new ModemSetup(readATasInt("ATCH?"), readATasHex("ATSW?"),
-                        readATasHex("ATDA?"));
-                leaveCommandMode();
+            if (running) {
+                synchronized (this) {
+                    enterCommandMode();
+                    setup = new ModemSetup(readATasInt("ATCH?"), readATasHex("ATSW?"),
+                            readATasHex("ATDA?"));
+                    leaveCommandMode();
+                }
+            }
+            else {
+                setup = new ModemSetup(0,0,0);
             }
         }
         return setup;
@@ -81,11 +88,13 @@ public final class SerialModem implements SWAPModem {
     @Override
     public void setSetup(ModemSetup setup) throws SerialException {
         synchronized (this) {
-            enterCommandMode();
-            sendATCommand(String.format("ATCH=%2d", setup.getChannel()));
-            sendATCommand(String.format("ATSW=%4h", setup.getNetworkID()));
-            sendATCommand(String.format("ATDA=%2d", setup.getDeviceAddress()));
-            leaveCommandMode();
+            if (running) {
+                enterCommandMode();
+                sendATCommand(String.format("ATCH=%2d", setup.getChannel()));
+                sendATCommand(String.format("ATSW=%4h", setup.getNetworkID()));
+                sendATCommand(String.format("ATDA=%2d", setup.getDeviceAddress()));
+                leaveCommandMode();
+            }
             this.setup = setup;
         }
     }

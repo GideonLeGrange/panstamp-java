@@ -119,6 +119,10 @@ public final class GatewayImpl implements Gateway {
         res.addAll(devices.values());
         return res;
     }
+    
+    public void addDevice(PanStampImpl ps) {
+        devices.put(ps.getAddress(), ps);
+    }
 
     @Override
     public void addListener(GatewayListener l) {

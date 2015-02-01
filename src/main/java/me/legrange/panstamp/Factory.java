@@ -1,7 +1,7 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.core.GatewayImpl;
+import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;
 import me.legrange.swap.tcp.TcpModem;
@@ -70,6 +70,7 @@ public final class Factory {
     public static Gateway createGateway(SWAPModem modem) {
         return createGateway(modem, new ClassLoaderLibrary());
     }
+    
     
     private static Gateway createGateway(SWAPModem modem, DeviceLibrary lib) {
         return new GatewayImpl(modem, lib);
