@@ -4,17 +4,18 @@ import java.util.List;
 import me.legrange.swap.SWAPModem;
 
 /**
- * A PanStamp network gateway. This object represents the interface to a network of 
- * PanStamp devices accessible via a SWAP modem. 
+ * A PanStamp network gateway. This object represents the interface to a network
+ * of PanStamp devices accessible via a SWAP modem.
  *
  * @author gideon
  */
 public interface Gateway {
-    
-    /** Open the gateway. 
-     * This will open the underlying modem and internal processes that are needed. 
-     * 
-     * @throws GatewayException  Thrown if there is a problem opening the modem.
+
+    /**
+     * Open the gateway. This will open the underlying modem and internal
+     * processes that are needed.
+     *
+     * @throws GatewayException Thrown if there is a problem opening the modem.
      */
     void open() throws GatewayException;
 
@@ -74,23 +75,57 @@ public interface Gateway {
      * return the network ID for the network supported by this gateway
      *
      * @return The network ID
-     * @throws me.legrange.panstamp.core.ModemException Thrown if there is a problem determining the network ID 
+     * @throws me.legrange.panstamp.core.ModemException Thrown if there is a
+     * problem determining the network ID
      */
     int getNetworkId() throws GatewayException;
-    
-     /** get the gateway panStamp's address 
-      * @return the gateway address
+
+    void setNetworkId(int id) throws GatewayException;
+
+    /**
+     * get the gateway panStamp's address
+     *
+     * @return the gateway address
      * @throws me.legrange.panstamp.core.ModemException
-      */
-     int getDeviceAddress() throws GatewayException;
-    
-    /** Get the frequency channel
-     * @return TThe channel
-     * @throws me.legrange.panstamp.core.ModemException  */
+     */
+    int getDeviceAddress() throws GatewayException;
+
+    /** 
+     * Set the device address for the gateway panStamp 
+     * @param addr
+     * @throws GatewayException 
+     */
+    void setDeviceAddress(int addr) throws GatewayException;
+
+    /**
+     * Get the frequency channel
+     *
+     * @return The channel
+     * @throws me.legrange.panstamp.core.ModemException
+     */
     int getChannel() throws GatewayException;
 
-    /** Get the security option
+    /** 
+     * Set the frequency channel 
+     * 
+     * @param The cannel to use
+     * @throws GatewayException 
+     */
+    void setChannel(int channel) throws GatewayException;
+
+    /**
+     * Get the security option
+     *
      * @return the security option value.
-     * @throws me.legrange.panstamp.core.ModemException */
+     * @throws me.legrange.panstamp.core.ModemException
+     */
     int getSecurityOption() throws GatewayException;
+
+    /** 
+     * Set the security option 
+     * 
+     * @param secOpt
+     * @throws GatewayException 
+     */
+    void setSecurityOption(int secOpt) throws GatewayException;
 }

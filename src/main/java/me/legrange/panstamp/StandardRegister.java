@@ -23,6 +23,7 @@ public class StandardRegister extends RegisterDef {
     public static final StandardRegister PERIODIC_TX_INTERVAL = new StandardRegister(Register.PERIODIC_TX_INTERVAL);
     public static final StandardRegister[] ALL = {PRODUCT_CODE, HARDWARE_VERSION, FIRMWARE_VERSION, SYSTEM_STATE,
         FREQUENCY_CHANNEL, SECURITY_OPTION, SECURITY_PASSWORD, SECURITY_NONCE, NETWORK_ID, DEVICE_ADDRESS, PERIODIC_TX_INTERVAL};
+    public static final StandardRegister MAX = PERIODIC_TX_INTERVAL;
 
     StandardRegister(Registers.Register reg) {
         super(reg.position(), reg.name());

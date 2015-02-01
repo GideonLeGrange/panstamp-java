@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.DataStore;
 import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
@@ -41,10 +40,9 @@ public final class GatewayImpl implements Gateway {
      * @param lib The XML library to use to find device definitions.
      * @param store The data store to which to store panStamp state.
      */
-    public GatewayImpl(SWAPModem modem, DeviceLibrary lib, DataStore store) {
+    public GatewayImpl(SWAPModem modem, DeviceLibrary lib) {
         this.modem = modem;
         this.lib = lib;
-        this.store = store;
         receiver = new Receiver();
     }
     
@@ -54,6 +52,7 @@ public final class GatewayImpl implements Gateway {
         try {
             modem.open();
             getSetup();
+            int networkId = getNetworkId();
         } catch (SWAPException ex) {
             throw new GatewayException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
         }
@@ -156,6 +155,26 @@ public final class GatewayImpl implements Gateway {
         return 0; // FIX ME
     }
 
+    @Override
+    public void setNetworkId(int id) throws GatewayException {
+        getSetup().setNetworkID(id);
+    }
+
+    @Override
+    public void setDeviceAddress(int addr) throws GatewayException {
+        getSetup().setDeviceAddress(addr);
+    }
+
+    @Override
+    public void setChannel(int channel) throws GatewayException {
+        getSetup().setChannel(channel);
+    }
+
+    @Override
+    public void setSecurityOption(int secOpt) throws GatewayException {
+        // FIX ME
+    }
+    
     /**
      * send a command message to a remote device
      */
@@ -258,7 +277,6 @@ public final class GatewayImpl implements Gateway {
     private final SWAPModem modem;
     private final Receiver receiver;
     private final  DeviceLibrary lib;
-    private final DataStore store;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(GatewayImpl.class.getName());

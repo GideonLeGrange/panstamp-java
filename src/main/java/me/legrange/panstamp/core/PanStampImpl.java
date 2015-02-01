@@ -58,20 +58,12 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public int getTxInterval() throws GatewayException {
-        Integer v = getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL);
-        if (v != null) {
-            return v;
-        }
-        return 0;
+        return getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL, 0);
     }
 
     @Override
     public int getSecurityOption() throws GatewayException {
-        Integer v = getIntValue(StandardEndpoint.SECURITY_OPTION);
-        if (v != null) {
-            return v;
-        }
-        return 0;
+        return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
     }
 
     /**
@@ -124,19 +116,26 @@ public class PanStampImpl implements PanStamp {
         }
     }
 
-    private void setIntValue(StandardEndpoint epDef, int val) throws GatewayException {
-        Register reg = getRegister(epDef.getRegister().getId());
-        Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
-        ep.setValue(val);
+    @Override
+    public int getManufacturerId() throws GatewayException {
+        return getIntValue(StandardEndpoint.MANUFACTURER_ID, 0);
+    }
+    
+    public void setManufacturerId(int id) throws GatewayException { 
+        if (id != getManufacturerId()) {
+            setIntValue(StandardEndpoint.MANUFACTURER_ID, id);
+        }
+     }
+    
+    public void setProductId(int id) throws GatewayException {
+        if (id != getProductId()) {
+            setIntValue(StandardEndpoint.PRODUCT_ID, id);
+        }
     }
 
-    private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
-        Register reg = getRegister(epDef.getRegister().getId());
-        if (reg.hasValue()) {
-            Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
-            return ep.getValue();
-        }
-        return null;
+    @Override
+    public int getProductId() throws GatewayException {
+        return getIntValue(StandardEndpoint.PRODUCT_ID, 0);
     }
 
     @Override
@@ -241,7 +240,7 @@ public class PanStampImpl implements PanStamp {
     /**
      * create a new mote for the given address in the given network
      */
-    PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
+    public PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
         this.gw = gw;
         this.address = address;
         for (Registers.Register reg : Registers.Register.values()) {
@@ -260,6 +259,30 @@ public class PanStampImpl implements PanStamp {
         }
     }
 
+    private int getIntValue(StandardEndpoint epDef, int defaultValue) throws GatewayException {
+        Integer v = getIntValue(epDef);
+        if (v != null) {
+            return v;
+        }
+        return defaultValue;
+
+    }
+
+    private void setIntValue(StandardEndpoint epDef, int val) throws GatewayException {
+        Register reg = getRegister(epDef.getRegister().getId());
+        Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
+        ep.setValue(val);
+    }
+
+    private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
+        Register reg = getRegister(epDef.getRegister().getId());
+        if (reg.hasValue()) {
+            Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
+            return ep.getValue();
+        }
+        return null;
+    }
+    
     private void queue(int id, byte[] value) {
         addListener(new UpdateOnSync(id, value));
         fireEvent(Type.SYNC_REQUIRED, getRegister(id));

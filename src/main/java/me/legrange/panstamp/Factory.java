@@ -2,7 +2,6 @@ package me.legrange.panstamp;
 
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.core.GatewayImpl;
-import me.legrange.panstamp.store.MemoryStore;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;
 import me.legrange.swap.tcp.TcpModem;
@@ -22,7 +21,7 @@ public final class Factory {
      * @return The newly created gateway. 
      */
     public static Gateway createSerial(String port, int baud) {
-        return createSerial(port, baud, new ClassLoaderLibrary(), new MemoryStore());
+        return createSerial(port, baud, new ClassLoaderLibrary());
     }
  
     /** Create a new serial gateway (gateway attached to a serial port) with the given port and speed, 
@@ -31,12 +30,11 @@ public final class Factory {
      * @param port The serial port to open, for example COM1 or /dev/ttyS0
      * @param baud The speed at which to open it, for example 34800 
      * @param lib The device library to use with the gateway. 
-     * @param store The data store to use for keeping track of devices. 
      * @return The newly created gateway. 
      */
-    public static Gateway createSerial(String port, int baud, DeviceLibrary lib, DataStore store) {
+    public static Gateway createSerial(String port, int baud, DeviceLibrary lib) {
         SerialModem sm = new SerialModem(port, baud);
-        return createGateway(sm, lib, store);
+        return createGateway(sm, lib);
     }
 
     /** Create a new TCP/IP gateway (gateway attached to a remote TCP service) with the given host and port, 
@@ -47,7 +45,7 @@ public final class Factory {
      * @return The newly created gateway 
      */
     public static Gateway createTcp(String host, int port) {
-        return createTcp(host, port, new ClassLoaderLibrary(), new MemoryStore());
+        return createTcp(host, port, new ClassLoaderLibrary());
     }
     
     /** Create a new TCP/IP gateway (gateway attached to a remote TCP service) with the given host and port, 
@@ -56,15 +54,24 @@ public final class Factory {
      * @param host the host to which to connect. 
      * @param port The TCP port to which to connect.
      * @param lib The device library to use with the gateway. 
-     * @param store The data store to use for keeping track of devices. 
      * @return The newly created gateway. 
      */
-    public static Gateway createTcp(String host, int port, DeviceLibrary lib, DataStore store) {
+    public static Gateway createTcp(String host, int port, DeviceLibrary lib) {
         TcpModem tm = new TcpModem(host, port);
-        return createGateway(tm, lib, store);
+        return createGateway(tm, lib);
     }
     
-    private static Gateway createGateway(SWAPModem modem, DeviceLibrary lib, DataStore store) {
-        return new GatewayImpl(modem, lib, store);
+    /** Create a new gateway with the given pre-existing SWAP modem. 
+     * 
+     * @param modem
+     * @param lib
+     * @return 
+     */
+    public static Gateway createGateway(SWAPModem modem) {
+        return createGateway(modem, new ClassLoaderLibrary());
+    }
+    
+    private static Gateway createGateway(SWAPModem modem, DeviceLibrary lib) {
+        return new GatewayImpl(modem, lib);
     }
 }

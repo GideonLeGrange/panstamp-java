@@ -50,7 +50,7 @@ public interface PanStamp {
     /** 
      * Set the address of the panStamp 
      * @param addr The address to set
-     * @throws GatewayException Thrown if there is a problem setting the address
+     * @throws GatewayException Thrown if there is a problem reading the interval.
      */
     void setAddress(int addr) throws GatewayException;
     
@@ -81,6 +81,20 @@ public interface PanStamp {
      * @throws GatewayException Thrown if there is a problem setting the interval.
      */
     void setTxInterval(int txInterval)throws GatewayException;
+    
+    /** 
+     * Get the device manufacturer id. 
+     * @return The manufacturer Id
+     * @throws GatewayException Thrown if there is a problem reading the id.
+     */
+    int getManufacturerId() throws GatewayException;
+
+        /** 
+     * Get the device product id. 
+     * @return The product Id
+     * @throws GatewayException Thrown if there is a problem reading the id.
+     */
+    int getProductId() throws GatewayException;
 
     /**
      * Get the device name (as defined by the endpoint definition).

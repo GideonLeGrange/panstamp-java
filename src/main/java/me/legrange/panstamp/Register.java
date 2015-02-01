@@ -98,5 +98,12 @@ public interface Register {
      * @return True if the register's value is known.
      */
     boolean hasValue();
+    
+    /** 
+     * return true if the register is one of the panStamp standard registers. 
+     * 
+     * @return True if it is standard
+     */
+    boolean isStandard();
 
 }

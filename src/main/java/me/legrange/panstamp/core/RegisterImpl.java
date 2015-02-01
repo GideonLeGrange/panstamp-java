@@ -18,6 +18,7 @@ import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
+import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
@@ -134,6 +135,11 @@ public class RegisterImpl implements Register {
         List<Parameter> all = new ArrayList<>();
         all.addAll(parameters.values());
         return all;
+    }
+
+    @Override
+    public boolean isStandard() {
+        return (id <= StandardRegister.MAX.getId());
     }
 
     /**
