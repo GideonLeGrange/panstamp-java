@@ -138,6 +138,15 @@ public final class GatewayImpl implements Gateway {
     public SWAPModem getSWAPModem() {
         return modem;
     }
+    
+    /** Check if the gateway is open (meaning connected to the network) 
+     * 
+     * @return
+     * @throws ModemException 
+     */
+    boolean isOpen() { 
+        return modem.isOpen();
+    }
 
     @Override
     public int getNetworkId() throws ModemException {

@@ -88,7 +88,12 @@ public class RegisterImpl implements Register {
     @Override
     public void setValue(byte value[]) throws GatewayException {
         try {
-            dev.sendCommandMessage(id, value);
+            if (dev.getGateway().isOpen()) {
+                dev.sendCommandMessage(id, value);
+            }
+            else {
+                this.value = value;
+            }
         } catch (ModemException e) {
             throw new MoteException(e.getMessage(), e);
         }
@@ -163,7 +168,8 @@ public class RegisterImpl implements Register {
         parameters.put(def.getName(), par);
         fireEvent(Type.PARAMETER_ADDED);
     }
-    
+  
+   
     ExecutorService getPool() { 
         return dev.getPool();
     }

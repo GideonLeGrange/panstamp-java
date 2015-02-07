@@ -120,17 +120,15 @@ public class PanStampImpl implements PanStamp {
     public int getManufacturerId() throws GatewayException {
         return getIntValue(StandardEndpoint.MANUFACTURER_ID, 0);
     }
-    
-    public void setManufacturerId(int id) throws GatewayException { 
-        if (id != getManufacturerId()) {
-            setIntValue(StandardEndpoint.MANUFACTURER_ID, id);
+
+    public void setProductCode(int manId, int prodId) throws GatewayException {
+        if (manId != getManufacturerId()) {
+            setIntValue(StandardEndpoint.MANUFACTURER_ID, manId);
         }
-     }
-    
-    public void setProductId(int id) throws GatewayException {
-        if (id != getProductId()) {
-            setIntValue(StandardEndpoint.PRODUCT_ID, id);
+        if (prodId != getProductId()) {
+            setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
         }
+        loadDefinition();
     }
 
     @Override
@@ -282,7 +280,7 @@ public class PanStampImpl implements PanStamp {
         }
         return null;
     }
-    
+
     private void queue(int id, byte[] value) {
         addListener(new UpdateOnSync(id, value));
         fireEvent(Type.SYNC_REQUIRED, getRegister(id));
@@ -371,10 +369,8 @@ public class PanStampImpl implements PanStamp {
                             Register reg = ev.getRegister();
                             int mfId = getManufacturerId(reg);
                             int pdId = getProductId(reg);
-                            if ((mfId != manufacturerId) || (pdId != productId)) {
-                                manufacturerId = mfId;
-                                productId = pdId;
-                                loadDefinition();
+                            if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
+                                setProductCode(mfId, pdId);
                                 fireEvent(Type.PRODUCT_CODE_UPDATE);
                             }
                             break;
@@ -407,7 +403,7 @@ public class PanStampImpl implements PanStamp {
      * get the device definition for this panStamp
      */
     private DeviceDef getDeviceDefinition() throws GatewayException {
-        return gw.getDeviceDefinition(manufacturerId, productId);
+        return gw.getDeviceDefinition(getManufacturerId(), getProductId());
     }
 
     /**
@@ -427,13 +423,13 @@ public class PanStampImpl implements PanStamp {
     }
 
     private final int address;
-    private DeviceDef def;
-    private final GatewayImpl gw;
-    private int manufacturerId;
-    private int productId;
+    private transient DeviceDef def;
+    private transient final GatewayImpl gw;
+//    private int manufacturerId;
+//    private int productId;
     private int syncState;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
-    private final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
+    private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
 
     private static class UpdateTask implements Runnable {
 

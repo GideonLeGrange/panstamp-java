@@ -114,8 +114,7 @@ public class Store {
             JsonObject deviceO = devicesO.getObject(key);
             PanStampImpl ps = new PanStampImpl((GatewayImpl) gw, deviceO.getInt(DEVICE_ADDRESS));
             ps.setTxInterval(deviceO.getInt(TX_INTERVAL));
-            ps.setManufacturerId(deviceO.getInt(MANUFACTURER_ID));
-            ps.setProductId(deviceO.getInt(PRODUCT_ID));
+            ps.setProductCode(deviceO.getInt(MANUFACTURER_ID), deviceO.getInt(PRODUCT_ID));
             ((GatewayImpl)gw).addDevice(ps);
         }
     }

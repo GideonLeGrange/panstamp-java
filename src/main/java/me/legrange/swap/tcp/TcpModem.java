@@ -18,10 +18,10 @@ import me.legrange.swap.serial.SerialModem;
 
 /**
  * A SWAP modem implementation that works over TCP.
+ *
  * @author gideon
  */
 public class TcpModem implements SWAPModem {
-
 
     public TcpModem(String host, int port) {
         this.host = host;
@@ -52,10 +52,14 @@ public class TcpModem implements SWAPModem {
             sock.close();
         } catch (IOException ex) {
             throw new TcpException(ex.getMessage(), ex);
-        }
-        finally {
+        } finally {
             trans.removeListener(listener);
         }
+    }
+
+    @Override
+    public boolean isOpen() {
+        return running;
     }
 
     @Override
@@ -82,25 +86,27 @@ public class TcpModem implements SWAPModem {
     public void setSetup(ModemSetup newSetup) throws SWAPException {
         trans.sendSetup(newSetup);
     }
-    
+
     @Override
-    public Type getType() { 
+    public Type getType() {
         return Type.TCP_IP;
     }
-    
+
     /**
      * Get the host the modem is connected to.
+     *
      * @return The host name.
      */
-    public String getHost() { 
+    public String getHost() {
         return host;
     }
-    
+
     /**
      * Get the TCP port the modem is connected to.
+     *
      * @return The port.
      */
-    public int getPort() { 
+    public int getPort() {
         return port;
     }
 

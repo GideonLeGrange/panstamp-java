@@ -25,6 +25,13 @@ public interface SWAPModem {
      * @throws me.legrange.swap.SWAPException
      */
     void close() throws SWAPException;
+    
+    /** 
+     * Check if the modem is open (connected to it's implementation device) 
+     * @return true if the modem is connected
+     * 
+     */
+    boolean isOpen();
 
     /**
      * send a message out onto the network

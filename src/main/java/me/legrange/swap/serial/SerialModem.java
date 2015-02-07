@@ -48,6 +48,11 @@ public final class SerialModem implements SWAPModem {
     }
 
     @Override
+    public boolean isOpen() {
+        return running;
+    }
+    
+    @Override
     public synchronized void send(SwapMessage msg) throws SerialException {
         com.send(msg.getText() + "\r");
         fireEvent(msg, ReceiveTask.Direction.OUT);

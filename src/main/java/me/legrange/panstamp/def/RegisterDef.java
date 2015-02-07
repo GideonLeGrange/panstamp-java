@@ -36,6 +36,14 @@ public class RegisterDef {
         return all;
     }
     
+    public int getByteSize() {
+        int size = 0;
+        for (EndpointDef epDef : getEndpoints()) {
+            size = size + epDef.getSize().getBytes();
+        }
+        return size;
+    }
+    
     void addEndpoint(EndpointDef ep) {
         endpoints.put(ep.getName(), ep);
     }
