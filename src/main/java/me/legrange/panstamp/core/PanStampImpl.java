@@ -130,7 +130,9 @@ public class PanStampImpl implements PanStamp {
             productId = prodId;
             setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
         }
-        loadDefinition();
+        if ((manufacturerId > 0) && (productId > 0)) {
+           loadDefinition();
+        }
     }
 
     @Override

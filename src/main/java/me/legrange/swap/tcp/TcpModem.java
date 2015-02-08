@@ -79,6 +79,9 @@ public class TcpModem implements SWAPModem {
 
     @Override
     public ModemSetup getSetup() throws SWAPException {
+        if (setup == null) {
+            setup = new ModemSetup(0,0,0);            
+        }
         return setup;
     }
 
