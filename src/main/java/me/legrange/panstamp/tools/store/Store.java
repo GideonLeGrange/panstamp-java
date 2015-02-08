@@ -77,6 +77,8 @@ public class Store {
 
     /**
      * Load all gateways stored in the data store
+     * @return The list of gateways loaded from storage. 
+     * @throws me.legrange.panstamp.tools.store.DataStoreException If there is an error loading the definitions.
      */
     public List<Gateway> load() throws DataStoreException {
         List<Gateway> gateways = new LinkedList<>();

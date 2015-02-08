@@ -139,12 +139,8 @@ public final class GatewayImpl implements Gateway {
         return modem;
     }
     
-    /** Check if the gateway is open (meaning connected to the network) 
-     * 
-     * @return
-     * @throws ModemException 
-     */
-    boolean isOpen() { 
+    @Override
+    public boolean isOpen() { 
         return modem.isOpen();
     }
 

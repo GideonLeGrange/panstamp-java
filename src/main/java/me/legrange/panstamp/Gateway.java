@@ -25,6 +25,13 @@ public interface Gateway {
      * @throws me.legrange.panstamp.GatewayException
      */
     void close() throws GatewayException;
+    
+    /** 
+     * Check if the gateway is open (is connected to a panStamp network). 
+     * 
+     * @return True if the network is running.
+     */
+    boolean isOpen();
 
     /**
      * use to check if a device with the given address is known
