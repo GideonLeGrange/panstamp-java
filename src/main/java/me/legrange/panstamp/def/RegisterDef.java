@@ -44,7 +44,7 @@ public class RegisterDef {
         return size;
     }
     
-    void addEndpoint(EndpointDef ep) {
+    protected void addEndpoint(EndpointDef ep) {
         endpoints.put(ep.getName(), ep);
     }
     

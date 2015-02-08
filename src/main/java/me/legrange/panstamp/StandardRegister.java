@@ -1,5 +1,6 @@
 package me.legrange.panstamp;
 
+import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.RegisterDef;
 import me.legrange.swap.Registers;
 import me.legrange.swap.Registers.Register;
@@ -29,4 +30,11 @@ public class StandardRegister extends RegisterDef {
         super(reg.position(), reg.name());
     }
 
+    void addEndpoint(StandardEndpoint ep) {
+        super.addEndpoint(ep); 
+    }
+    
+    
+    
+    
 }

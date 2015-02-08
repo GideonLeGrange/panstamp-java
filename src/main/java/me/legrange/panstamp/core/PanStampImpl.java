@@ -118,14 +118,16 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public int getManufacturerId() throws GatewayException {
-        return getIntValue(StandardEndpoint.MANUFACTURER_ID, 0);
+        return manufacturerId;
     }
 
     public void setProductCode(int manId, int prodId) throws GatewayException {
         if (manId != getManufacturerId()) {
+            manufacturerId = manId;
             setIntValue(StandardEndpoint.MANUFACTURER_ID, manId);
         }
         if (prodId != getProductId()) {
+            productId = prodId;
             setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
         }
         loadDefinition();
@@ -133,7 +135,7 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public int getProductId() throws GatewayException {
-        return getIntValue(StandardEndpoint.PRODUCT_ID, 0);
+        return productId;
     }
 
     @Override
@@ -425,8 +427,8 @@ public class PanStampImpl implements PanStamp {
     private final int address;
     private transient DeviceDef def;
     private transient final GatewayImpl gw;
-//    private int manufacturerId;
-//    private int productId;
+  private int manufacturerId;
+    private int productId;
     private int syncState;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();
     private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();

@@ -8,7 +8,7 @@ import me.legrange.panstamp.def.Size;
 import me.legrange.panstamp.def.Type;
 
 /**
- *
+ * // FIX ME - need to make standard register def contain standard endpoint def to be completely compatible with custom/loaded.
  * @author gideon
  */
 public class StandardEndpoint extends EndpointDef {
@@ -61,10 +61,11 @@ public class StandardEndpoint extends EndpointDef {
         PERIODIC_TX_INTERVAL.setSize(new Size(2, 0));
     }
 
-    StandardEndpoint(RegisterDef reg, String name, Direction direction, Type type) {
+    StandardEndpoint(StandardRegister reg, String name, Direction direction, Type type) {
         super(reg, name, direction, type);
         setSize(new Size(1,0));
         setPosition(new Position(0));
+        reg.addEndpoint(this);
     }
 
 }
