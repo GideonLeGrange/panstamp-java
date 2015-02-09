@@ -115,7 +115,7 @@ public interface Gateway {
     /** 
      * Set the frequency channel 
      * 
-     * @param The cannel to use
+     * @param channel The channel to use. 
      * @throws GatewayException 
      */
     void setChannel(int channel) throws GatewayException;

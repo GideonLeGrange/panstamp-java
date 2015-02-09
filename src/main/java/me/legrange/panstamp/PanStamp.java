@@ -119,7 +119,7 @@ public interface PanStamp {
      * @throws me.legrange.panstamp.GatewayException Thrown if there is a
      * problem retrieving the register.
      */
-    Register getRegister(int id) throws GatewayException;
+    Register getRegister(int id); //throws GatewayException;
 
     /**
      * Determine if the device has a register with the given ID.
