@@ -92,6 +92,8 @@ final class ComPort  {
             port = portId.open(getClass().getSimpleName(), timeout);
             port.setSerialPortParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+            port.enableReceiveTimeout(Integer.MAX_VALUE);
+            port.enableReceiveThreshold(0);
             in = new BufferedReader(new InputStreamReader(port.getInputStream()));
             out = port.getOutputStream();
             out.flush();
