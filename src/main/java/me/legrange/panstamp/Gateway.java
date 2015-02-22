@@ -56,6 +56,12 @@ public interface Gateway {
      * @return The list of devices
      */
     List<PanStamp> getDevices();
+    
+    /** Removes the device with the given address from the network
+     * 
+     * @param address The address of the device to remove.
+     */
+    void removeDevice(int address);
 
     /**
      * add listener to receive new device events
@@ -87,6 +93,11 @@ public interface Gateway {
      */
     int getNetworkId() throws GatewayException;
 
+    /** Set the network ID for the network accessed by this gateway
+     * 
+     * @param id The network ID
+     * @throws GatewayException thrown if there is a problem setting the network ID 
+     */
     void setNetworkId(int id) throws GatewayException;
 
     /**

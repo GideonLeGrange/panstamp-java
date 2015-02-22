@@ -199,6 +199,14 @@ public class PanStampImpl implements PanStamp {
     public void removeListener(PanStampListener l) {
         listeners.remove(l);
     }
+    
+    void destroy() {
+        for (RegisterImpl reg : registers.values()) {
+            reg.destroy();
+        }
+        listeners.clear();
+        registers.clear();
+    }
 
     DeviceDef getDefinition() {
         return def;
@@ -430,7 +438,7 @@ public class PanStampImpl implements PanStamp {
     private final int address;
     private transient DeviceDef def;
     private transient final GatewayImpl gw;
-  private int manufacturerId;
+    private int manufacturerId;
     private int productId;
     private int syncState;
     private final Map<Integer, RegisterImpl> registers = new HashMap<>();

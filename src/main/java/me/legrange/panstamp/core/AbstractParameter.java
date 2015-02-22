@@ -9,7 +9,7 @@ import me.legrange.panstamp.def.Param;
  * @author gideon
  * @param <T>
  */
-public abstract class AbstractParameter<T> implements Parameter<T>{
+public abstract class AbstractParameter<T> implements Parameter<T> {
 
     @Override
     public String getName() {
@@ -21,7 +21,6 @@ public abstract class AbstractParameter<T> implements Parameter<T>{
         return reg.hasValue();
     }
 
-  
     @Override
     public Register getRegister() {
         return reg;
@@ -35,17 +34,17 @@ public abstract class AbstractParameter<T> implements Parameter<T>{
         }
         return pat;
     }
-    
+
     AbstractParameter(RegisterImpl reg, Param par) {
         this.reg = reg;
         this.par = par;
 
     }
 
+    void destroy() {
+    }
 
     protected final RegisterImpl reg;
     protected final Param par;
-
-
 
 }

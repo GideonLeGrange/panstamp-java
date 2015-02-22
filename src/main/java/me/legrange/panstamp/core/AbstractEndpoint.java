@@ -116,6 +116,10 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     protected abstract T transformOut(T value, Unit unit);
 
     protected abstract T transformIn(T value, Unit unit);
+    
+    void destroy() { 
+        listeners.clear();
+    }
 
     protected final RegisterImpl reg;
     protected final EndpointDef epDef;

@@ -125,6 +125,28 @@ public final class GatewayImpl implements Gateway {
     }
 
     @Override
+    public void removeDevice(int address) {
+        final PanStampImpl ps = devices.get(address);
+        if (ps != null) {
+            ps.destroy();
+            devices.remove(address);
+        }
+        fireEvent(new GatewayEvent() {
+
+            @Override
+            public GatewayEvent.Type getType() {
+                return GatewayEvent.Type.DEVICE_REMOVED;
+            }
+
+            @Override
+            public PanStamp getDevice() {
+                return ps;
+            }
+        });
+    }
+    
+
+    @Override
     public void addListener(GatewayListener l) {
         listeners.add(l);
     }

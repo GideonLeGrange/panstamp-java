@@ -146,6 +146,18 @@ public class RegisterImpl implements Register {
     public boolean isStandard() {
         return (id <= StandardRegister.MAX.getId());
     }
+    
+    void destroy() { 
+        for (AbstractEndpoint ep : endpoints.values()) {
+            ep.destroy();
+        }
+        for (AbstractParameter par : parameters.values()) {
+            par.destroy();
+        }
+        listeners.clear();
+        endpoints.clear();
+        parameters.clear();
+    }
 
     /**
      * update the abstracted register value and notify listeners
@@ -158,13 +170,13 @@ public class RegisterImpl implements Register {
     }
 
     void addEndpoint(EndpointDef def) throws NoSuchUnitException {
-        Endpoint ep = makeEndpoint(def);
+        AbstractEndpoint ep = makeEndpoint(def);
         endpoints.put(def.getName(), ep);
         fireEvent(Type.ENDPOINT_ADDED, ep);
     }
 
     void addParameter(Param def) throws NoSuchUnitException {
-        Parameter par = makeParameter(def);
+        AbstractParameter par = makeParameter(def);
         parameters.put(def.getName(), par);
         fireEvent(Type.PARAMETER_ADDED);
     }
@@ -219,7 +231,7 @@ public class RegisterImpl implements Register {
     /**
      * make an endpoint object based on it's definition
      */
-    private Endpoint makeEndpoint(EndpointDef epDef) throws NoSuchUnitException {
+    private AbstractEndpoint makeEndpoint(EndpointDef epDef) throws NoSuchUnitException {
         switch (epDef.getType()) {
             case NUMBER:
                 return new NumberEndpoint(this, epDef);
@@ -237,7 +249,7 @@ public class RegisterImpl implements Register {
     /**
      * make a parameter object based on it's definition
      */
-    private Parameter makeParameter(Param def) throws NoSuchUnitException {
+    private AbstractParameter makeParameter(Param def) throws NoSuchUnitException {
         switch (def.getType()) {
             case NUMBER:
                 return new NumberParameter(this, def);
@@ -294,8 +306,8 @@ public class RegisterImpl implements Register {
     private final PanStampImpl dev;
     private final int id;
     private String name = "";
-    private final Map<String, Endpoint> endpoints = new HashMap<>();
-    private final Map<String, Parameter> parameters = new HashMap<>();
+    private final Map<String, AbstractEndpoint> endpoints = new HashMap<>();
+    private final Map<String, AbstractParameter> parameters = new HashMap<>();
     private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] value;
    
