@@ -21,42 +21,48 @@ public class DataUpdater {
     }
 
     public void addGateway(Gateway gw) {
-        gw.addListener(new GatewayListener() {
+        gw.addListener(listener);
 
-            @Override
-            public void gatewayUpdated(GatewayEvent ev) {
-                switch (ev.getType()) {
-                    case DEVICE_DETECTED:
-                        final PanStamp ps = ev.getDevice();
-                        ps.addListener(new PanStampListener() {
+    }
 
-                            @Override
-                            public void deviceUpdated(PanStampEvent ev) {
-                                switch (ev.getType()) {
-                                    case PRODUCT_CODE_UPDATE: {
-                                        try {
-                                            store.storePanStamp(ps);
-                                        } catch (DataStoreException ex) {
-                                            Logger.getLogger(DataUpdater.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                    }
-                                    break;
-
-                                }
-                            }
-                        });
-                         {
-                            try {
-                                store.storePanStamp(ps);
-                            } catch (DataStoreException ex) {
-                                Logger.getLogger(DataUpdater.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                }
-            }
-        });
+    public void removeGateway(Gateway gw) {
+        gw.removeListener(listener);
     }
 
     private final Store store;
+
+    private final GatewayListener listener = new GatewayListener() {
+        @Override
+        public void gatewayUpdated(GatewayEvent ev) {
+            switch (ev.getType()) {
+                case DEVICE_DETECTED:
+                    final PanStamp ps = ev.getDevice();
+                    ps.addListener(new PanStampListener() {
+
+                        @Override
+                        public void deviceUpdated(PanStampEvent ev) {
+                            switch (ev.getType()) {
+                                case PRODUCT_CODE_UPDATE: {
+                                    try {
+                                        store.storePanStamp(ps);
+                                    } catch (DataStoreException ex) {
+                                        Logger.getLogger(DataUpdater.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                                break;
+
+                            }
+                        }
+                    });
+                     {
+                        try {
+                            store.storePanStamp(ps);
+                        } catch (DataStoreException ex) {
+                            Logger.getLogger(DataUpdater.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+            }
+        }
+    };
 
 }

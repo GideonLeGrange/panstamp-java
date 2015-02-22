@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
@@ -441,7 +442,7 @@ public class PanStampImpl implements PanStamp {
     private int manufacturerId;
     private int productId;
     private int syncState;
-    private final Map<Integer, RegisterImpl> registers = new HashMap<>();
+    private final Map<Integer, RegisterImpl> registers = new ConcurrentHashMap<>();
     private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
 
     private static class UpdateTask implements Runnable {

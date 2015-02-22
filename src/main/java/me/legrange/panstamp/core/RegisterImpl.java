@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
@@ -306,8 +307,8 @@ public class RegisterImpl implements Register {
     private final PanStampImpl dev;
     private final int id;
     private String name = "";
-    private final Map<String, AbstractEndpoint> endpoints = new HashMap<>();
-    private final Map<String, AbstractParameter> parameters = new HashMap<>();
+    private final Map<String, AbstractEndpoint> endpoints = new ConcurrentHashMap<>();
+    private final Map<String, AbstractParameter> parameters = new ConcurrentHashMap<>();
     private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] value;
    

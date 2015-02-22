@@ -26,17 +26,19 @@ import me.legrange.swap.UserMessage;
 import me.legrange.swap.ModemSetup;
 
 /**
- * A gateway connecting a panStamp network to your code using the
- * SWAP modem supplied. 
+ * A gateway connecting a panStamp network to your code using the SWAP modem
+ * supplied.
  *
  * @author gideon
  */
 public final class GatewayImpl implements Gateway {
 
-    /** Create an new gateway implementation using the given modem implementation,
-     * XML library and data store. 
-     * 
-     * @param modem The SWAP modem to use to connect to the panStamp wireless network.
+    /**
+     * Create an new gateway implementation using the given modem
+     * implementation, XML library and data store.
+     *
+     * @param modem The SWAP modem to use to connect to the panStamp wireless
+     * network.
      * @param lib The XML library to use to find device definitions.
      * @param store The data store to which to store panStamp state.
      */
@@ -45,7 +47,7 @@ public final class GatewayImpl implements Gateway {
         this.lib = lib;
         receiver = new Receiver();
     }
-    
+
     @Override
     public void open() throws GatewayException {
         modem.addListener(receiver);
@@ -70,8 +72,7 @@ public final class GatewayImpl implements Gateway {
         } catch (SWAPException ex) {
             throw new ModemException(ex.getMessage(), ex);
 
-        }
-        finally {
+        } finally {
             modem.removeListener(receiver);
             devices.clear();
         }
@@ -119,7 +120,7 @@ public final class GatewayImpl implements Gateway {
         res.addAll(devices.values());
         return res;
     }
-    
+
     public void addDevice(PanStampImpl ps) {
         devices.put(ps.getAddress(), ps);
     }
@@ -128,23 +129,22 @@ public final class GatewayImpl implements Gateway {
     public void removeDevice(int address) {
         final PanStampImpl ps = devices.get(address);
         if (ps != null) {
+            fireEvent(new GatewayEvent() {
+
+                @Override
+                public GatewayEvent.Type getType() {
+                    return GatewayEvent.Type.DEVICE_REMOVED;
+                }
+
+                @Override
+                public PanStamp getDevice() {
+                    return ps;
+                }
+            });
             ps.destroy();
             devices.remove(address);
         }
-        fireEvent(new GatewayEvent() {
-
-            @Override
-            public GatewayEvent.Type getType() {
-                return GatewayEvent.Type.DEVICE_REMOVED;
-            }
-
-            @Override
-            public PanStamp getDevice() {
-                return ps;
-            }
-        });
     }
-    
 
     @Override
     public void addListener(GatewayListener l) {
@@ -160,9 +160,9 @@ public final class GatewayImpl implements Gateway {
     public SWAPModem getSWAPModem() {
         return modem;
     }
-    
+
     @Override
-    public boolean isOpen() { 
+    public boolean isOpen() {
         return modem.isOpen();
     }
 
@@ -205,7 +205,7 @@ public final class GatewayImpl implements Gateway {
     public void setSecurityOption(int secOpt) throws GatewayException {
         // FIX ME
     }
-    
+
     /**
      * send a command message to a remote device
      */
@@ -228,10 +228,10 @@ public final class GatewayImpl implements Gateway {
         return lib.getDeviceDefinition(manId, prodId);
     }
 
-    ExecutorService getPool() { 
+    ExecutorService getPool() {
         return pool;
     }
-    
+
     /**
      * send a message to a mote
      */
@@ -242,7 +242,7 @@ public final class GatewayImpl implements Gateway {
             throw new ModemException(ex.getMessage(), ex);
         }
     }
-    
+
     /**
      * update the network based on a received message
      */
@@ -266,7 +266,7 @@ public final class GatewayImpl implements Gateway {
                         }
 
                     });
-            } catch (NoSuchUnitException ex) {
+                } catch (NoSuchUnitException ex) {
                     throw new ModemException(ex.getMessage(), ex);
                 }
             }
@@ -307,7 +307,7 @@ public final class GatewayImpl implements Gateway {
 
     private final SWAPModem modem;
     private final Receiver receiver;
-    private final  DeviceLibrary lib;
+    private final DeviceLibrary lib;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(GatewayImpl.class.getName());
