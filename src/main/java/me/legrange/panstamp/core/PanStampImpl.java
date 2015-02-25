@@ -3,10 +3,8 @@ package me.legrange.panstamp.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -251,6 +249,9 @@ public class PanStampImpl implements PanStamp {
 
     /**
      * create a new mote for the given address in the given network
+     * @param gw The gateway to which this device is connected
+     * @param address The address of the device
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem creating the device. 
      */
     public PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
         this.gw = gw;
