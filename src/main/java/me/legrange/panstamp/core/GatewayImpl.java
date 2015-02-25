@@ -121,8 +121,21 @@ public final class GatewayImpl implements Gateway {
         return res;
     }
 
-    public void addDevice(PanStampImpl ps) {
+    public void addDevice(final PanStampImpl ps) {
         devices.put(ps.getAddress(), ps);
+        fireEvent(new GatewayEvent() {
+
+            @Override
+            public GatewayEvent.Type getType() {
+                return GatewayEvent.Type.DEVICE_DETECTED;
+            }
+
+            @Override
+            public PanStamp getDevice() {
+                return ps;
+            }
+
+        });
     }
 
     @Override
@@ -251,21 +264,8 @@ public final class GatewayImpl implements Gateway {
         synchronized (devices) {
             if (!hasDevice(address)) {
                 try {
-                    final PanStampImpl dev = new PanStampImpl(this, address);
-                    devices.put(address, dev);
-                    fireEvent(new GatewayEvent() {
+                    addDevice(new PanStampImpl(this, address));
 
-                        @Override
-                        public GatewayEvent.Type getType() {
-                            return GatewayEvent.Type.DEVICE_DETECTED;
-                        }
-
-                        @Override
-                        public PanStamp getDevice() {
-                            return dev;
-                        }
-
-                    });
                 } catch (NoSuchUnitException ex) {
                     throw new ModemException(ex.getMessage(), ex);
                 }
