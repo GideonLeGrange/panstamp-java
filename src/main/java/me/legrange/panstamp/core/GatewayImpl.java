@@ -40,7 +40,6 @@ public final class GatewayImpl implements Gateway {
      * @param modem The SWAP modem to use to connect to the panStamp wireless
      * network.
      * @param lib The XML library to use to find device definitions.
-     * @param store The data store to which to store panStamp state.
      */
     public GatewayImpl(SWAPModem modem, DeviceLibrary lib) {
         this.modem = modem;
