@@ -3,7 +3,6 @@ package me.legrange.panstamp;
 import me.legrange.panstamp.def.Direction;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Position;
-import me.legrange.panstamp.def.RegisterDef;
 import me.legrange.panstamp.def.Size;
 import me.legrange.panstamp.def.Type;
 

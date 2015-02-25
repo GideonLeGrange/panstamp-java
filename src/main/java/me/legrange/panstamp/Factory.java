@@ -64,7 +64,6 @@ public final class Factory {
     /** Create a new gateway with the given pre-existing SWAP modem. 
      * 
      * @param modem
-     * @param lib
      * @return 
      */
     public static Gateway createGateway(SWAPModem modem) {
