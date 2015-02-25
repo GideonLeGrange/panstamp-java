@@ -11,12 +11,16 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceLibrary;
+import me.legrange.panstamp.DeviceStateStore;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.Register;
+import me.legrange.panstamp.StandardRegister;
+import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
@@ -39,11 +43,11 @@ public final class GatewayImpl implements Gateway {
      *
      * @param modem The SWAP modem to use to connect to the panStamp wireless
      * network.
-     * @param lib The XML library to use to find device definitions.
      */
-    public GatewayImpl(SWAPModem modem, DeviceLibrary lib) {
+    public GatewayImpl(SWAPModem modem) {
         this.modem = modem;
-        this.lib = lib;
+        this.lib = new ClassLoaderLibrary();
+        this.store = new MemoryStore();
         receiver = new Receiver();
     }
 
@@ -174,6 +178,26 @@ public final class GatewayImpl implements Gateway {
     }
 
     @Override
+    public DeviceLibrary getDeviceLibrary() {
+        return lib;
+    }
+
+    @Override
+    public DeviceStateStore getDeviceStore() {
+        return store;
+    }
+
+    @Override
+    public void setDeviceLibrary(DeviceLibrary lib) {
+        this.lib = lib;
+    }
+
+    @Override
+    public void setDeviceStore(DeviceStateStore store) {
+        this.store = store;
+    }
+
+    @Override
     public boolean isOpen() {
         return modem.isOpen();
     }
@@ -263,8 +287,16 @@ public final class GatewayImpl implements Gateway {
         synchronized (devices) {
             if (!hasDevice(address)) {
                 try {
-                    addDevice(new PanStampImpl(this, address));
-
+                    PanStampImpl dev = new PanStampImpl(this, address);
+                    addDevice(dev);
+                    for (StandardRegister sr : StandardRegister.ALL) {
+                        if (store.hasRegisterValue(address, sr)) {
+                            Register reg = dev.getRegister(sr.getId());
+                            if (!reg.hasValue()) {
+                                reg.setValue(store.getRegisterValue(address, sr));
+                            }
+                        }
+                    }
                 } catch (NoSuchUnitException ex) {
                     throw new ModemException(ex.getMessage(), ex);
                 }
@@ -286,6 +318,9 @@ public final class GatewayImpl implements Gateway {
             updateNetwork(msg);
             PanStampImpl dev = (PanStampImpl) getDevice(msg.getRegisterAddress());
             dev.statusMessageReceived(msg);
+            if (msg.isStandardRegister()) {
+                store.setRegisterValue(msg.getRegisterAddress(), StandardRegister.forId(msg.getRegisterID()), msg.getRegisterValue());
+            }
         } catch (GatewayException ex) {
             java.util.logging.Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -306,7 +341,8 @@ public final class GatewayImpl implements Gateway {
 
     private final SWAPModem modem;
     private final Receiver receiver;
-    private final DeviceLibrary lib;
+    private DeviceLibrary lib;
+    private DeviceStateStore store;
     private final Map<Integer, PanStampImpl> devices = new HashMap<>();
     private final List<GatewayListener> listeners = new LinkedList<>();
     private static final Logger logger = Logger.getLogger(GatewayImpl.class.getName());

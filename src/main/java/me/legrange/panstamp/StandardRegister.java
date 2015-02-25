@@ -25,6 +25,10 @@ public class StandardRegister extends RegisterDef {
         FREQUENCY_CHANNEL, SECURITY_OPTION, SECURITY_PASSWORD, SECURITY_NONCE, NETWORK_ID, DEVICE_ADDRESS, PERIODIC_TX_INTERVAL};
     public static final StandardRegister MAX = PERIODIC_TX_INTERVAL;
 
+    public  static StandardRegister forId(int id) {
+        return ALL[id];
+    }
+    
     StandardRegister(Registers.Register reg) {
         super(reg.position(), reg.name());
     }

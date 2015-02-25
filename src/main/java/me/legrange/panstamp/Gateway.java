@@ -83,6 +83,30 @@ public interface Gateway {
      * @return The SWAP modem supporting this gateway
      */
     SWAPModem getSWAPModem();
+    
+    /** 
+     * Return the device library being used to lookup device definitions. 
+     * @return The current library.
+     */
+    DeviceLibrary getDeviceLibrary();
+    
+    /** 
+     * Set the device library used to lookup device definitions.
+     * @param lib The library to use.
+     */
+    void setDeviceLibrary(DeviceLibrary lib);
+    
+    /** Return the device store used to save device state. 
+     * 
+     * @return The current store.
+     */
+    DeviceStateStore getDeviceStore();
+    
+    /** 
+     * Set the device store to use to lookup persisted device registers. 
+     * @param store The store to use.
+     */
+    void setDeviceStore(DeviceStateStore store);
 
     /**
      * return the network ID for the network supported by this gateway
