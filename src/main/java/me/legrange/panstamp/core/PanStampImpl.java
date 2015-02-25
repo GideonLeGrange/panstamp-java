@@ -133,6 +133,9 @@ public class PanStampImpl implements PanStamp {
         if ((manufacturerId > 0) && (productId > 0)) {
            loadDefinition();
         }
+        // FIXME. There is a problem here in that we can potenially keep loading and reloading. Also
+        // we're probably overwriting partial info by running loadDefintion after the above sets.
+        // Furthermore, we're not clearing any lists or maps before populating. 
     }
 
     @Override
@@ -382,8 +385,8 @@ public class PanStampImpl implements PanStamp {
                     switch (ev.getType()) {
                         case VALUE_RECEIVED:
                             Register reg = ev.getRegister();
-                            int mfId = getManufacturerId(reg);
-                            int pdId = getProductId(reg);
+                            int mfId = getManufacturerIdFromRegister(reg);
+                            int pdId = getProductIdFromRegister(reg);
                             if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
                                 setProductCode(mfId, pdId);
                                 fireEvent(Type.PRODUCT_CODE_UPDATE);
@@ -398,10 +401,10 @@ public class PanStampImpl implements PanStamp {
     }
 
     /**
-     * load all endpoints
+     * load all endpoints and parameters
      */
     private void loadDefinition() throws GatewayException {
-        def = getDeviceDefinition();
+        def = gw.getDeviceDefinition(getManufacturerId(), getProductId());
         List<RegisterDef> rpDefs = def.getRegisters();
         for (RegisterDef rpDef : rpDefs) {
             RegisterImpl reg = (RegisterImpl) getRegister(rpDef.getId());
@@ -415,24 +418,17 @@ public class PanStampImpl implements PanStamp {
     }
 
     /**
-     * get the device definition for this panStamp
+     * get the manufacturer id for this panStamp from the actual register
      */
-    private DeviceDef getDeviceDefinition() throws GatewayException {
-        return gw.getDeviceDefinition(getManufacturerId(), getProductId());
-    }
-
-    /**
-     * get the manufacturer id for this panStamp
-     */
-    private int getManufacturerId(Register reg) throws GatewayException {
+    private int getManufacturerIdFromRegister(Register reg) throws GatewayException {
         byte val[] = reg.getValue();
         return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
     }
 
     /**
-     * get the product id for this panStamp
+     * get the product id for this panStamp from the actual register
      */
-    private int getProductId(Register reg) throws GatewayException {
+    private int getProductIdFromRegister(Register reg) throws GatewayException {
         byte val[] = reg.getValue();
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
     }

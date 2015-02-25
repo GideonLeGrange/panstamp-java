@@ -1,7 +1,6 @@
 package me.legrange.panstamp;
 
 import me.legrange.panstamp.def.DeviceDef;
-import me.legrange.panstamp.def.DeviceNotFoundException;
 
 /**
  * A device library can be implemented to find a device definition based on a panStamp's
