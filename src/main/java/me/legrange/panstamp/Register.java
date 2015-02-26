@@ -39,9 +39,9 @@ public interface Register {
     /**
      * return the endpoint for the given name
      *
-     * @param name
-     * @return
-     * @throws me.legrange.panstamp.GatewayException
+     * @param name The name of the endpoint needed
+     * @return The endpoint object
+     * @throws me.legrange.panstamp.EndpointNotFoundException Thrown if an endpoint with that name could not be found.
      */
     Endpoint getEndpoint(String name) throws EndpointNotFoundException;
 

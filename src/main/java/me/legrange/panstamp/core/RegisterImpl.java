@@ -1,7 +1,6 @@
 package me.legrange.panstamp.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +29,7 @@ import me.legrange.swap.Registers;
  *
  * @author gideon
  */
-public class RegisterImpl implements Register {
+public final class RegisterImpl implements Register {
 
     @Override
     public int getId() {
@@ -60,11 +59,6 @@ public class RegisterImpl implements Register {
         return all;
     }
 
-    /**
-     * Add a listener to receive register updates
-     *
-     * @param l listener to add
-     */
     @Override
     public void addListener(RegisterListener l) {
         listeners.add(l);
@@ -182,7 +176,7 @@ public class RegisterImpl implements Register {
         fireEvent(Type.PARAMETER_ADDED);
     }
   
-   
+    /** Get the executor service used to service library threads */
     ExecutorService getPool() { 
         return dev.getPool();
     }
@@ -198,7 +192,9 @@ public class RegisterImpl implements Register {
     RegisterImpl(PanStampImpl mote, Registers.Register reg) throws NoSuchUnitException {
         this(mote, reg.position());
         name = reg.toString();
-        addStandardEndpoints(reg);
+        for (StandardEndpoint sep : StandardEndpoint.ALL) {
+            addEndpoint(sep);
+        }
     }
 
     private void fireEvent(final RegisterEvent.Type type) {
@@ -262,45 +258,6 @@ public class RegisterImpl implements Register {
                 return new IntegerParameter(this, def);
             default:
                 throw new NoSuchUnitException(String.format("Unknown parameter type '%s'. BUG!", def.getType()));
-        }
-    }
-
-    private void addStandardEndpoints(Registers.Register reg) throws NoSuchUnitException {
-        switch (reg) {
-            case DEVICE_ADDRESS:
-                addEndpoint(StandardEndpoint.DEVICE_ADDRESS);
-                break;
-            case FIRMWARE_VERSION:
-                addEndpoint(StandardEndpoint.FIRMWARE_VERSION);
-                break;
-            case FREQUENCY_CHANNEL:
-                addEndpoint(StandardEndpoint.FREQUENCY_CHANNEL);
-                break;
-            case HARDWARE_VERSION:
-                addEndpoint(StandardEndpoint.HARDWARE_VERSION);
-                break;
-            case NETWORK_ID:
-                addEndpoint(StandardEndpoint.NETWORK_ID);
-                break;
-            case PERIODIC_TX_INTERVAL:
-                addEndpoint(StandardEndpoint.PERIODIC_TX_INTERVAL);
-                break;
-            case PRODUCT_CODE:
-                addEndpoint(StandardEndpoint.MANUFACTURER_ID);
-                addEndpoint(StandardEndpoint.PRODUCT_ID);
-                break;
-            case SECURITY_NONCE:
-                addEndpoint(StandardEndpoint.SECURITY_NONCE);
-                break;
-            case SECURITY_OPTION:
-                addEndpoint(StandardEndpoint.SECURITY_OPTION);
-                break;
-            case SECURITY_PASSWORD:
-                addEndpoint(StandardEndpoint.SECURITY_PASSWORD);
-                break;
-            case SYSTEM_STATE:
-                addEndpoint(StandardEndpoint.SYSTEM_STATE);
-                break;
         }
     }
 

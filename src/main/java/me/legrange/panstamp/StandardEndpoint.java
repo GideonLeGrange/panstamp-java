@@ -60,6 +60,10 @@ public class StandardEndpoint extends EndpointDef {
         PERIODIC_TX_INTERVAL.setSize(new Size(2, 0));
     }
 
+    public static final StandardEndpoint ALL[] = { MANUFACTURER_ID, PRODUCT_ID, HARDWARE_VERSION, FIRMWARE_VERSION,
+        SYSTEM_STATE, FREQUENCY_CHANNEL, SECURITY_OPTION, SECURITY_PASSWORD, SECURITY_NONCE, NETWORK_ID,DEVICE_ADDRESS,
+        PERIODIC_TX_INTERVAL};
+    
     StandardEndpoint(StandardRegister reg, String name, Direction direction, Type type) {
         super(reg, name, direction, type);
         setSize(new Size(1,0));

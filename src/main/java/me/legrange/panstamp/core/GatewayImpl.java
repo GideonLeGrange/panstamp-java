@@ -57,7 +57,6 @@ public final class GatewayImpl implements Gateway {
         try {
             modem.open();
             getSetup();
-            int networkId = getNetworkId();
         } catch (SWAPException ex) {
             throw new GatewayException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
         }
@@ -264,6 +263,7 @@ public final class GatewayImpl implements Gateway {
         return lib.getDeviceDefinition(manId, prodId);
     }
 
+    /** Get the executor service used to service library threads */
     ExecutorService getPool() {
         return pool;
     }
@@ -334,7 +334,6 @@ public final class GatewayImpl implements Gateway {
             } catch (SWAPException ex) {
                 throw new ModemException(ex.getMessage(), ex);
             }
-
         }
         return setup;
     }

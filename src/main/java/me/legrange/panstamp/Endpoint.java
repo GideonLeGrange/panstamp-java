@@ -54,15 +54,15 @@ public interface Endpoint<T> {
      *
      * @param unit Unit in which to receive the value
      * @return The value
-     * @throws me.legrange.panstamp.impl.NoSuchUnitException
+     * @throws me.legrange.panstamp.GatewayException
      */
     T getValue(String unit) throws GatewayException;
 
     /**
      * returns the current value of the endpoint.
      *
-     * @return The value
-     * @throws me.legrange.panstamp.impl.NoSuchUnitException
+     * @return The value 
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem retrieving the value 
      */
     T getValue() throws GatewayException;
 

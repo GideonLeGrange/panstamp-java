@@ -5,7 +5,7 @@ import me.legrange.swap.Registers;
 import me.legrange.swap.Registers.Register;
 
 /**
- *
+ * 
  * @author gideon
  */
 public class StandardRegister extends RegisterDef {
@@ -36,8 +36,5 @@ public class StandardRegister extends RegisterDef {
     void addEndpoint(StandardEndpoint ep) {
         super.addEndpoint(ep); 
     }
-    
-    
-    
     
 }

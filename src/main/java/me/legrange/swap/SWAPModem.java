@@ -8,6 +8,7 @@ package me.legrange.swap;
  */
 public interface SWAPModem {
 
+    /** Type of SWAP modem. Currently only serial and TCP_IP are supported, and it's unlikely to change. */
     public enum Type {
 
         SERIAL, TCP_IP

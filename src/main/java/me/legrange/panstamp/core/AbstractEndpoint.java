@@ -17,9 +17,11 @@ import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
 /**
- *
+ * Abstract implementation of an endpoint that can be extended into endpoints supporting
+ * different data times. 
+ * 
  * @author gideon
- * @param <T>
+ * @param <T> The data type supported by the endpoint. 
  */
 public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListener {
 
@@ -40,22 +42,6 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     @Override
     public final boolean hasValue() {
         return reg.hasValue();
-    }
-
-    protected final Unit getUnit(String name) throws NoSuchUnitException {
-        for (Unit u : epDef.getUnits()) {
-            if (u.getName().equals(name)) {
-                return u;
-            }
-        }
-        throw new NoSuchUnitException(String.format("No unit '%s' found in endpoint '%s'", name, getName()));
-    }
-
-    AbstractEndpoint(RegisterImpl reg, EndpointDef epDef) {
-        this.reg = reg;
-        this.epDef = epDef;
-        this.listeners = new CopyOnWriteArrayList<>();
-
     }
 
     @Override
@@ -93,9 +79,9 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
                 for (EndpointListener<T> l : listeners) {
                     pool().submit(new ListenerTask(e, l));
                 }
-            break;
+                break;
         }
-        
+
     }
 
     @Override
@@ -112,25 +98,59 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     public Register getRegister() {
         return reg;
     }
-    
+
+    /**
+     * Transform the output value from a value in the given unit
+     *
+     * @param value The value to transform
+     * @param unit The unit from which to transform it
+     * @return The transformed value
+     */
     protected abstract T transformOut(T value, Unit unit);
 
+    /**
+     * Transform the input value to a value in the given unit
+     *
+     * @param value The value to transform
+     * @param unit The unit to which to transform it
+     * @return The transformed value
+     */
     protected abstract T transformIn(T value, Unit unit);
-    
-    void destroy() { 
+
+    protected final Unit getUnit(String name) throws NoSuchUnitException {
+        for (Unit u : epDef.getUnits()) {
+            if (u.getName().equals(name)) {
+                return u;
+            }
+        }
+        throw new NoSuchUnitException(String.format("No unit '%s' found in endpoint '%s'", name, getName()));
+    }
+
+    protected AbstractEndpoint(RegisterImpl reg, EndpointDef epDef) {
+        this.reg = reg;
+        this.epDef = epDef;
+        this.listeners = new CopyOnWriteArrayList<>();
+
+    }
+
+    void destroy() {
         listeners.clear();
     }
 
-    protected final RegisterImpl reg;
-    protected final EndpointDef epDef;
-
+    /**
+     * Get the executor service used to service library threads
+     */
     private ExecutorService pool() {
         return reg.getPool();
     }
 
-    private final List<EndpointListener<T>> listeners;
- 
+    protected final RegisterImpl reg;
+    protected final EndpointDef epDef;
+    private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
 
+    /**
+     * Runnable to execute event firing in the executor
+     */
     private class ListenerTask implements Runnable {
 
         private ListenerTask(EndpointEvent e, EndpointListener l) {
