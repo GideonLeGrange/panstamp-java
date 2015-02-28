@@ -267,8 +267,7 @@ public class PanStampImpl implements PanStamp {
                 impl.addListener(productCodeListener());
 
             } else if (StandardRegister.SYSTEM_STATE.getId() == reg.getId()) {
-                Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
-                ep.addListener(systemStateListener());
+                impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
 
             }
         }

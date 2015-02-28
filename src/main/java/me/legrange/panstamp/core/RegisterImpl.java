@@ -17,12 +17,10 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
-import me.legrange.swap.Registers;
 
 /**
  * Abstraction of a panStamp register.
