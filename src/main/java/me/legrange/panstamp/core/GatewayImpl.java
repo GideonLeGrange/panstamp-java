@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.DeviceStateStore;
+import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
@@ -19,9 +20,11 @@ import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.panstamp.def.DeviceDef;
+import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -289,11 +292,12 @@ public final class GatewayImpl implements Gateway {
                 try {
                     PanStampImpl dev = new PanStampImpl(this, address);
                     addDevice(dev);
-                    for (StandardRegister sr : StandardRegister.ALL) {
-                        if (store.hasRegisterValue(address, sr)) {
-                            Register reg = dev.getRegister(sr.getId());
-                            if (!reg.hasValue()) {
-                                reg.setValue(store.getRegisterValue(address, sr));
+                    for (StandardEndpoint sep : StandardEndpoint.ALL) {
+                        if (store.hasEndpointValue(address, sep)) {
+                            Register reg = dev.getRegister(sep.getRegister().getId());
+                            Endpoint ep = reg.getEndpoint(sep.getName());
+                            if (!ep.hasValue()) {
+                                ep.setValue(store.getEndpointValue(address, sep));
                             }
                         }
                     }
@@ -319,7 +323,11 @@ public final class GatewayImpl implements Gateway {
             PanStampImpl dev = (PanStampImpl) getDevice(msg.getRegisterAddress());
             dev.statusMessageReceived(msg);
             if (msg.isStandardRegister()) {
-                store.setRegisterValue(msg.getRegisterAddress(), StandardRegister.forId(msg.getRegisterID()), msg.getRegisterValue());
+                StandardRegister sr = StandardRegister.forId(msg.getRegisterID());
+                Register reg = dev.getRegister(msg.getRegisterID());
+                for (EndpointDef ed : sr.getEndpoints()) {
+                    store.setEndpointValue(dev.getAddress(), (StandardEndpoint)ed, (Integer)(reg.getEndpoint(((StandardEndpoint)ed).getName()).getValue()));
+                }
             }
         } catch (GatewayException ex) {
             java.util.logging.Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);

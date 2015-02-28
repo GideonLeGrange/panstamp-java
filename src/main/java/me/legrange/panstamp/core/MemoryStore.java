@@ -3,7 +3,7 @@ package me.legrange.panstamp.core;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import me.legrange.panstamp.DeviceStateStore;
-import me.legrange.panstamp.StandardRegister;
+import me.legrange.panstamp.StandardEndpoint;
 
 /**
  * An implementation of DeviceStateStore that keeps whatever is learned in
@@ -17,28 +17,29 @@ public class MemoryStore implements DeviceStateStore {
     }
 
     @Override
-    public boolean hasRegisterValue(int address, StandardRegister reg) {
-        return getRegisterValue(address, reg) != null;
+    public boolean hasEndpointValue(int address, StandardEndpoint ep) {
+        return mapForAddress(address).get(ep) != null;
     }
 
     @Override
-    public byte[] getRegisterValue(int address, StandardRegister reg) {
-        Map<StandardRegister, byte[]> forAddress = cache.get(address);
-        if (forAddress != null) {
-            return forAddress.get(reg);
-        }
-        return null;
+    public int getEndpointValue(int address, StandardEndpoint ep) {
+        return mapForAddress(address).get(ep);
     }
 
     @Override
-    public void setRegisterValue(int address, StandardRegister reg, byte[] value) {
-        Map<StandardRegister, byte[]> forAddress = cache.get(address);
-        if (forAddress == null) {
-            forAddress = cache.put(address, new ConcurrentHashMap<StandardRegister, byte[]>());
-        }
-        forAddress.put(reg, value);
+    public void setEndpointValue(int address, StandardEndpoint ep, int value) {
+        mapForAddress(address).put(ep, value);
     }
 
-    private final Map<Integer, Map<StandardRegister, byte[]>> cache = new ConcurrentHashMap<>();
+    private Map<StandardEndpoint, Integer> mapForAddress(int address) {
+        Map<StandardEndpoint, Integer> map = cache.get(address);
+        if (map == null) {
+            map = new ConcurrentHashMap<>();
+            cache.put(address, map);
+        }
+        return map;
+    }
+
+    private final Map<Integer, Map<StandardEndpoint, Integer>> cache = new ConcurrentHashMap<>();
 
 }

@@ -7,27 +7,29 @@ package me.legrange.panstamp;
  */
 public interface DeviceStateStore {
     
-    /** Check if a stored register value for the given address and standard register is available. 
+     /** Check if a stored endpoint value for the given address and standard endpoint is available. 
      * @param address The address of the device for which the value is required.
-     * @param reg The register for which the value is required.
+     * @param ep The endpoint for which the value is required.
      * @return True if a value is available. 
      */
-    boolean hasRegisterValue(int address, StandardRegister reg);
+    boolean hasEndpointValue(int address, StandardEndpoint ep);
     
-    /** Return the stored register value for the given address and standard register. 
+        /** Return the stored register value for the given address and standard register. 
      * 
      * @param address The address of the device for which the value is required.
-     * @param reg The register for which the value is required.
+     * @param ep The endpoint for which the value is required.
      * @return The value if available or null if no value is known. 
      */
-    byte[] getRegisterValue(int address, StandardRegister reg);
+    int getEndpointValue(int address, StandardEndpoint ep);
     
-    /** Store the register value for the given address and standard register. 
+        
+    /** Store the endpoint value for the given address and standard endpoint. 
      * 
      * @param address The address of the device for which the value is stored.
-     * @param reg The register for which the value is stored.
+     * @param ep The endpoint for which the value is stored.
      * @param value The value to be stored.
      */
-    void setRegisterValue(int address, StandardRegister reg, byte[] value);
+    void setEndpointValue(int address, StandardEndpoint ep, int value);
+    
     
 }
