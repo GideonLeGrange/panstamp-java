@@ -26,11 +26,6 @@ public class UserMessage implements SwapMessage {
     }
 
     @Override
-    public Registers.Register getStandardRegister() throws SWAPException {
-        return Registers.Register.byId(registerID);
-    }
-
-    @Override
     public Type getType() {
         return type;
     }

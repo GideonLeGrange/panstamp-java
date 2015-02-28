@@ -29,7 +29,7 @@ public class Registers {
         DEVICE_ADDRESS(9, 1, Access.READ_WRITE),
         PERIODIC_TX_INTERVAL(10, 2, Access.READ_WRITE);
         
-        public int position() { 
+            public int position() { 
             return pos;
         }
         

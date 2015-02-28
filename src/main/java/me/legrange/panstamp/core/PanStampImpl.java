@@ -27,7 +27,6 @@ import me.legrange.panstamp.def.DeviceDef;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Param;
 import me.legrange.panstamp.def.RegisterDef;
-import me.legrange.swap.Registers;
 import me.legrange.swap.SwapMessage;
 
 /**
@@ -131,7 +130,7 @@ public class PanStampImpl implements PanStamp {
             setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
         }
         if ((manufacturerId > 0) && (productId > 0)) {
-           loadDefinition();
+            loadDefinition();
         }
         // FIXME. There is a problem here in that we can potenially keep loading and reloading. Also
         // we're probably overwriting partial info by running loadDefintion after the above sets.
@@ -201,7 +200,7 @@ public class PanStampImpl implements PanStamp {
     public void removeListener(PanStampListener l) {
         listeners.remove(l);
     }
-    
+
     void destroy() {
         for (RegisterImpl reg : registers.values()) {
             reg.destroy();
@@ -252,25 +251,25 @@ public class PanStampImpl implements PanStamp {
 
     /**
      * create a new mote for the given address in the given network
+     *
      * @param gw The gateway to which this device is connected
      * @param address The address of the device
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem creating the device. 
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
+     * problem creating the device.
      */
     public PanStampImpl(GatewayImpl gw, int address) throws GatewayException {
         this.gw = gw;
         this.address = address;
-        for (Registers.Register reg : Registers.Register.values()) {
+        for (StandardRegister reg : StandardRegister.ALL) {
             RegisterImpl impl = new RegisterImpl(this, reg);
-            registers.put(reg.position(), impl);
-            switch (reg) {
-                case PRODUCT_CODE:
-                    impl.addListener(productCodeListener());
-                    break;
-                case SYSTEM_STATE: {
-                    Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
-                    ep.addListener(systemStateListener());
-                    break;
-                }
+            registers.put(reg.getId(), impl);
+            if (StandardRegister.PRODUCT_CODE.getId() == reg.getId()) {
+                impl.addListener(productCodeListener());
+
+            } else if (StandardRegister.SYSTEM_STATE.getId() == reg.getId()) {
+                Endpoint<Integer> ep = impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
+                ep.addListener(systemStateListener());
+
             }
         }
     }

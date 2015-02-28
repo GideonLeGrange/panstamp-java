@@ -85,7 +85,6 @@ public class DeviceDef {
     private final String label;
     private String product;
     private boolean powerDownMode;
- //   private final Map<String, EndpointDef> endpoints = new HashMap<>();
     private final Map<Integer, RegisterDef> registers = new HashMap<>();
 
 }

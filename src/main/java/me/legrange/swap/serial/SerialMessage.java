@@ -82,12 +82,7 @@ public class SerialMessage implements SwapMessage {
     public boolean isStandardRegister() {
         return getRegisterID() <= Registers.MAX_STANDARD_REGISTER.position();
     }
-
-    @Override
-    public Registers.Register getStandardRegister() throws SWAPException {
-        return Registers.Register.byId(registerID);
-    }
-
+    
     @Override
     public String toString() {
         return text;

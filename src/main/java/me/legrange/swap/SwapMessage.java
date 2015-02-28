@@ -48,8 +48,6 @@ public interface SwapMessage {
 
     int getSender();
 
-    Registers.Register getStandardRegister() throws SWAPException;
-
     boolean isExtended();
 
     boolean isStandardRegister();

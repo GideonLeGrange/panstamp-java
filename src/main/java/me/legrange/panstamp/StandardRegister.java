@@ -1,6 +1,5 @@
 package me.legrange.panstamp;
 
-import java.util.List;
 import me.legrange.panstamp.def.RegisterDef;
 import me.legrange.swap.Registers;
 import me.legrange.swap.Registers.Register;

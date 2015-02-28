@@ -161,7 +161,7 @@ public final class RegisterImpl implements Register {
         synchronized (this) {
             this.value = value;
         }
-        fireEvent(RegisterEvent.Type.VALUE_RECEIVED);
+        fireEvent(Type.VALUE_RECEIVED);
     }
 
     void addEndpoint(EndpointDef def) throws NoSuchUnitException {
@@ -188,11 +188,11 @@ public final class RegisterImpl implements Register {
         this.dev = mote;
         this.id = id;
     }
-
-    RegisterImpl(PanStampImpl mote, Registers.Register reg) throws NoSuchUnitException {
-        this(mote, reg.position());
-        name = reg.toString();
-        for (StandardEndpoint sep : StandardEndpoint.ALL) {
+    
+    RegisterImpl(PanStampImpl mote, StandardRegister reg) throws NoSuchUnitException {
+        this(mote, reg.getId());
+        name = reg.getName();
+        for (EndpointDef sep : reg.getEndpoints()) {
             addEndpoint(sep);
         }
     }
