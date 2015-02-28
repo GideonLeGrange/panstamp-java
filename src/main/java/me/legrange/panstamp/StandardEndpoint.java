@@ -51,7 +51,7 @@ public class StandardEndpoint extends EndpointDef {
         SECURITY_NONCE = new StandardEndpoint(StandardRegister.SECURITY_NONCE, "Security nonce", Direction.IN, Type.INTEGER);
 
         NETWORK_ID = new StandardEndpoint(StandardRegister.NETWORK_ID, "Network ID", Direction.OUT, Type.INTEGER);
-        NETWORK_ID.setSize(new Size(4, 0));
+        NETWORK_ID.setSize(new Size(2, 0));
 
         DEVICE_ADDRESS = new StandardEndpoint(StandardRegister.DEVICE_ADDRESS, "Device address", Direction.OUT, Type.INTEGER);
         DEVICE_ADDRESS.setSize(new Size(1, 0));
