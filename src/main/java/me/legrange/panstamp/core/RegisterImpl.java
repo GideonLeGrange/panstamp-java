@@ -14,8 +14,6 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterEvent;
-import me.legrange.panstamp.RegisterEvent.Type;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.def.DeviceDef;
@@ -83,8 +81,7 @@ public final class RegisterImpl implements Register {
         try {
             if (dev.getGateway().isOpen()) {
                 dev.sendCommandMessage(id, value);
-            }
-            else {
+            } else {
                 this.value = value;
             }
         } catch (ModemException e) {
@@ -139,8 +136,8 @@ public final class RegisterImpl implements Register {
     public boolean isStandard() {
         return (id <= StandardRegister.MAX.getId());
     }
-    
-    void destroy() { 
+
+    void destroy() {
         for (AbstractEndpoint ep : endpoints.values()) {
             ep.destroy();
         }
@@ -155,27 +152,30 @@ public final class RegisterImpl implements Register {
     /**
      * update the abstracted register value and notify listeners
      */
-    void valueReceived(byte value[]) {
+    void valueReceived(final byte value[]) {
         synchronized (this) {
             this.value = value;
         }
-        fireEvent(Type.VALUE_RECEIVED);
+        fireValueReceived(value);
+
     }
 
     void addEndpoint(EndpointDef def) throws NoSuchUnitException {
         AbstractEndpoint ep = makeEndpoint(def);
         endpoints.put(def.getName(), ep);
-        fireEvent(Type.ENDPOINT_ADDED, ep);
+        fireEndpointAdded(ep);
     }
 
     void addParameter(Param def) throws NoSuchUnitException {
         AbstractParameter par = makeParameter(def);
         parameters.put(def.getName(), par);
-        fireEvent(Type.PARAMETER_ADDED);
+        fireParameterAdded(par);
     }
-  
-    /** Get the executor service used to service library threads */
-    ExecutorService getPool() { 
+
+    /**
+     * Get the executor service used to service library threads
+     */
+    ExecutorService getPool() {
         return dev.getPool();
     }
 
@@ -186,7 +186,7 @@ public final class RegisterImpl implements Register {
         this.dev = mote;
         this.id = id;
     }
-    
+
     RegisterImpl(PanStampImpl mote, StandardRegister reg) throws NoSuchUnitException {
         this(mote, reg.getId());
         name = reg.getName();
@@ -195,31 +195,48 @@ public final class RegisterImpl implements Register {
         }
     }
 
-    private void fireEvent(final RegisterEvent.Type type) {
-        fireEvent(type, null);
+    private void fireValueReceived(final byte[] value) {
+        for (final RegisterListener l : listeners) {
+            getPool().submit(
+                    new Runnable() {
+
+                        @Override
+                        public void run() {
+                            l.valueReceived(RegisterImpl.this, value);
+                        }
+
+                    }
+            );
+        }
     }
 
-    private void fireEvent(final RegisterEvent.Type type, final Endpoint ep) {
-        RegisterEvent ev = new RegisterEvent() {
+    private void fireEndpointAdded(final Endpoint ep) {
+        for (final RegisterListener l : listeners) {
+            getPool().submit(
+                    new Runnable() {
 
-            @Override
-            public RegisterEvent.Type getType() {
-                return type;
-            }
+                        @Override
+                        public void run() {
+                            l.endpointAdded(RegisterImpl.this, ep);
+                        }
 
-            @Override
-            public Register getRegister() {
-                return RegisterImpl.this;
-            }
+                    }
+            );
+        }
+    }
 
-            @Override
-            public Endpoint getEndpoint() {
-                return ep;
-            }
+    private void fireParameterAdded(final Parameter par) {
+        for (final RegisterListener l : listeners) {
+            getPool().submit(
+                    new Runnable() {
 
-        };
-        for (RegisterListener l : listeners) {
-            getPool().submit(new UpdateTask(ev, l));
+                        @Override
+                        public void run() {
+                            l.parameteradded(RegisterImpl.this, par);
+                        }
+
+                    }
+            );
         }
     }
 
@@ -266,27 +283,5 @@ public final class RegisterImpl implements Register {
     private final Map<String, AbstractParameter> parameters = new ConcurrentHashMap<>();
     private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] value;
-   
-
-    private class UpdateTask implements Runnable {
-
-        private UpdateTask(RegisterEvent e, RegisterListener l) {
-            this.l = l;
-            this.e = e;
-        }
-
-        @Override
-        public void run() {
-            try {
-                l.registerUpdated(e);
-            } catch (Throwable ex) {
-                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
-
-            }
-        }
-
-        private final RegisterEvent e;
-        private final RegisterListener l;
-    }
 
 }

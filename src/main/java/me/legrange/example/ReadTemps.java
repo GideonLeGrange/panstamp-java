@@ -3,7 +3,6 @@ package me.legrange.example;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
@@ -50,13 +49,8 @@ public class ReadTemps extends Example implements EndpointListener<Double>, PanS
     }
 
     @Override
-    public void endpointUpdated(EndpointEvent<Double> ev) {
-        try {
-            Endpoint ep = ev.getEndpoint();
-            System.out.printf("It is %.2fC\n", ep.getValue("C"));
-        } catch (GatewayException ex) {
-            Logger.getLogger(ReadTemps.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void valueReceived(Endpoint<Double> e, Double v) {
+        System.out.printf("It is %.2fC\n", v);
     }
 
 }
