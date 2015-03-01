@@ -24,7 +24,7 @@ public final class StandardRegister extends RegisterDef {
     public static final StandardRegister MAX = PERIODIC_TX_INTERVAL;
     
     static {
-        StandardEndpoint[] all = StandardEndpoint.ALL; 
+        final StandardEndpoint[] all = StandardEndpoint.ALL; 
         // hack. Sorry. Need to ensure that all standard endpoints are loaded
         // before we start using standard registers and I don't want to waste time on fixing the
         // chicken/egg relationship between those two now.

@@ -64,13 +64,7 @@ public class PanStampImpl implements PanStamp {
     public int getSecurityOption() throws GatewayException {
         return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
     }
-
-    /**
-     *
-     * @return The network address
-     * @throws GatewayException Thrown if there is an error trying to figure out
-     * the network address.
-     */
+    
     @Override
     public int getNetwork() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
@@ -117,24 +111,8 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public int getManufacturerId() throws GatewayException {
+        return getManufacturerIdFromRegister(null)
         return manufacturerId;
-    }
-
-    public void setProductCode(int manId, int prodId) throws GatewayException {
-        if (manId != getManufacturerId()) {
-            manufacturerId = manId;
-            setIntValue(StandardEndpoint.MANUFACTURER_ID, manId);
-        }
-        if (prodId != getProductId()) {
-            productId = prodId;
-            setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
-        }
-        if ((manufacturerId > 0) && (productId > 0)) {
-            loadDefinition();
-        }
-        // FIXME. There is a problem here in that we can potenially keep loading and reloading. Also
-        // we're probably overwriting partial info by running loadDefintion after the above sets.
-        // Furthermore, we're not clearing any lists or maps before populating. 
     }
 
     @Override
@@ -149,6 +127,7 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public String getName() {
+        checkDefinition();
         if (def != null) {
             return def.getProduct();
         }
@@ -209,7 +188,12 @@ public class PanStampImpl implements PanStamp {
         registers.clear();
     }
 
-    DeviceDef getDefinition() {
+    DeviceDef getDefinition() throws GatewayException {
+        if (def == null) {
+            if ((getManufacturerId() != 0) && (getProductId() != 0)) {
+                loadDefinition();
+            }
+        }
         return def;
     }
 
@@ -271,6 +255,23 @@ public class PanStampImpl implements PanStamp {
 
             }
         }
+    }
+
+    private void setProductCode(int manId, int prodId) throws GatewayException {
+        if (manId != getManufacturerId()) {
+            manufacturerId = manId;
+            setIntValue(StandardEndpoint.MANUFACTURER_ID, manId);
+        }
+        if (prodId != getProductId()) {
+            productId = prodId;
+            setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
+        }
+        if ((manufacturerId > 0) && (productId > 0)) {
+            loadDefinition();
+        }
+        // FIXME. There is a problem here in that we can potenially keep loading and reloading. Also
+        // we're probably overwriting partial info by running loadDefintion after the above sets.
+        // Furthermore, we're not clearing any lists or maps before populating. 
     }
 
     private int getIntValue(StandardEndpoint epDef, int defaultValue) throws GatewayException {
@@ -383,8 +384,8 @@ public class PanStampImpl implements PanStamp {
                     switch (ev.getType()) {
                         case VALUE_RECEIVED:
                             Register reg = ev.getRegister();
-                            int mfId = getManufacturerIdFromRegister(reg);
-                            int pdId = getProductIdFromRegister(reg);
+                            int mfId = getManufacturerIdFromRegister();
+                            int pdId = getProductIdFromRegister();
                             if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
                                 setProductCode(mfId, pdId);
                                 fireEvent(Type.PRODUCT_CODE_UPDATE);
@@ -418,7 +419,8 @@ public class PanStampImpl implements PanStamp {
     /**
      * get the manufacturer id for this panStamp from the actual register
      */
-    private int getManufacturerIdFromRegister(Register reg) throws GatewayException {
+    private int getManufacturerIdFromRegister() throws GatewayException {
+        Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
         byte val[] = reg.getValue();
         return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
     }
@@ -426,14 +428,15 @@ public class PanStampImpl implements PanStamp {
     /**
      * get the product id for this panStamp from the actual register
      */
-    private int getProductIdFromRegister(Register reg) throws GatewayException {
+    private int getProductIdFromRegister() throws GatewayException {
+        Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
         byte val[] = reg.getValue();
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
     }
 
     private final int address;
-    private transient DeviceDef def;
-    private transient final GatewayImpl gw;
+    private DeviceDef def;
+    private  final GatewayImpl gw;
     private int manufacturerId;
     private int productId;
     private int syncState;

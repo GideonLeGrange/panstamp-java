@@ -141,6 +141,7 @@ public final class GatewayImpl implements Gateway {
             }
 
         });
+        ps.getDefinition();
     }
 
     @Override
@@ -294,8 +295,7 @@ public final class GatewayImpl implements Gateway {
                     addDevice(dev);
                     for (StandardEndpoint sep : StandardEndpoint.ALL) {
                         if (store.hasEndpointValue(address, sep)) {
-                            Register reg = dev.getRegister(sep.getRegister().getId());
-                            Endpoint ep = reg.getEndpoint(sep.getName());
+                            Endpoint ep = dev.getRegister(sep.getRegister().getId()).getEndpoint(sep.getName());
                             if (!ep.hasValue()) {
                                 ep.setValue(store.getEndpointValue(address, sep));
                             }

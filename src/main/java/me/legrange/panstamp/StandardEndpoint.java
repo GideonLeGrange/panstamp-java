@@ -1,5 +1,7 @@
 package me.legrange.panstamp;
 
+import java.util.HashMap;
+import java.util.Map;
 import me.legrange.panstamp.def.Direction;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Position;
@@ -13,6 +15,7 @@ import me.legrange.panstamp.def.Type;
  * @author gideon
  */
 public final class StandardEndpoint extends EndpointDef {
+    private static final Map<String, StandardEndpoint> nameMap = new HashMap<>();
 
     public static final StandardEndpoint MANUFACTURER_ID = new StandardEndpoint(StandardRegister.PRODUCT_CODE, "Manufacturer Id", Direction.IN, Type.INTEGER);
     public static final StandardEndpoint PRODUCT_ID = new StandardEndpoint(StandardRegister.PRODUCT_CODE, "Product Id", Direction.IN, Type.INTEGER);
@@ -27,6 +30,14 @@ public final class StandardEndpoint extends EndpointDef {
     public static final StandardEndpoint DEVICE_ADDRESS = new StandardEndpoint(StandardRegister.DEVICE_ADDRESS, "Device address", Direction.OUT, Type.INTEGER);
     public static final StandardEndpoint PERIODIC_TX_INTERVAL = new StandardEndpoint(StandardRegister.PERIODIC_TX_INTERVAL, "Periodic Tx interval", Direction.OUT, Type.INTEGER);
 
+    public static final StandardEndpoint ALL[] = {MANUFACTURER_ID, PRODUCT_ID, HARDWARE_VERSION, FIRMWARE_VERSION,
+        SYSTEM_STATE, FREQUENCY_CHANNEL, SECURITY_OPTION, SECURITY_PASSWORD, SECURITY_NONCE, NETWORK_ID, DEVICE_ADDRESS,
+        PERIODIC_TX_INTERVAL};
+    
+    public static StandardEndpoint forName(String name) {
+        return nameMap.get(name);
+    }
+
     static {
         MANUFACTURER_ID.setSize(new Size(4, 0));
         MANUFACTURER_ID.setPosition(new Position(0));
@@ -37,11 +48,11 @@ public final class StandardEndpoint extends EndpointDef {
         NETWORK_ID.setSize(new Size(2, 0));
         DEVICE_ADDRESS.setSize(new Size(1, 0));
         PERIODIC_TX_INTERVAL.setSize(new Size(2, 0));
+        for (StandardEndpoint sep : ALL) {
+            nameMap.put(sep.getName(), sep);
+        }
+        
     }
-
-    public static final StandardEndpoint ALL[] = {MANUFACTURER_ID, PRODUCT_ID, HARDWARE_VERSION, FIRMWARE_VERSION,
-        SYSTEM_STATE, FREQUENCY_CHANNEL, SECURITY_OPTION, SECURITY_PASSWORD, SECURITY_NONCE, NETWORK_ID, DEVICE_ADDRESS,
-        PERIODIC_TX_INTERVAL};
 
     private StandardEndpoint(StandardRegister reg, String name, Direction direction, Type type) {
         super(reg, name, direction, type);
@@ -49,5 +60,6 @@ public final class StandardEndpoint extends EndpointDef {
         setPosition(new Position(0));
         reg.addEndpoint(this);
     }
+    
 
 }
