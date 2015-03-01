@@ -111,7 +111,6 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public int getManufacturerId() throws GatewayException {
-        return getManufacturerIdFromRegister(null)
         return manufacturerId;
     }
 
@@ -127,7 +126,6 @@ public class PanStampImpl implements PanStamp {
 
     @Override
     public String getName() {
-        checkDefinition();
         if (def != null) {
             return def.getProduct();
         }
@@ -188,12 +186,7 @@ public class PanStampImpl implements PanStamp {
         registers.clear();
     }
 
-    DeviceDef getDefinition() throws GatewayException {
-        if (def == null) {
-            if ((getManufacturerId() != 0) && (getProductId() != 0)) {
-                loadDefinition();
-            }
-        }
+    DeviceDef getDefinition()  {
         return def;
     }
 
