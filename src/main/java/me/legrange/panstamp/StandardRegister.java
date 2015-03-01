@@ -6,7 +6,7 @@ import me.legrange.panstamp.def.RegisterDef;
  * 
  * @author gideon
  */
-public class StandardRegister extends RegisterDef {
+public final class StandardRegister extends RegisterDef {
 
     public static final StandardRegister PRODUCT_CODE = new StandardRegister(0, "Product code");
     public static final StandardRegister HARDWARE_VERSION = new StandardRegister(1, "Hardware version");
@@ -22,6 +22,13 @@ public class StandardRegister extends RegisterDef {
     public static final StandardRegister[] ALL = {PRODUCT_CODE, HARDWARE_VERSION, FIRMWARE_VERSION, SYSTEM_STATE,
         FREQUENCY_CHANNEL, SECURITY_OPTION, SECURITY_PASSWORD, SECURITY_NONCE, NETWORK_ID, DEVICE_ADDRESS, PERIODIC_TX_INTERVAL};
     public static final StandardRegister MAX = PERIODIC_TX_INTERVAL;
+    
+    static {
+        StandardEndpoint[] all = StandardEndpoint.ALL; 
+        // hack. Sorry. Need to ensure that all standard endpoints are loaded
+        // before we start using standard registers and I don't want to waste time on fixing the
+        // chicken/egg relationship between those two now.
+    }
 
     public  static StandardRegister forId(int id) {
         return ALL[id];
