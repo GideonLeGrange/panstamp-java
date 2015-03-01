@@ -6,7 +6,7 @@ package me.legrange.swap;
  */
 public interface SwapMessage {
     
-    
+    /** Types of SWAP messages */
     public enum Type { QUERY(1), COMMAND(2), STATUS(0); 
         
         private Type(int function) {
@@ -20,6 +20,9 @@ public interface SwapMessage {
         private final int function;
         
     }
+    
+    /** Maximum register ID for standard SWAP messages */
+    public static final int MAX_STANDARD_REGISTER = 10;
     
     Type getType();
 

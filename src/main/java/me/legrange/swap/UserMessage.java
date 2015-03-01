@@ -22,7 +22,7 @@ public class UserMessage implements SwapMessage {
 
     @Override
     public boolean isStandardRegister() {
-        return getRegisterID() <= Registers.MAX_STANDARD_REGISTER.position();
+        return getRegisterID() <= SwapMessage.MAX_STANDARD_REGISTER;
     }
 
     @Override
@@ -92,9 +92,9 @@ public class UserMessage implements SwapMessage {
         }
         return text;
     }
-    
+
     @Override
-    public String toString() { 
+    public String toString() {
         return getText();
     }
 
@@ -117,7 +117,7 @@ public class UserMessage implements SwapMessage {
         this.registerAddress = registerAddress;
         text = null;
     }
-    
+
     /**
      * pack the message into a hex text for transmission to the modem
      */

@@ -80,7 +80,7 @@ public class SerialMessage implements SwapMessage {
 
     @Override
     public boolean isStandardRegister() {
-        return getRegisterID() <= Registers.MAX_STANDARD_REGISTER.position();
+        return getRegisterID() <= SwapMessage.MAX_STANDARD_REGISTER;
     }
     
     @Override
