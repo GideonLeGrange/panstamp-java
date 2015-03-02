@@ -3,12 +3,12 @@ package me.legrange.example;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.GatewayEvent;
+import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.StandardEndpoint;
+import me.legrange.panstamp.core.AbstractPanStampListener;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -52,39 +52,34 @@ public class SetAddress extends Example {
     }
 
     @Override
-    public synchronized void gatewayUpdated(GatewayEvent ev) {
-            switch (ev.getType()) {
-                case DEVICE_DETECTED : {
-                    PanStamp ps = ev.getDevice();
-                    int addr = ps.getAddress();
-                    say("Detected node %2x", addr);
-                    if (addr == NEW_ADDR) {
-                        say("Detected %2x so we're done, quit", NEW_ADDR);
-                        done = true;
-                    }
-                    else if (addr == OLD_ADDR) {
-                        try {
-                            ps.addListener(new PanStampListener() {
+    public void deviceDetected(Gateway gw, PanStamp ps) {
+        int addr = ps.getAddress();
+        say("Detected node %2x", addr);
+        if (addr == NEW_ADDR) {
+            say("Detected %2x so we're done, quit", NEW_ADDR);
+            done = true;
+        } else if (addr == OLD_ADDR) {
+            try {
+                ps.addListener(new AbstractPanStampListener() {
 
-                                @Override
-                                public void deviceUpdated(PanStampEvent ev) {
-                                    switch (ev.getType()) {
-                                        case SYNC_REQUIRED : 
-                                            System.out.printf("Device %2x needs to sync. Press the button\n", ev.getDevice().getAddress());
-                                    }
-                                }
-                            }) ;
-                            Endpoint ep = Util.getEndpoint(ps, StandardEndpoint.DEVICE_ADDRESS);
-                            ep.setValue(NEW_ADDR);
-                        } catch (GatewayException ex) {
-                            Logger.getLogger(SetAddress.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    @Override
+                    public void syncRequired(PanStamp ps) {
+                        System.out.printf("Device %2x needs to sync. Press the button\n", ps.getAddress());
                     }
-                    
-                }
+                });
+                Endpoint ep = Util.getEndpoint(ps, StandardEndpoint.DEVICE_ADDRESS);
+                ep.setValue(NEW_ADDR);
+            } catch (GatewayException ex) {
+                Logger.getLogger(SetAddress.class.getName()).log(Level.SEVERE, null, ex);
             }
-    }
+        }
 
+    }
+    @Override
+    public void deviceRemoved(Gateway gw, PanStamp dev) {
+    }
     private boolean done = false;
+
+
 
 }
