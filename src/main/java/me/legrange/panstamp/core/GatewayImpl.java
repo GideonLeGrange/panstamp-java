@@ -14,7 +14,6 @@ import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.DeviceStateStore;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
@@ -128,19 +127,7 @@ public final class GatewayImpl implements Gateway {
 
     public void addDevice(final PanStampImpl ps) {
         devices.put(ps.getAddress(), ps);
-        fireEvent(new GatewayEvent() {
-
-            @Override
-            public GatewayEvent.Type getType() {
-                return GatewayEvent.Type.DEVICE_DETECTED;
-            }
-
-            @Override
-            public PanStamp getDevice() {
-                return ps;
-            }
-
-        });
+        fireDeviceDetected(ps);
         ps.getDefinition();
     }
 
@@ -148,18 +135,7 @@ public final class GatewayImpl implements Gateway {
     public void removeDevice(int address) {
         final PanStampImpl ps = devices.get(address);
         if (ps != null) {
-            fireEvent(new GatewayEvent() {
-
-                @Override
-                public GatewayEvent.Type getType() {
-                    return GatewayEvent.Type.DEVICE_REMOVED;
-                }
-
-                @Override
-                public PanStamp getDevice() {
-                    return ps;
-                }
-            });
+            fireDeviceRemoved(ps);
             ps.destroy();
             devices.remove(address);
         }
@@ -271,6 +247,30 @@ public final class GatewayImpl implements Gateway {
     ExecutorService getPool() {
         return pool;
     }
+    
+    private void fireDeviceDetected(final PanStampImpl dev) {
+        for (final GatewayListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.deviceDetected(GatewayImpl.this, dev);
+                }
+            });
+        }
+    }
+    
+        private void fireDeviceRemoved(final PanStampImpl dev) {
+        for (final GatewayListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.deviceRemoved(GatewayImpl.this, dev);
+                }
+            });
+        }
+    }
 
     /**
      * send a message to a mote
@@ -305,12 +305,6 @@ public final class GatewayImpl implements Gateway {
                     throw new ModemException(ex.getMessage(), ex);
                 }
             }
-        }
-    }
-
-    private void fireEvent(GatewayEvent ev) {
-        for (GatewayListener l : listeners) {
-            pool.submit(new ListenerTask(l, ev));
         }
     }
 
@@ -392,27 +386,4 @@ public final class GatewayImpl implements Gateway {
         }
     }
 
-    /**
-     * A runnable task that sends a panStamp to a listener
-     */
-    private class ListenerTask implements Runnable {
-
-        private ListenerTask(GatewayListener l, GatewayEvent ev) {
-            this.l = l;
-            this.ev = ev;
-        }
-
-        @Override
-        public void run() {
-            try {
-                l.gatewayUpdated(ev);
-            } catch (Throwable e) {
-                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
-
-            }
-        }
-
-        private final GatewayListener l;
-        private final GatewayEvent ev;
-    }
 }

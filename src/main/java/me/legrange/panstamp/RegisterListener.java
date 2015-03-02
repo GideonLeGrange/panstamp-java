@@ -6,10 +6,6 @@ package me.legrange.panstamp;
  */
 public interface RegisterListener {
 
-    /**
-     * Receive a notice if a register value is updated. 
-     * @param ev The event raised.
-     */
     void valueReceived(Register reg, byte value[]);
     
     void endpointAdded(Register reg, Endpoint ep);

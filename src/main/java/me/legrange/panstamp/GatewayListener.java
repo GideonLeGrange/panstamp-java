@@ -7,8 +7,8 @@ package me.legrange.panstamp;
  */
 public interface GatewayListener {
    
-    /** Called on listeners to notify them of gateway events.
-     * @param ev The event that occurred. */
-    void gatewayUpdated(GatewayEvent ev);
+    void deviceDetected(Gateway gw, PanStamp dev);
+    
+    void deviceRemoved(Gateway gw, PanStamp dev);
     
 }
