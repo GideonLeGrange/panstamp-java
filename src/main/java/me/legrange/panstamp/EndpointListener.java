@@ -7,9 +7,7 @@ package me.legrange.panstamp;
  */
 public interface EndpointListener<T> {
     
-   /** Called on listeners to notify them of endpoint events.
-     * @param ev The event.
-    */
-    void endpointUpdated(EndpointEvent<T> ev);
+    /** Called on listeners if a new value was received for the endpoint */
+    void valueReceived(Endpoint<T> ep, T value);
     
 }

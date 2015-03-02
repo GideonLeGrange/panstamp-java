@@ -7,11 +7,12 @@ package me.legrange.panstamp;
  */
 public interface PanStampListener {
 
-    /**
-     * Called on listeners to notify them of panStamp events.
-     *
-     * @param ev The event that occurred.
-     */
-    void deviceUpdated(PanStampEvent ev);
+    void productCodeChange(PanStamp dev, int manufacturerId, int productId);
+    
+    void syncStateChange(PanStamp dev, int syncState);
+    
+    void registerDetected(PanStamp dev, Register reg);
+    
+    void syncRequired(PanStamp dev);
 
 }

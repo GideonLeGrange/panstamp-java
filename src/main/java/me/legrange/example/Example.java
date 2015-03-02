@@ -22,7 +22,7 @@ public abstract class Example implements GatewayListener {
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(SetSleep.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Example.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

@@ -11,15 +11,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.PanStampEvent;
-import me.legrange.panstamp.PanStampEvent.Type;
 import me.legrange.panstamp.PanStampListener;
+import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
@@ -64,7 +61,7 @@ public class PanStampImpl implements PanStamp {
     public int getSecurityOption() throws GatewayException {
         return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
     }
-    
+
     @Override
     public int getNetwork() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
@@ -186,7 +183,7 @@ public class PanStampImpl implements PanStamp {
         registers.clear();
     }
 
-    DeviceDef getDefinition()  {
+    DeviceDef getDefinition() {
         return def;
     }
 
@@ -218,7 +215,7 @@ public class PanStampImpl implements PanStamp {
         boolean isNew = !reg.hasValue();
         reg.valueReceived(msg.getRegisterValue());
         if (isNew) {
-            fireEvent(Type.REGISTER_DETECTED, reg);
+            fireRegisterDetected(reg);
         }
     }
 
@@ -247,6 +244,18 @@ public class PanStampImpl implements PanStamp {
                 impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
 
             }
+        }
+    }
+
+    private void fireRegisterDetected(final Register reg) {
+        for (final PanStampListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.registerDetected(PanStampImpl.this, reg);
+                }
+            });
         }
     }
 
@@ -293,7 +302,7 @@ public class PanStampImpl implements PanStamp {
 
     private void queue(int id, byte[] value) {
         addListener(new UpdateOnSync(id, value));
-        fireEvent(Type.SYNC_REQUIRED, getRegister(id));
+        fireSyncRequired();
     }
 
     private boolean isSleeper() throws GatewayException {
@@ -309,85 +318,76 @@ public class PanStampImpl implements PanStamp {
         }
     }
 
-    private void fireEvent(final PanStampEvent.Type type) {
-        fireEvent(type, null, this.syncState);
-    }
-
-    private void fireEvent(final PanStampEvent.Type type, final Register reg) {
-        fireEvent(type, reg, this.syncState);
-    }
-
-    private void fireEvent(final PanStampEvent.Type type, int syncState) {
-        fireEvent(type, null, syncState);
-    }
-
-    private void fireEvent(final PanStampEvent.Type type, final Register reg, final int syncState) {
-        PanStampEvent ev = new PanStampEvent() {
-
-            @Override
-            public Type getType() {
-                return type;
-            }
-
-            @Override
-            public PanStamp getDevice() {
-                return PanStampImpl.this;
-            }
-
-            @Override
-            public Register getRegister() {
-                return reg;
-            }
-
-            @Override
-            public int getSyncState() {
-                return syncState;
-            }
-
-        };
-        for (PanStampListener l : listeners) {
-            getPool().submit(new UpdateTask(ev, l));
-        }
-    }
-
     private EndpointListener systemStateListener() {
         return new EndpointListener<Integer>() {
 
             @Override
-            public void endpointUpdated(EndpointEvent<Integer> ev) {
-                switch (ev.getType()) {
-                    case VALUE_RECEIVED:
-                        try {
-                            syncState = ev.getEndpoint().getValue();
-                            fireEvent(Type.SYNC_STATE_CHANGE);
-                        } catch (GatewayException ex) {
-                            Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        break;
-                }
+            public void valueReceived(Endpoint<Integer> ep, Integer syncState) {
+                fireSyncStateChanged(syncState);
             }
         };
+    }
+
+    private void fireSyncRequired() {
+        for (final PanStampListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.syncStateChange(PanStampImpl.this, syncState);
+                }
+            });
+        }
+    }
+
+    private void fireSyncStateChanged(final int syncState) {
+        for (final PanStampListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.syncStateChange(PanStampImpl.this, syncState);
+                }
+            });
+        }
+    }
+
+    private void fireProductCodeChange(final int manufacturerId, final int productId) {
+        System.out.printf("fireProductCodeChange(%d,%d)\n", manufacturerId, productId);
+        for (final PanStampListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.productCodeChange(PanStampImpl.this, manufacturerId, productId);
+                }
+            });
+        }
     }
 
     private RegisterListener productCodeListener() {
         return new RegisterListener() {
             @Override
-            public void registerUpdated(RegisterEvent ev) {
+            public void valueReceived(Register reg, byte value[]) {
                 try {
-                    switch (ev.getType()) {
-                        case VALUE_RECEIVED:
-                            Register reg = ev.getRegister();
-                            int mfId = getManufacturerIdFromRegister();
-                            int pdId = getProductIdFromRegister();
-                            if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
-                                setProductCode(mfId, pdId);
-                                fireEvent(Type.PRODUCT_CODE_UPDATE);
-                            }
-                            break;
+                    int mfId = getManufacturerIdFromRegister();
+                    int pdId = getProductIdFromRegister();
+                    if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
+                        setProductCode(mfId, pdId);
+                        fireProductCodeChange(mfId, pdId);
                     }
                 } catch (GatewayException ex) {
                     Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+            }
+
+            @Override
+            public void endpointAdded(Register reg, Endpoint ep) {
+            }
+
+            @Override
+            public void parameteradded(Register reg, Parameter par) {
             }
         };
     }
@@ -429,35 +429,14 @@ public class PanStampImpl implements PanStamp {
 
     private final int address;
     private DeviceDef def;
-    private  final GatewayImpl gw;
+    private final GatewayImpl gw;
     private int manufacturerId;
     private int productId;
     private int syncState;
     private final Map<Integer, RegisterImpl> registers = new ConcurrentHashMap<>();
     private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
 
-    private static class UpdateTask implements Runnable {
-
-        private UpdateTask(PanStampEvent ev, PanStampListener l) {
-            this.l = l;
-            this.ev = ev;
-        }
-
-        @Override
-        public void run() {
-            try {
-                l.deviceUpdated(ev);
-            } catch (Throwable e) {
-                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, e);
-
-            }
-        }
-
-        private final PanStampListener l;
-        private final PanStampEvent ev;
-    }
-
-    private class UpdateOnSync implements PanStampListener {
+    private class UpdateOnSync extends AbstractPanStampListener {
 
         private UpdateOnSync(int id, byte[] val) {
             this.id = id;
@@ -467,9 +446,8 @@ public class PanStampImpl implements PanStamp {
         private final byte[] val;
 
         @Override
-        public void deviceUpdated(PanStampEvent ev) {
-            if (ev.getType() == Type.SYNC_STATE_CHANGE) {
-                switch (ev.getSyncState()) {
+        public void syncStateChange(PanStamp dev, int syncState) {                
+            switch (syncState) {
                     case 1:
                     case 3:
                         try {
@@ -483,6 +461,5 @@ public class PanStampImpl implements PanStamp {
                     default:
                 }
             }
-        }
     }
 }

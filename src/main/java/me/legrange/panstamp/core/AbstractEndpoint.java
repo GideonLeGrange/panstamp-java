@@ -7,23 +7,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
 /**
- * Abstract implementation of an endpoint that can be extended into endpoints supporting
- * different data times. 
- * 
+ * Abstract implementation of an endpoint that can be extended into endpoints
+ * supporting different data times.
+ *
  * @author gideon
- * @param <T> The data type supported by the endpoint. 
+ * @param <T> The data type supported by the endpoint.
  */
-public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListener {
+public abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     @Override
     public String getName() {
@@ -47,7 +45,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     @Override
     public synchronized void addListener(EndpointListener<T> el) {
         if (listeners.isEmpty()) {
-            getRegister().addListener(this);
+            getRegister().addListener(listener);
         }
         listeners.add(el);
     }
@@ -56,32 +54,8 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     public synchronized void removeListener(EndpointListener<T> el) {
         listeners.remove(el);
         if (listeners.isEmpty()) {
-            getRegister().removeListener(this);
+            getRegister().removeListener(listener);
         }
-    }
-
-    @Override
-    public void registerUpdated(RegisterEvent ev) {
-        switch (ev.getType()) {
-            case VALUE_RECEIVED:
-                EndpointEvent e = new EndpointEvent() {
-
-                    @Override
-                    public Endpoint getEndpoint() {
-                        return AbstractEndpoint.this;
-                    }
-
-                    @Override
-                    public EndpointEvent.Type getType() {
-                        return EndpointEvent.Type.VALUE_RECEIVED;
-                    }
-                };
-                for (EndpointListener<T> l : listeners) {
-                    pool().submit(new ListenerTask(e, l));
-                }
-                break;
-        }
-
     }
 
     @Override
@@ -148,28 +122,25 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     protected final EndpointDef epDef;
     private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
 
-    /**
-     * Runnable to execute event firing in the executor
-     */
-    private class ListenerTask implements Runnable {
-
-        private ListenerTask(EndpointEvent e, EndpointListener l) {
-            this.l = l;
-            this.e = e;
-        }
-
+    private final RegisterListener listener = new AbstractRegisterListener() {
         @Override
-        public void run() {
-            try {
-                l.endpointUpdated(e);
-            } catch (Throwable ex) {
-                Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);
+        public void valueReceived(final Register reg, final byte[] value) {
+            for (final EndpointListener<T> l : listeners) {
+                pool().submit(new Runnable() {
 
+                    @Override
+                    public void run() {
+                        try {
+                            l.valueReceived(AbstractEndpoint.this, getValue());
+                        } catch (GatewayException ex) {
+                            Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                }
+                );
             }
         }
-
-        private final EndpointListener<T> l;
-        private final EndpointEvent<T> e;
-    }
+    };
 
 }
