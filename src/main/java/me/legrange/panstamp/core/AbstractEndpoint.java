@@ -22,7 +22,7 @@ import me.legrange.panstamp.def.Unit;
  * @author gideon
  * @param <T> The data type supported by the endpoint.
  */
-public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListener {
+public abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     @Override
     public String getName() {
@@ -46,7 +46,7 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     @Override
     public synchronized void addListener(EndpointListener<T> el) {
         if (listeners.isEmpty()) {
-            getRegister().addListener(this);
+            getRegister().addListener(listener);
         }
         listeners.add(el);
     }
@@ -55,36 +55,10 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     public synchronized void removeListener(EndpointListener<T> el) {
         listeners.remove(el);
         if (listeners.isEmpty()) {
-            getRegister().removeListener(this);
+            getRegister().removeListener(listener);
         }
     }
 
-    @Override
-    public void valueReceived(final Register reg, final byte[] value) {
-        for (final EndpointListener<T> l : listeners) {
-            pool().submit(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        l.valueReceived(AbstractEndpoint.this, getValue());
-                    } catch (GatewayException ex) {
-                        Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                }
-            }
-            );
-        }
-    }
-
-    @Override
-    public void endpointAdded(Register reg, Endpoint ep) {
-    }
-
-    @Override
-    public void parameteradded(Register reg, Parameter par) {
-    }
 
     @Override
     public final T getValue(String unit) throws GatewayException {
@@ -149,5 +123,26 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T>, RegisterListen
     protected final RegisterImpl reg;
     protected final EndpointDef epDef;
     private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
+    
+    private final RegisterListener listener = new AbstractRegisterListener() {
+            @Override
+            public void valueReceived(final Register reg, final byte[] value) {
+        for (final EndpointListener<T> l : listeners) {
+            pool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        l.valueReceived(AbstractEndpoint.this, getValue());
+                    } catch (GatewayException ex) {
+                        Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+            );
+        }
+    }
+    };
 
 }

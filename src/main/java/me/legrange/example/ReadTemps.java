@@ -10,6 +10,7 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.core.AbstractEndpointListener;
 
 /**
  *
@@ -53,4 +54,12 @@ public class ReadTemps extends Example implements EndpointListener<Double>, PanS
         System.out.printf("It is %.2fC\n", v);
     }
 
+    private EndpointListener<Double> epl = new AbstractEndpointListener<Double>() {
+
+        @Override
+    public void valueReceived(Endpoint<Double> e, Double v) {
+        System.out.printf("It is %.2fC\n", v);
+    }
+        
+    };
 }
