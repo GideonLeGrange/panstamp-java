@@ -353,13 +353,13 @@ public class PanStampImpl implements PanStamp {
     }
 
     private void fireProductCodeChange(final int manufacturerId, final int productId) {
+        System.out.printf("fireProductCodeChange(%d,%d)\n", manufacturerId, productId);
         for (final PanStampListener l : listeners) {
             getPool().submit(new Runnable() {
 
                 @Override
                 public void run() {
                     l.productCodeChange(PanStampImpl.this, manufacturerId, productId);
-                    l.syncStateChange(PanStampImpl.this, syncState);
                 }
             });
         }

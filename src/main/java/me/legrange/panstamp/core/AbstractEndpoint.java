@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.def.EndpointDef;
@@ -58,7 +57,6 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T> {
             getRegister().removeListener(listener);
         }
     }
-
 
     @Override
     public final T getValue(String unit) throws GatewayException {
@@ -123,26 +121,26 @@ public abstract class AbstractEndpoint<T> implements Endpoint<T> {
     protected final RegisterImpl reg;
     protected final EndpointDef epDef;
     private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
-    
+
     private final RegisterListener listener = new AbstractRegisterListener() {
-            @Override
-            public void valueReceived(final Register reg, final byte[] value) {
-        for (final EndpointListener<T> l : listeners) {
-            pool().submit(new Runnable() {
+        @Override
+        public void valueReceived(final Register reg, final byte[] value) {
+            for (final EndpointListener<T> l : listeners) {
+                pool().submit(new Runnable() {
 
-                @Override
-                public void run() {
-                    try {
-                        l.valueReceived(AbstractEndpoint.this, getValue());
-                    } catch (GatewayException ex) {
-                        Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                    @Override
+                    public void run() {
+                        try {
+                            l.valueReceived(AbstractEndpoint.this, getValue());
+                        } catch (GatewayException ex) {
+                            Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
                     }
-
                 }
+                );
             }
-            );
         }
-    }
     };
 
 }
