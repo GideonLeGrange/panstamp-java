@@ -320,7 +320,12 @@ public final class GatewayImpl implements Gateway {
                 StandardRegister sr = StandardRegister.forId(msg.getRegisterID());
                 Register reg = dev.getRegister(msg.getRegisterID());
                 for (EndpointDef ed : sr.getEndpoints()) {
-                    store.setEndpointValue(dev.getAddress(), (StandardEndpoint)ed, (Integer)(reg.getEndpoint(((StandardEndpoint)ed).getName()).getValue()));
+                    int addr = dev.getAddress();
+                    StandardEndpoint sep = (StandardEndpoint)ed;
+                    Endpoint<Integer> ep = reg.getEndpoint(sep.getName());
+                    int val = ep.getValue();
+                    store.setEndpointValue(addr, sep, val );
+//                    store.setEndpointValue(dev.getAddress(), (StandardEndpoint)ed, (Integer)(reg.getEndpoint(((StandardEndpoint)ed).getName()).getValue()));
                 }
             }
         } catch (GatewayException ex) {
