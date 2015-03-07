@@ -44,7 +44,7 @@ class IntegerEndpoint extends AbstractEndpoint<Integer> {
         }
         long val = value.longValue();
         for (int i = epDef.getSize().getBytes() - 1; i >= 0; --i) {
-            bytes[i] = (byte) (val & 0xFF);
+            bytes[epDef.getPosition().getBytePos()+i] = (byte) (val & 0xFF);
             val = val >>> 8;
         }
         reg.setValue(bytes);

@@ -259,23 +259,6 @@ public class PanStampImpl implements PanStamp {
         }
     }
 
-    private void setProductCode(int manId, int prodId) throws GatewayException {
-        if (manId != getManufacturerId()) {
-            manufacturerId = manId;
-            setIntValue(StandardEndpoint.MANUFACTURER_ID, manId);
-        }
-        if (prodId != getProductId()) {
-            productId = prodId;
-            setIntValue(StandardEndpoint.PRODUCT_ID, prodId);
-        }
-        if ((manufacturerId > 0) && (productId > 0)) {
-            loadDefinition();
-        }
-        // FIXME. There is a problem here in that we can potenially keep loading and reloading. Also
-        // we're probably overwriting partial info by running loadDefintion after the above sets.
-        // Furthermore, we're not clearing any lists or maps before populating. 
-    }
-
     private int getIntValue(StandardEndpoint epDef, int defaultValue) throws GatewayException {
         Integer v = getIntValue(epDef);
         if (v != null) {
@@ -373,7 +356,9 @@ public class PanStampImpl implements PanStamp {
                     int mfId = getManufacturerIdFromRegister();
                     int pdId = getProductIdFromRegister();
                     if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
-                        setProductCode(mfId, pdId);
+                        manufacturerId = mfId;
+                        productId = pdId;
+                        loadDefinition();
                         fireProductCodeChange(mfId, pdId);
                     }
                 } catch (GatewayException ex) {
