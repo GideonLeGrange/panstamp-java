@@ -9,8 +9,6 @@ import me.legrange.panstamp.def.Size;
 import me.legrange.panstamp.def.Type;
 
 /**
- * // FIX ME - need to make standard register def contain standard endpoint def
- * to be completely compatible with custom/loaded.
  *
  * @author gideon
  */
@@ -60,6 +58,5 @@ public final class StandardEndpoint extends EndpointDef {
         setPosition(new Position(0));
         reg.addEndpoint(this);
     }
-    
 
 }
