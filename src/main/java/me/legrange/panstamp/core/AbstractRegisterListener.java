@@ -16,6 +16,10 @@ public abstract class AbstractRegisterListener implements RegisterListener {
     }
 
     @Override
+    public void valueSet(Register reg, byte[] value) {
+    }
+
+    @Override
     public void endpointAdded(Register reg, Endpoint ep) {
     }
 

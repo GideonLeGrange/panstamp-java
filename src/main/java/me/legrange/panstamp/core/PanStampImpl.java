@@ -349,7 +349,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     private RegisterListener productCodeListener() {
-        return new RegisterListener() {
+        return new AbstractRegisterListener() {
             @Override
             public void valueReceived(Register reg, byte value[]) {
                 try {
@@ -358,7 +358,9 @@ public class PanStampImpl implements PanStamp {
                     if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
                         manufacturerId = mfId;
                         productId = pdId;
-                        loadDefinition();
+                        if ((manufacturerId != 0) && (productId != 0)) {
+                            loadDefinition();
+                        }
                         fireProductCodeChange(mfId, pdId);
                     }
                 } catch (GatewayException ex) {
@@ -368,13 +370,24 @@ public class PanStampImpl implements PanStamp {
             }
 
             @Override
-            public void endpointAdded(Register reg, Endpoint ep) {
-            }
+            public void valueSet(Register reg, byte[] value) {
+                try {
+                    int mfId = getManufacturerIdFromRegister();
+                    int pdId = getProductIdFromRegister();
+                    if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
+                        manufacturerId = mfId;
+                        productId = pdId;
+                        if ((manufacturerId != 0) && (productId != 0)) {
+                            loadDefinition();
+                        }
+                    }
+                } catch (GatewayException ex) {
+                    Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
-            @Override
-            public void parameteradded(Register reg, Parameter par) {
             }
         };
+
     }
 
     /**
@@ -431,20 +444,20 @@ public class PanStampImpl implements PanStamp {
         private final byte[] val;
 
         @Override
-        public void syncStateChange(PanStamp dev, int syncState) {                
+        public void syncStateChange(PanStamp dev, int syncState) {
             switch (syncState) {
-                    case 1:
-                    case 3:
-                        try {
-                            gw.sendCommandMessage(PanStampImpl.this, id, val);
-                        } catch (ModemException ex) {
-                            Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
-                        } finally {
-                            removeListener(this);
-                        }
-                        break;
-                    default:
-                }
+                case 1:
+                case 3:
+                    try {
+                        gw.sendCommandMessage(PanStampImpl.this, id, val);
+                    } catch (ModemException ex) {
+                        Logger.getLogger(PanStampImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        removeListener(this);
+                    }
+                    break;
+                default:
             }
+        }
     }
 }

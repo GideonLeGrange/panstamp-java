@@ -84,6 +84,7 @@ public final class RegisterImpl implements Register {
             } else {
                 this.value = value;
             }
+            fireValueSet(value);
         } catch (ModemException e) {
             throw new MoteException(e.getMessage(), e);
         }
@@ -203,6 +204,21 @@ public final class RegisterImpl implements Register {
                         @Override
                         public void run() {
                             l.valueReceived(RegisterImpl.this, value);
+                        }
+
+                    }
+            );
+        }
+    }
+    
+    private void fireValueSet(final byte[] value) {
+        for (final RegisterListener l : listeners) {
+            getPool().submit(
+                    new Runnable() {
+
+                        @Override
+                        public void run() {
+                            l.valueSet(RegisterImpl.this, value);
                         }
 
                     }

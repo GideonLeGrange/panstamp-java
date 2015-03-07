@@ -40,7 +40,7 @@ abstract class AbstractDeviceLibrary implements DeviceLibrary {
      */
     protected abstract InputStream getStream(String path);
 
-    private DeviceDef getDefinition(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
+    private synchronized DeviceDef getDefinition(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
         if (devices == null) {
             devices = new HashMap<>();
             List<DeviceDef> all = XMLParser.parse(this);
