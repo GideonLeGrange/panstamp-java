@@ -3,8 +3,10 @@ package me.legrange.panstamp.core;
 import me.legrange.panstamp.GatewayException;
 
 /**
- * Thrown when there is a problem with modem coms
- * @author gideon 
+ * Thrown when there is a problem with modem communication.
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class ModemException extends GatewayException {
 
@@ -15,5 +17,5 @@ public class ModemException extends GatewayException {
     public ModemException(String msg, Throwable cause) {
         super(msg, cause);
     }
-    
+
 }

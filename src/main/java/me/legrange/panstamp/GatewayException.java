@@ -2,7 +2,9 @@ package me.legrange.panstamp;
 
 /**
  * Super class of exceptions thrown by the gateway 
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public class GatewayException extends Exception {
 

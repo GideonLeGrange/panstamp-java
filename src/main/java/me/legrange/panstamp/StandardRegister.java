@@ -3,8 +3,11 @@ package me.legrange.panstamp;
 import me.legrange.panstamp.def.RegisterDef;
 
 /**
+ * This class provides register definitions for the standard SWAP registers to they can 
+ * be used in the same way as other registers and endpoints. 
  * 
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public final class StandardRegister extends RegisterDef {
 

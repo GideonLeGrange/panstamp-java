@@ -6,8 +6,11 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 
 /**
- *
- * @author gideon
+ * An abstract implementation for a RegisterListener that developers can extend if 
+ * they only what to implement one method in the RegisterListener interface. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public abstract class AbstractRegisterListener implements RegisterListener {
 
@@ -24,7 +27,7 @@ public abstract class AbstractRegisterListener implements RegisterListener {
     }
 
     @Override
-    public void parameteradded(Register reg, Parameter par) {
+    public void parameterAdded(Register reg, Parameter par) {
     }
     
 }

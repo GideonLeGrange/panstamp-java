@@ -7,7 +7,8 @@ import me.legrange.swap.SWAPModem;
  * A PanStamp network gateway. This object represents the interface to a network
  * of PanStamp devices accessible via a SWAP modem.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface Gateway {
 

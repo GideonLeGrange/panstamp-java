@@ -9,8 +9,11 @@ import me.legrange.panstamp.def.Size;
 import me.legrange.panstamp.def.Type;
 
 /**
- *
- * @author gideon
+ * This class provides endpoint definitions for the standard SWAP registers to they can 
+ * be used in the same way as other registers and endpoints. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public final class StandardEndpoint extends EndpointDef {
     private static final Map<String, StandardEndpoint> nameMap = new HashMap<>();

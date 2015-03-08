@@ -1,8 +1,10 @@
 package me.legrange.panstamp.core;
 
 /**
- *
- * @author gideon
+ * Thrown by a panStamp device if a register that is requested cannot be found. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class NoSuchRegisterException extends MoteException {
 

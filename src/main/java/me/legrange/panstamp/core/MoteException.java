@@ -4,7 +4,9 @@ import me.legrange.panstamp.GatewayException;
 
 /**
  * Thrown by a mote object when it experiences problems.
- * @author gideon
+ *
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class MoteException extends GatewayException {
 

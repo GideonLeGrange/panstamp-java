@@ -2,7 +2,9 @@ package me.legrange.panstamp;
 
 /**
  * Thrown when a panStamp device cannot be found in the network. 
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public class NodeNotFoundException extends GatewayException {
 

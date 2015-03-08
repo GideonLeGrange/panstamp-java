@@ -10,7 +10,8 @@ import me.legrange.panstamp.def.DeviceDef;
  * will typically not implement this interface, it can be implemented to define 
  * custom ways of loading XML files. 
  * 
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface DeviceLibrary {
     

@@ -5,8 +5,11 @@ import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 
 /**
- *
- * @author gideon
+ * An abstract implementation for a GatewayListener that developers can extend if 
+ * they only what to implement one method in the GatewayListener interface. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public abstract class AbstractGatewayListener implements GatewayListener {
 

@@ -5,10 +5,11 @@ import java.util.List;
 /**
  * An abstraction of a panStamp device.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface PanStamp {
-
+    
     /**
      * Get the address of this device.
      *

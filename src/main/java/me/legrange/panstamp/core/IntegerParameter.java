@@ -4,8 +4,11 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.def.Param;
 
 /**
- *
- * @author gideon
+ * An parameter that supports  integer values for endpoint data and maps values to Java Integers.s
+ * these to booleans. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class IntegerParameter extends AbstractParameter<Integer> {
 

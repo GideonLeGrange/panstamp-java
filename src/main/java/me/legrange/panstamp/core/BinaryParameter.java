@@ -4,8 +4,11 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.def.Param;
 
 /**
- *
- * @author gideon
+ * An parameter that supports the "bin" type from the XML definitions and maps
+ * these to booleans. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class BinaryParameter extends AbstractParameter<Boolean> {
 

@@ -3,7 +3,9 @@ package me.legrange.panstamp;
 /**
  * Application developers can implement this interface to add their preferred persistence
  * implementation to the library.
- * @author gideon
+ *
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface DeviceStateStore {
     

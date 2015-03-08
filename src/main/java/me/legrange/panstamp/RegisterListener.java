@@ -2,7 +2,9 @@ package me.legrange.panstamp;
 
 /**
  * Implement this to receive updates when registers change.
- * @author Gideon le Grange
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface RegisterListener {
 
@@ -20,7 +22,17 @@ public interface RegisterListener {
      */
     void valueSet(Register reg, byte value[]);
     
+    /** An endpoint was added to a register.
+     * 
+     * @param reg The register involved. 
+     * @param ep The endpoint added. 
+     */
     void endpointAdded(Register reg, Endpoint ep);
     
-    void parameteradded(Register reg, Parameter par);
+    /** A parameter was added to a register. 
+     * 
+     * @param reg The register involved
+     * @param par The endpoint added. 
+     */
+    void parameterAdded(Register reg, Parameter par);
 }

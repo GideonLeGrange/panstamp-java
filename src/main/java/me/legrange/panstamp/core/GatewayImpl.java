@@ -35,7 +35,8 @@ import me.legrange.swap.ModemSetup;
  * A gateway connecting a panStamp network to your code using the SWAP modem
  * supplied.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public final class GatewayImpl implements Gateway {
 

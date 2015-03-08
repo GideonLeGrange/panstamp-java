@@ -5,10 +5,13 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.def.Param;
 
 /**
- *
- * @author gideon
+ * An abstract implementation of Parameter that can be extended for different types of
+ * parameters. 
+ * 
  * @param <T>
- */
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
+ */ 
 public abstract class AbstractParameter<T> implements Parameter<T> {
 
     @Override
@@ -39,9 +42,6 @@ public abstract class AbstractParameter<T> implements Parameter<T> {
         this.reg = reg;
         this.par = par;
 
-    }
-
-    void destroy() {
     }
 
     protected final RegisterImpl reg;

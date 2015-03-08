@@ -5,8 +5,11 @@ import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
 /**
- *
- * @author gideon
+ * An endpoint that supports the "binary" type from the XML definitions and maps
+ * these to booleans. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class BinaryEndpoint extends AbstractEndpoint<Boolean> {
 

@@ -5,7 +5,8 @@ import java.util.List;
 /**
  * An abstraction of a panStamp register.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface Register {
 

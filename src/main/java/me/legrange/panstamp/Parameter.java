@@ -2,8 +2,10 @@ package me.legrange.panstamp;
 
 /**
  * A parameter that can be set for a panStamp device. 
- * @author gideon
  * @param <T> Type of parameter
+ *  
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface Parameter<T> {
     

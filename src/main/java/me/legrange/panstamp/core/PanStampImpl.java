@@ -15,7 +15,6 @@ import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
-import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
@@ -31,7 +30,8 @@ import me.legrange.swap.SwapMessage;
  * represent instances of panStamp devices connected to the network behind the
  * gateway.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class PanStampImpl implements PanStamp {
 

@@ -18,8 +18,9 @@ import me.legrange.panstamp.def.Unit;
  * Abstract implementation of an endpoint that can be extended into endpoints
  * supporting different data times.
  *
- * @author gideon
  * @param <T> The data type supported by the endpoint.
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public abstract class AbstractEndpoint<T> implements Endpoint<T> {
 

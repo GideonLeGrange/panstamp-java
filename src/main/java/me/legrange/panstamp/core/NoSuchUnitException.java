@@ -2,7 +2,9 @@ package me.legrange.panstamp.core;
 
 /**
  * Thrown when an endpoint is accessed with a unit that is not known.
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class NoSuchUnitException extends MoteException {
 

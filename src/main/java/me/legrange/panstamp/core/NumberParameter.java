@@ -4,8 +4,11 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.def.Param;
 
 /**
- *
- * @author gideon
+ * An parameter that supports the "num" type from the XML definitions and maps
+ * these to Doubles. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class NumberParameter extends AbstractParameter<Double> {
 

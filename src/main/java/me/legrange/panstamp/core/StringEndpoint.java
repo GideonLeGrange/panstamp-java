@@ -5,8 +5,11 @@ import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
 /**
- *
- * @author gideon
+ * An endpoint that supports the "str" type from the XML definitions and maps
+ * these to Strings. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class StringEndpoint extends AbstractEndpoint<String> {
 

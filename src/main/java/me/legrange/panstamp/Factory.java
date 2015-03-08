@@ -8,7 +8,8 @@ import me.legrange.swap.tcp.TcpModem;
 /**
  * Factory used to construct panStamp gateway instances. 
  * 
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public final class Factory {
     

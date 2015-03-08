@@ -142,9 +142,6 @@ public final class RegisterImpl implements Register {
         for (AbstractEndpoint ep : endpoints.values()) {
             ep.destroy();
         }
-        for (AbstractParameter par : parameters.values()) {
-            par.destroy();
-        }
         listeners.clear();
         endpoints.clear();
         parameters.clear();
@@ -248,7 +245,7 @@ public final class RegisterImpl implements Register {
 
                         @Override
                         public void run() {
-                            l.parameteradded(RegisterImpl.this, par);
+                            l.parameterAdded(RegisterImpl.this, par);
                         }
 
                     }

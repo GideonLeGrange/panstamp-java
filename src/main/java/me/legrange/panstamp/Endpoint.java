@@ -5,8 +5,10 @@ import java.util.List;
 /**
  * A PanStamp endpoint
  *
- * @author gideon
  * @param <T> type of value supported by the endpoint
+ *
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public interface Endpoint<T> {
     

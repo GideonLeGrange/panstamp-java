@@ -9,9 +9,10 @@ import me.legrange.panstamp.StandardEndpoint;
  * An implementation of DeviceStateStore that keeps whatever is learned in
  * memory
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class MemoryStore implements DeviceStateStore {
+public final class MemoryStore implements DeviceStateStore {
 
     public MemoryStore() {
     }

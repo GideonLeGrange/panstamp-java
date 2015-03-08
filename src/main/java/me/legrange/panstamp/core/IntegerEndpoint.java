@@ -5,8 +5,10 @@ import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.panstamp.def.Unit;
 
 /**
- *
- * @author gideon
+ * An endpoint that supports  integer values for endpoint data and maps values to Java Integers.
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class IntegerEndpoint extends AbstractEndpoint<Integer> {
 
