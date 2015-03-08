@@ -11,9 +11,10 @@ import me.legrange.panstamp.GatewayException;
  * through for example an application XML directory first, before falling back
  * to the default class loader.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class CompoundDeviceLibrary implements DeviceLibrary {
+public final class CompoundDeviceLibrary implements DeviceLibrary {
 
     public CompoundDeviceLibrary(DeviceLibrary...sources) {
         this.sources = sources;
@@ -30,7 +31,7 @@ public class CompoundDeviceLibrary implements DeviceLibrary {
     }
 
     @Override
-    public DeviceDef getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
         for (DeviceLibrary lib : sources) {
             if (lib.hasDeviceDefinition(manufacturedID, productId)) {
                 return lib.getDeviceDefinition(manufacturedID, productId);

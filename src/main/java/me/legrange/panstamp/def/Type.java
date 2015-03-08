@@ -1,8 +1,10 @@
 package me.legrange.panstamp.def;
 
 /**
- * Enum for the types of data defined for panStamp data points
- * @author gideon
+ * The data types defined for endpoint and parameter data. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public enum Type {
     BINARY("bin"), NUMBER("num"), STRING("str"), INTEGER("int");

@@ -5,7 +5,8 @@ import java.io.InputStream;
 /**
  * A device library that uses the Java class loader to load XML definitions.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public final class ClassLoaderLibrary extends AbstractDeviceLibrary {
 

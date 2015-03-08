@@ -2,7 +2,9 @@
 
 /**
  * Exception thrown if a panStamp device cannot be found 
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public final class DeviceNotFoundException extends DefinitionException {
 

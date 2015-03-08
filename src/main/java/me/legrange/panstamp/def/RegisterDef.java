@@ -7,7 +7,9 @@ import java.util.Map;
 
 /**
  * A device register definition.
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class RegisterDef {
 
@@ -16,26 +18,46 @@ public class RegisterDef {
         this.name = name;
     }
 
+    /** Get the register ID of the register defined by this defintion. 
+     * 
+     * @return The register ID. 
+     */
     public int getId() {
         return id;
     }
 
+    /** Get the name of the register. 
+     * 
+     * @return The name.
+     */
     public String getName() {
         return name;
     }
     
+    /** Get the endpoint definitions defined for this register definition. 
+     * 
+     * @return This of endpoint definitions. 
+     */
     public List<EndpointDef> getEndpoints() {
         List<EndpointDef> all = new ArrayList<>();
         all.addAll(endpoints.values());
         return all;
     }
     
+    /** Get the parameter definitions defined for this register definition. 
+     * 
+     * @return This of parameter definitions. 
+     */
     public List<Param> getParameters() { 
         List<Param> all = new ArrayList<>();
         all.addAll(params.values());
         return all;
     }
     
+    /** Get the size in bytes of this register. 
+     * 
+     * @return The size. 
+     */
     public int getByteSize() {
         int size = 0;
         for (EndpointDef epDef : getEndpoints()) {

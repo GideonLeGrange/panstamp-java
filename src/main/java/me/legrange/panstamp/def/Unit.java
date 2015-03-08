@@ -1,8 +1,10 @@
 package me.legrange.panstamp.def;
 
 /**
- * An endpoint unit
- * @author gideon
+ * A unit definition for endpoint data. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class Unit {
 
@@ -12,14 +14,26 @@ public class Unit {
         this.offset = offset;
     }
 
+    /** The name of the unit. 
+     * 
+     * @return The name.
+     */
     public String getName() {
         return name;
     }
 
+    /** The multiplication factor for the data. 
+     * 
+     * @return The factor. 
+     */
     public double getFactor() {
         return factor;
     }
 
+    /** The offset constant for the data. 
+     * 
+     * @return The offset. 
+     */
     public double getOffset() {
         return offset;
     }

@@ -1,14 +1,18 @@
 package me.legrange.panstamp.def;
 
 /**
- *  The position of data relative to a panStamp register
- * @author gideon
+ * The position of data relative to a panStamp register definition.
+ *
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class Position {
-    
-    enum Type { BITS, BYTES; }
-    
-    
+
+    enum Type {
+
+        BITS, BYTES;
+    }
+
     public Position(int bytePos, int bitPos) {
         this.bytePos = bytePos;
         this.bitPos = bitPos;
@@ -17,24 +21,34 @@ public class Position {
 
     public Position(int bytePos) {
         this.bytePos = bytePos;
-        this.bitPos =  0;
+        this.bitPos = 0;
         this.type = Type.BYTES;
     }
 
+    /** Get the byte offset of the position. 
+     * 
+     * @return The byte offset. 
+     */
     public int getBytePos() {
         return bytePos;
     }
 
+    /** Get the bit offset of the position. 
+     * 
+     * @return The bit offset. 
+     */
     public int getBitPos() {
         return bitPos;
     }
-
-    public Type getType() {
+    
+    /** Get the type of the position: Byte-wise or bit-wise. 
+     * 
+     * @return The type.
+     */
+    Type getType() {
         return type;
     }
-    
-    
-    
+
     private final int bytePos;
     private final int bitPos;
     private final Type type;

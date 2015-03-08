@@ -15,13 +15,20 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Parse XML Devices XML file
+ * This class parses XML device definitions into DeviceDefinitons objects. 
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
  class XMLParser {
 
-    public static List<DeviceDef> parse(AbstractDeviceLibrary lib) throws ParseException {
+     /** Parse all XML definitions in the supplied library and return a list definitions. 
+      * 
+      * @param lib The library from which to read the device definitions. 
+      * @return The list of parsed definitions.
+      * @throws ParseException Thrown if there is a problem parsing the defintions. 
+      */
+    public static List<DeviceDefinition> parse(AbstractDeviceLibrary lib) throws ParseException {
         XMLParser parser = new XMLParser(lib);
         return parser.parseDevices();
     }
@@ -36,9 +43,9 @@ import org.xml.sax.SAXException;
     /**
      * parse the devices.xml file
      */
-    private List<DeviceDef> parseDevices() throws ParseException {
+    private List<DeviceDefinition> parseDevices() throws ParseException {
         String fileName = "devices.xml";
-        List<DeviceDef> devices = new LinkedList<>();
+        List<DeviceDefinition> devices = new LinkedList<>();
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -63,14 +70,14 @@ import org.xml.sax.SAXException;
     /**
      * parse the devices for one developer
      */
-    private List<DeviceDef> parseDeveloper(Element node) throws ParseException {
-        List<DeviceDef> devices = new LinkedList<>();
+    private List<DeviceDefinition> parseDeveloper(Element node) throws ParseException {
+        List<DeviceDefinition> devices = new LinkedList<>();
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
         Developer dev = new Developer(id, name);
         for (Element n : iterable(node.getChildNodes())) {
             if (n.getNodeName().equals("dev")) {
-                DeviceDef device = parseDevice(dev, n);
+                DeviceDefinition device = parseDevice(dev, n);
                 if (device != null) {
                     devices.add(device);
                 }
@@ -82,15 +89,15 @@ import org.xml.sax.SAXException;
     /**
      * parse a device configuration
      */
-    private DeviceDef parseDevice(Developer devel, Element node) throws ParseException {
-        DeviceDef dev = null;
+    private DeviceDefinition parseDevice(Developer devel, Element node) throws ParseException {
+        DeviceDefinition dev = null;
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
         String label = requireAttr(node, "label");
         String fileName = devel.getName() + "/" + name + ".xml";
         InputStream in = makeStream(fileName);
         if (in !=  null) {
-            dev = new DeviceDef(devel, id, name, label);
+            dev = new DeviceDefinition(devel, id, name, label);
             parseDeviceXML(dev, fileName);
         } else {
             log.warning(String.format("File '%s' for device id %d does not exist, skipping.", fileName, id));
@@ -101,7 +108,7 @@ import org.xml.sax.SAXException;
     /**
      * parse the device XML file
      */
-    private void parseDeviceXML(DeviceDef dev, String fileName) throws ParseException {
+    private void parseDeviceXML(DeviceDefinition dev, String fileName) throws ParseException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -141,7 +148,7 @@ import org.xml.sax.SAXException;
     /**
      * parse the config section
      */
-    private void parseConfig(DeviceDef dev, Element config) throws ParseException {
+    private void parseConfig(DeviceDefinition dev, Element config) throws ParseException {
         for (Element node : iterable(config.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "reg":
@@ -156,7 +163,7 @@ import org.xml.sax.SAXException;
     /**
      * parse a config/reg element
      */
-    private RegisterDef parseConfigReg(DeviceDef dev, Element reg) throws ParseException {
+    private RegisterDef parseConfigReg(DeviceDefinition dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
         RegisterDef register = new RegisterDef(id, name);
@@ -242,7 +249,7 @@ import org.xml.sax.SAXException;
     /**
      * parse the regular section
      */
-    private void parseRegular(DeviceDef dev, Element regular) throws ParseException {
+    private void parseRegular(DeviceDefinition dev, Element regular) throws ParseException {
         for (Element node : iterable(regular.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "reg":
@@ -258,7 +265,7 @@ import org.xml.sax.SAXException;
     /**
      * parse a reg element
      */
-    private RegisterDef parseRegularReg(DeviceDef dev, Element reg) throws ParseException {
+    private RegisterDef parseRegularReg(DeviceDefinition dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
         RegisterDef register = new RegisterDef(id, name);

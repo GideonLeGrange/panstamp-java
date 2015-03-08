@@ -1,8 +1,10 @@
 package me.legrange.panstamp.def;
 
 /**
- *
- * @author gideon
+ * Thrown if an endpoint cannot be found. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class NoSuchEndpointException extends DefinitionException {
 

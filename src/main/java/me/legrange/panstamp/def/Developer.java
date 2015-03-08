@@ -1,20 +1,26 @@
 package me.legrange.panstamp.def;
 
 /**
- * A panstamp developer
- * @author gideon
+ * The object represents the information associated with a panStamp developer
+ * in the device XML tree. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class Developer {
+public final class Developer {
 
-    public Developer(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
+    /** Get the developer ID. 
+     * 
+     * @return The developer ID.
+     */
     public int getId() {
         return id;
     }
 
+    /** Get the developer name
+     * 
+     * @return The developer name.
+     */
     public String getName() {
         return name;
     }
@@ -22,6 +28,12 @@ public class Developer {
     @Override
     public String toString() {
         return "Developer{" + "id=" + id + ", name=" + name + '}';
+    }
+
+    /** Create a new instance with the given id and name */
+    Developer(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
     
     private final int id;

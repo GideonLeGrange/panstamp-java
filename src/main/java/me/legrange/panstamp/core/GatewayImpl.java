@@ -22,7 +22,7 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
-import me.legrange.panstamp.def.DeviceDef;
+import me.legrange.panstamp.def.DeviceDefinition;
 import me.legrange.panstamp.def.EndpointDef;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
@@ -240,7 +240,7 @@ public final class GatewayImpl implements Gateway {
         send(msg);
     }
 
-    DeviceDef getDeviceDefinition(int manId, int prodId) throws GatewayException {
+    DeviceDefinition getDeviceDefinition(int manId, int prodId) throws GatewayException {
         return lib.getDeviceDefinition(manId, prodId);
     }
 

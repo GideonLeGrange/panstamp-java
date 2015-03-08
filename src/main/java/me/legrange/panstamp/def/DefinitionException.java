@@ -3,8 +3,10 @@ package me.legrange.panstamp.def;
 import me.legrange.panstamp.GatewayException;
 
 /**
- * Thrown when there is a problem with panstamp device defintions.
- * @author gideon
+ * Thrown when there is a problem with panStamp device definitions.
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public abstract class DefinitionException extends GatewayException {
 

@@ -10,9 +10,10 @@ import java.util.logging.Logger;
  * A device library that uses a directory with XML files to find device 
  * configurations. 
  * 
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class FileLibrary extends AbstractDeviceLibrary {
+public final class FileLibrary extends AbstractDeviceLibrary {
 
     public FileLibrary(File dir) {
         this.dir = dir;
