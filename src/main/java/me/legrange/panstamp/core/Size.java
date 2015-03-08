@@ -1,5 +1,5 @@
 
-package me.legrange.panstamp.def;
+package me.legrange.panstamp.core;
 
 /**
  * The size of a data point (endpoint or parameter). 

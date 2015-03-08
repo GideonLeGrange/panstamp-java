@@ -1,4 +1,4 @@
-  package me.legrange.panstamp.def;
+  package me.legrange.panstamp.core;
 
 /**
  * Exception thrown if a panStamp device cannot be found 

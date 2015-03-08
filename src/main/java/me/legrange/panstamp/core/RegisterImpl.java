@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointNotFoundException;
 import me.legrange.panstamp.GatewayException;
@@ -16,9 +14,6 @@ import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.def.DeviceDefinition;
-import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.Param;
 
 /**
  * Abstraction of a panStamp register.

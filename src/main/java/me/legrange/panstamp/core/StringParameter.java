@@ -1,7 +1,6 @@
 package me.legrange.panstamp.core;
 
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.def.Param;
 
 /**
  * An parameter that supports the "str" type from the XML definitions and maps
@@ -10,7 +9,7 @@ import me.legrange.panstamp.def.Param;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class StringParameter extends AbstractParameter<String> {
+final class StringParameter extends AbstractParameter<String> {
 
     public StringParameter(RegisterImpl reg, Param epDef) {
         super(reg, epDef);

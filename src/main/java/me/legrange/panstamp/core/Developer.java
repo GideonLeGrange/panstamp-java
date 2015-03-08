@@ -1,4 +1,4 @@
-package me.legrange.panstamp.def;
+package me.legrange.panstamp.core;
 
 /**
  * The object represents the information associated with a panStamp developer

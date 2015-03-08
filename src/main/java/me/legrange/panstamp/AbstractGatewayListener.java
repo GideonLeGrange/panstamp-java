@@ -1,4 +1,4 @@
-package me.legrange.panstamp.core;
+package me.legrange.panstamp;
 
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayListener;

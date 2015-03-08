@@ -3,7 +3,7 @@ package me.legrange.example;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.def.EndpointDef;
+import me.legrange.panstamp.core.EndpointDef;
 
 /**
  * Some utility methods to make some tedious operations a bit easier.

@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.def.DeviceDefinition;
+import me.legrange.panstamp.core.DeviceDefinition;
 
 /**
  * A device library can be implemented to find a device definition based on a panStamp's

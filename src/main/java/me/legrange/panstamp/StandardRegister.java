@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.def.RegisterDef;
+import me.legrange.panstamp.core.RegisterDef;
 
 /**
  * This class provides register definitions for the standard SWAP registers to they can 

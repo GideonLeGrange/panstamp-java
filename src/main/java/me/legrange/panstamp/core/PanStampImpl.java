@@ -1,5 +1,7 @@
 package me.legrange.panstamp.core;
 
+import me.legrange.panstamp.AbstractPanStampListener;
+import me.legrange.panstamp.AbstractRegisterListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,10 +21,6 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.def.DeviceDefinition;
-import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.Param;
-import me.legrange.panstamp.def.RegisterDef;
 import me.legrange.swap.SwapMessage;
 
 /**

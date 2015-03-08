@@ -1,7 +1,6 @@
 package me.legrange.panstamp.core;
 
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.def.Param;
 
 /**
  * An parameter that supports  integer values for endpoint data and maps values to Java Integers.s

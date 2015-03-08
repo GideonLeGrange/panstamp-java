@@ -1,4 +1,4 @@
-package me.legrange.panstamp.def;
+package me.legrange.panstamp.core;
 
 /**
  * The data types defined for endpoint and parameter data. 

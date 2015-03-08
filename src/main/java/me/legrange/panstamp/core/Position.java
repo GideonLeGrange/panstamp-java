@@ -1,4 +1,4 @@
-package me.legrange.panstamp.def;
+package me.legrange.panstamp.core;
 
 /**
  * The position of data relative to a panStamp register definition.

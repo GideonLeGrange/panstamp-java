@@ -9,8 +9,8 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.core.AbstractEndpointListener;
-import me.legrange.panstamp.core.AbstractPanStampListener;
+import me.legrange.panstamp.AbstractEndpointListener;
+import me.legrange.panstamp.AbstractPanStampListener;
 
 /**
  *

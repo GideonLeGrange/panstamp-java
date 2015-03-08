@@ -1,5 +1,6 @@
 package me.legrange.panstamp.core;
 
+import me.legrange.panstamp.AbstractRegisterListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -11,8 +12,6 @@ import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.Unit;
 
 /**
  * Abstract implementation of an endpoint that can be extended into endpoints
@@ -22,7 +21,7 @@ import me.legrange.panstamp.def.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public abstract class AbstractEndpoint<T> implements Endpoint<T> {
+abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     @Override
     public String getName() {

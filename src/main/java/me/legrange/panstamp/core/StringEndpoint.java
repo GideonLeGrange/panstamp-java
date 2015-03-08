@@ -1,8 +1,6 @@
 package me.legrange.panstamp.core;
 
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.Unit;
 
 /**
  * An endpoint that supports the "str" type from the XML definitions and maps
@@ -11,7 +9,7 @@ import me.legrange.panstamp.def.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class StringEndpoint extends AbstractEndpoint<String> {
+final class StringEndpoint extends AbstractEndpoint<String> {
 
     public StringEndpoint(RegisterImpl reg, EndpointDef epDef) {
         super(reg, epDef);

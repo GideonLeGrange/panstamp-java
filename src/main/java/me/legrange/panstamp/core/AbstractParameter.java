@@ -2,7 +2,6 @@ package me.legrange.panstamp.core;
 
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.def.Param;
 
 /**
  * An abstract implementation of Parameter that can be extended for different types of
@@ -12,7 +11,7 @@ import me.legrange.panstamp.def.Param;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */ 
-public abstract class AbstractParameter<T> implements Parameter<T> {
+abstract class AbstractParameter<T> implements Parameter<T> {
 
     @Override
     public String getName() {

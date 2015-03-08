@@ -2,11 +2,11 @@ package me.legrange.panstamp;
 
 import java.util.HashMap;
 import java.util.Map;
-import me.legrange.panstamp.def.Direction;
-import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.Position;
-import me.legrange.panstamp.def.Size;
-import me.legrange.panstamp.def.Type;
+import me.legrange.panstamp.core.Direction;
+import me.legrange.panstamp.core.EndpointDef;
+import me.legrange.panstamp.core.Position;
+import me.legrange.panstamp.core.Size;
+import me.legrange.panstamp.core.Type;
 
 /**
  * This class provides endpoint definitions for the standard SWAP registers to they can 

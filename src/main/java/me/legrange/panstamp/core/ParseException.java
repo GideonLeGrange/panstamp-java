@@ -1,4 +1,4 @@
-package me.legrange.panstamp.def;
+package me.legrange.panstamp.core;
 
 /**
  * Thrown when there is an error parsing the XML device files. 

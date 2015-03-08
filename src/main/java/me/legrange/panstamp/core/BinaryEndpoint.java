@@ -1,8 +1,6 @@
 package me.legrange.panstamp.core;
 
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.def.EndpointDef;
-import me.legrange.panstamp.def.Unit;
 
 /**
  * An endpoint that supports the "binary" type from the XML definitions and maps
