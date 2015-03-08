@@ -19,7 +19,8 @@ import me.legrange.swap.serial.SerialModem;
 /**
  * A SWAP modem implementation that works over TCP.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class TcpModem implements SWAPModem {
 

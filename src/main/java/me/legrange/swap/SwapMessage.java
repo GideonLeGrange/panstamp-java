@@ -1,8 +1,10 @@
 package me.legrange.swap;
 
 /**
+ * A SWAP message sent or received via the SWAP modem application.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public interface SwapMessage {
     
@@ -27,7 +29,9 @@ public interface SwapMessage {
     Type getType();
 
     /**
-     * @return function code
+     * Get the SWAP function code for this message. Query = 1, Command = 2 and Status = 0.
+     * 
+     * @return The function code.
      */
     int getFunction();
 

@@ -13,14 +13,14 @@ import java.util.logging.Logger;
 import me.legrange.swap.DecodingException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SwapMessage;
-import me.legrange.swap.UserMessage;
 import me.legrange.swap.serial.SerialMessage;
 
 /**
  * A TCP transport that serializes and de-serializes certain data used by our
  * SWAP implementation over a TCP socket.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 class TcpTransport {
 

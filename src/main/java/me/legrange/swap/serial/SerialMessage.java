@@ -5,7 +5,8 @@ import me.legrange.swap.*;
 /**
  * A SWAP message received from the serial modem.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class SerialMessage implements SwapMessage {
     

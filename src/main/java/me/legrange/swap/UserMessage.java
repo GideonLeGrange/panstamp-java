@@ -1,8 +1,10 @@
 package me.legrange.swap;
 
 /**
- *
- * @author gideon
+ * An implementation of SwapMessage for messages originating from the application. 
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class UserMessage implements SwapMessage {
 

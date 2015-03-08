@@ -3,7 +3,8 @@ package me.legrange.swap;
 /**
  * A class that encapsulates the modem sketch's settings.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class ModemSetup {
 

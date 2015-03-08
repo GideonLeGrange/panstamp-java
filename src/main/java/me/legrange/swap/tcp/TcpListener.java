@@ -5,14 +5,16 @@ import me.legrange.swap.SwapMessage;
 
 /**
  * Implement this interface to receive messages from TcpTransport. 
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 interface TcpListener {
     
-    /** A SWAP message was received */
+    /** A SWAP message was received. */
     void messgeReceived(SwapMessage msg);
     
-    /** A setup message was received */
+    /** A setup message was received. */
     void setupReceived(ModemSetup setup);
     
 }

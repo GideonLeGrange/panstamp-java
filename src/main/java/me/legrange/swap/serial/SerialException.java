@@ -4,7 +4,9 @@ import me.legrange.swap.SWAPException;
 
 /**
  * Thrown when there is a Serial IO error
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class SerialException extends SWAPException {
 
@@ -15,7 +17,5 @@ public class SerialException extends SWAPException {
     SerialException(String msg, Throwable cause) {
         super(msg, cause);
     }
-    
-    
-    
+
 }

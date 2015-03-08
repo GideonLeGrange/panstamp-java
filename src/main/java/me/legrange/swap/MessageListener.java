@@ -2,7 +2,9 @@ package me.legrange.swap;
 
 /**
  * Implement this to receive incoming SWAP messages.
- * @author gideon
+  *
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public interface MessageListener {
     

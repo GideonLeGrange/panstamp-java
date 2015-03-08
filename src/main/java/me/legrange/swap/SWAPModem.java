@@ -4,7 +4,8 @@ package me.legrange.swap;
  * A virtual modem that provides access to a SWAP transport. Currently we
  * implement two kinds, serial and TCP/IP.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public interface SWAPModem {
 

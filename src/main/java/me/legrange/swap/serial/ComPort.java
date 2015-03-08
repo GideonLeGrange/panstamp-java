@@ -13,6 +13,9 @@ import java.io.OutputStream;
 
 /**
  * A wrapper around a RXTX serial port.
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 final class ComPort  {
 

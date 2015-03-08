@@ -15,7 +15,9 @@ import me.legrange.swap.serial.SerialException;
 
 /**
  * A TCP server that serves SWAP comms from a modem over TCP/IP 
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class TcpServer {
 

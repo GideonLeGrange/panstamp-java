@@ -19,7 +19,8 @@ import me.legrange.swap.SWAPModem;
 /**
  * An interface providing access through the serial port to the SWAP modem.
  *
- * @author gideon
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public final class SerialModem implements SWAPModem {
 

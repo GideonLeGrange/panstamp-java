@@ -1,10 +1,11 @@
 
-package me.legrange.swap.tcp;
+package me.legrange.example;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;
+import me.legrange.swap.tcp.TcpServer;
 
 /**
  *

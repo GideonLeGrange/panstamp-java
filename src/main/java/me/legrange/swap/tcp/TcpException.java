@@ -4,7 +4,9 @@ import me.legrange.swap.SWAPException;
 
 /**
  * Thrown by the TcpModem if there is a problem.
- * @author gideon
+ * 
+ * @since 1.0
+ * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public class TcpException extends SWAPException {
 
