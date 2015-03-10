@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.core.DeviceDefinition;
+import me.legrange.panstamp.impl.XMLDeviceDefinition;
 
 /**
  * A device library can be implemented to find a device definition based on a panStamp's
@@ -31,6 +31,6 @@ public interface DeviceLibrary {
      * @return The device definition. 
      * @throws GatewayException If there is a problem loading a device definition. 
      */
-    DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException;
+    XMLDeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException;
         
 }

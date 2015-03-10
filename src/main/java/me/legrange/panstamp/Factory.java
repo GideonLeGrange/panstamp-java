@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.core.GatewayImpl;
+import me.legrange.panstamp.impl.GatewayImpl;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;
 import me.legrange.swap.tcp.TcpModem;
