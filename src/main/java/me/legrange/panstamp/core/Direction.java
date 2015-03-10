@@ -6,7 +6,7 @@ package me.legrange.panstamp.core;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public enum Direction {
+enum Direction {
     IN("inp"), OUT("out");
 
     static Direction forTag(String tag) {

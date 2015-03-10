@@ -6,7 +6,7 @@
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class DeviceNotFoundException extends DefinitionException {
+final class DeviceNotFoundException extends DefinitionException {
 
     DeviceNotFoundException(String message) {
         super(message);

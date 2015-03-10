@@ -12,7 +12,7 @@ import me.legrange.panstamp.Register;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class MemoryStore implements DeviceStateStore {
+final class MemoryStore implements DeviceStateStore {
 
     public MemoryStore() {
     }

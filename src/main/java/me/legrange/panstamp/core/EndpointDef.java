@@ -9,7 +9,7 @@ import java.util.List;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class EndpointDef {
+class EndpointDef {
     
     /** Get the register definition to which this endpoint definition applies. 
      * 

@@ -6,7 +6,7 @@ package me.legrange.panstamp.core;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class NoSuchUnitException extends MoteException {
+class NoSuchUnitException extends MoteException {
 
     public NoSuchUnitException(String msg) {
         super(msg);

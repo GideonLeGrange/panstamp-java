@@ -6,7 +6,7 @@ package me.legrange.panstamp.core;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class ParseException extends DefinitionException {
+class ParseException extends DefinitionException {
 
     public ParseException(String message) {
         super(message);

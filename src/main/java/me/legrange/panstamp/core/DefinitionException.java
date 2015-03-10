@@ -8,7 +8,7 @@ import me.legrange.panstamp.GatewayException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public abstract class DefinitionException extends GatewayException {
+abstract class DefinitionException extends GatewayException {
 
     public DefinitionException(String message) {
         super(message);

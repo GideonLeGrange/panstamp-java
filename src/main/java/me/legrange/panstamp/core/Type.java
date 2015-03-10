@@ -6,7 +6,7 @@ package me.legrange.panstamp.core;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public enum Type {
+enum Type {
     BINARY("bin"), NUMBER("num"), STRING("str"), INTEGER("int");
 
     static Type forTag(String tag) {

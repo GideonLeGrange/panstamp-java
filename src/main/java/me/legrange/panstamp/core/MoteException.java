@@ -8,7 +8,7 @@ import me.legrange.panstamp.GatewayException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class MoteException extends GatewayException {
+class MoteException extends GatewayException {
 
     public MoteException(String msg) {
         super(msg);

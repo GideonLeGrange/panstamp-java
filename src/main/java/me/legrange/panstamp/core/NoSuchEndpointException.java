@@ -6,7 +6,7 @@ package me.legrange.panstamp.core;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class NoSuchEndpointException extends DefinitionException {
+class NoSuchEndpointException extends DefinitionException {
 
    public NoSuchEndpointException(String message) {
         super(message);
