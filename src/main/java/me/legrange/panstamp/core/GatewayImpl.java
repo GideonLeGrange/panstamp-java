@@ -12,15 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.DeviceStateStore;
-import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.StandardEndpoint;
-import me.legrange.panstamp.StandardRegister;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -291,12 +288,10 @@ public final class GatewayImpl implements Gateway {
                 try {
                     PanStampImpl dev = new PanStampImpl(this, address);
                     addDevice(dev);
-                    for (StandardEndpoint sep : StandardEndpoint.ALL) {
-                        if (store.hasEndpointValue(address, sep)) {
-                            Endpoint ep = dev.getRegister(sep.getRegister().getId()).getEndpoint(sep.getName());
-                            if (!ep.hasValue()) {
-                                ep.setValue(store.getEndpointValue(address, sep));
-                            }
+                    for (StandardRegister sr : StandardRegister.ALL) {
+                        Register reg = dev.getRegister(sr.getId());
+                        if (!reg.hasValue()) {
+                            reg.setValue(store.getRegisterValue(reg));
                         }
                     }
                 } catch (NoSuchUnitException ex) {
@@ -317,9 +312,7 @@ public final class GatewayImpl implements Gateway {
             if (msg.isStandardRegister()) {
                 StandardRegister sr = StandardRegister.forId(msg.getRegisterID());
                 Register reg = dev.getRegister(msg.getRegisterID());
-                for (EndpointDef ed : sr.getEndpoints()) {
-                    store.setEndpointValue(dev.getAddress(), (StandardEndpoint)ed, (Integer)(reg.getEndpoint(((StandardEndpoint)ed).getName()).getValue()));
-                }
+                store.setRegisterValue(reg, reg.getValue());
             }
         } catch (GatewayException ex) {
             java.util.logging.Logger.getLogger(GatewayImpl.class.getName()).log(Level.SEVERE, null, ex);

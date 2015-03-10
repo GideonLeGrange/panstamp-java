@@ -1,4 +1,4 @@
-package me.legrange.panstamp;
+package me.legrange.panstamp.core;
 
 import java.util.HashMap;
 import java.util.Map;

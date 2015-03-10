@@ -1,5 +1,6 @@
-package me.legrange.panstamp;
+package me.legrange.panstamp.core;
 
+import me.legrange.panstamp.core.StandardEndpoint;
 import me.legrange.panstamp.core.RegisterDef;
 
 /**

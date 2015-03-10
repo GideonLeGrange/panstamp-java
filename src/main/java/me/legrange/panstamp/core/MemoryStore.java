@@ -3,7 +3,7 @@ package me.legrange.panstamp.core;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import me.legrange.panstamp.DeviceStateStore;
-import me.legrange.panstamp.StandardEndpoint;
+import me.legrange.panstamp.Register;
 
 /**
  * An implementation of DeviceStateStore that keeps whatever is learned in
@@ -18,22 +18,22 @@ public final class MemoryStore implements DeviceStateStore {
     }
 
     @Override
-    public boolean hasEndpointValue(int address, StandardEndpoint ep) {
-        return mapForAddress(address).get(ep) != null;
+    public boolean hasRegisterValue(Register reg) {
+        return mapForAddress(reg.getDevice().getAddress()).get(reg.getId()) != null;
     }
 
     @Override
-    public int getEndpointValue(int address, StandardEndpoint ep) {
-        return mapForAddress(address).get(ep);
+    public byte[] getRegisterValue(Register reg) {
+        return mapForAddress(reg.getDevice().getAddress()).get(reg.getId());
     }
 
     @Override
-    public void setEndpointValue(int address, StandardEndpoint ep, int value) {
-        mapForAddress(address).put(ep, value);
+    public void setRegisterValue(Register reg, byte value[]) {
+         mapForAddress(reg.getDevice().getAddress()).put(reg.getId(), value);
     }
-
-    private Map<StandardEndpoint, Integer> mapForAddress(int address) {
-        Map<StandardEndpoint, Integer> map = cache.get(address);
+    
+    private Map<Integer, byte[]> mapForAddress(int address) {
+        Map<Integer, byte[]> map = cache.get(address);
         if (map == null) {
             map = new ConcurrentHashMap<>();
             cache.put(address, map);
@@ -41,6 +41,6 @@ public final class MemoryStore implements DeviceStateStore {
         return map;
     }
 
-    private final Map<Integer, Map<StandardEndpoint, Integer>> cache = new ConcurrentHashMap<>();
+    private final Map<Integer, Map<Integer, byte[]>> cache = new ConcurrentHashMap<>();
 
 }

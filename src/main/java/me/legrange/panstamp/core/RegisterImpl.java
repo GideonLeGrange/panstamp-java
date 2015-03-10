@@ -13,7 +13,6 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.StandardRegister;
 
 /**
  * Abstraction of a panStamp register.

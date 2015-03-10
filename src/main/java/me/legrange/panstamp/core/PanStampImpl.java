@@ -19,8 +19,6 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.StandardEndpoint;
-import me.legrange.panstamp.StandardRegister;
 import me.legrange.swap.SwapMessage;
 
 /**
