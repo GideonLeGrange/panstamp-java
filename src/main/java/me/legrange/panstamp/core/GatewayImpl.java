@@ -291,7 +291,9 @@ public final class GatewayImpl implements Gateway {
                     for (StandardRegister sr : StandardRegister.ALL) {
                         Register reg = dev.getRegister(sr.getId());
                         if (!reg.hasValue()) {
-                            reg.setValue(store.getRegisterValue(reg));
+                            if (store.hasRegisterValue(reg)) {
+                                reg.setValue(store.getRegisterValue(reg));
+                            }
                         }
                     }
                 } catch (NoSuchUnitException ex) {

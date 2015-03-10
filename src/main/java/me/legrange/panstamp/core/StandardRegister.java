@@ -1,8 +1,5 @@
 package me.legrange.panstamp.core;
 
-import me.legrange.panstamp.core.StandardEndpoint;
-import me.legrange.panstamp.core.RegisterDef;
-
 /**
  * This class provides register definitions for the standard SWAP registers to they can 
  * be used in the same way as other registers and endpoints. 
@@ -10,7 +7,7 @@ import me.legrange.panstamp.core.RegisterDef;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class StandardRegister extends RegisterDef {
+final class StandardRegister extends RegisterDef {
 
     public static final StandardRegister PRODUCT_CODE = new StandardRegister(0, "Product code");
     public static final StandardRegister HARDWARE_VERSION = new StandardRegister(1, "Hardware version");

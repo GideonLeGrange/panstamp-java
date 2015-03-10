@@ -2,11 +2,6 @@ package me.legrange.panstamp.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import me.legrange.panstamp.core.Direction;
-import me.legrange.panstamp.core.EndpointDef;
-import me.legrange.panstamp.core.Position;
-import me.legrange.panstamp.core.Size;
-import me.legrange.panstamp.core.Type;
 
 /**
  * This class provides endpoint definitions for the standard SWAP registers to they can 
@@ -15,7 +10,7 @@ import me.legrange.panstamp.core.Type;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class StandardEndpoint extends EndpointDef {
+final class StandardEndpoint extends EndpointDef {
     private static final Map<String, StandardEndpoint> nameMap = new HashMap<>();
 
     public static final StandardEndpoint MANUFACTURER_ID = new StandardEndpoint(StandardRegister.PRODUCT_CODE, "Manufacturer Id", Direction.IN, Type.INTEGER);
