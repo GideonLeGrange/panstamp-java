@@ -117,28 +117,23 @@ public interface PanStamp {
      *
      * @return the register for the given id
      * @param id ID of register to return
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
-     * problem retrieving the register.
      */
-    Register getRegister(int id); //throws GatewayException;
+    Register getRegister(int id);
 
     /**
      * Determine if the device has a register with the given ID.
      *
      * @param id The id of the register required.
      * @return True if the panStamp has the register.
-     * @throws GatewayException
      */
-    boolean hasRegister(int id) throws GatewayException;
+    boolean hasRegister(int id);
 
     /**
      * Get the list of registers defined for this device
      *
      * @return The list of registers.
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
-     * problem with the list of register.
      */
-    List<Register> getRegisters() throws GatewayException;
+    List<Register> getRegisters();
 
     /**
      * add an event listener

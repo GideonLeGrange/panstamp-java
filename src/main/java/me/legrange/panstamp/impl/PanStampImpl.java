@@ -147,7 +147,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     @Override
-    public List<Register> getRegisters() throws GatewayException {
+    public List<Register> getRegisters() {
         List<Register> all = new ArrayList<>();
         all.addAll(registers.values());
         Collections.sort(all, new Comparator() {
@@ -161,7 +161,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     @Override
-    public boolean hasRegister(int id) throws GatewayException {
+    public boolean hasRegister(int id) {
         return registers.get(id) != null;
     }
 
