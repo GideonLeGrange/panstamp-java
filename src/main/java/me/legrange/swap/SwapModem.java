@@ -7,7 +7,7 @@ package me.legrange.swap;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public interface SWAPModem {
+public interface SwapModem {
 
     /** Type of SWAP modem. Currently only serial and TCP_IP are supported, and it's unlikely to change. */
     public enum Type {
@@ -17,16 +17,16 @@ public interface SWAPModem {
     
     /** 
      * connect to the modem. 
-     * @throws me.legrange.swap.SWAPException Thrown if there is a problem opening the modem.
+     * @throws me.legrange.swap.SwapException Thrown if there is a problem opening the modem.
      */
-    void open() throws SWAPException;
+    void open() throws SwapException;
 
     /**
      * disconnect and close the modem
      *
-     * @throws me.legrange.swap.SWAPException
+     * @throws me.legrange.swap.SwapException
      */
-    void close() throws SWAPException;
+    void close() throws SwapException;
     
     /** 
      * Check if the modem is open (connected to it's implementation device) 
@@ -39,9 +39,9 @@ public interface SWAPModem {
      * send a message out onto the network
      *
      * @param msg Message to send.
-     * @throws me.legrange.swap.SWAPException
+     * @throws me.legrange.swap.SwapException
      */
-    void send(SwapMessage msg) throws SWAPException;
+    void send(SwapMessage msg) throws SwapException;
 
     /**
      * add a message listener to receive messages
@@ -61,19 +61,19 @@ public interface SWAPModem {
      * get the network setup
      *
      * @return The setup data
-     * @throws me.legrange.swap.SWAPException Thrown if there is a problem
+     * @throws me.legrange.swap.SwapException Thrown if there is a problem
      * retrieving the setup
      */
-    ModemSetup getSetup() throws SWAPException;
+    ModemSetup getSetup() throws SwapException;
 
     /**
      * set the network setup
      *
      * @param setup The modem setup to apply
-     * @throws me.legrange.swap.SWAPException Thrown if there is a problem
+     * @throws me.legrange.swap.SwapException Thrown if there is a problem
      * applying the setup
      */
-    void setSetup(ModemSetup setup) throws SWAPException;
+    void setSetup(ModemSetup setup) throws SwapException;
 
     /**
      * determine the type of virtual modem

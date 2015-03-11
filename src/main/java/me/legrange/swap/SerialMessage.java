@@ -1,6 +1,4 @@
-package me.legrange.swap.serial;
-
-import me.legrange.swap.*;
+package me.legrange.swap;
 
 /**
  * A SWAP message received from the serial modem.

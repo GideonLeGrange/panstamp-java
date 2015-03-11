@@ -1,6 +1,4 @@
-package me.legrange.swap.serial;
-
-import me.legrange.swap.SWAPException;
+package me.legrange.swap;
 
 /**
  * Thrown when there is a Serial IO error
@@ -8,7 +6,7 @@ import me.legrange.swap.SWAPException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class SerialException extends SWAPException {
+public class SerialException extends SwapException {
 
     SerialException(String msg) {
         super(msg);

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import me.legrange.swap.DecodingException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SwapMessage;
-import me.legrange.swap.serial.SerialMessage;
+import me.legrange.swap.SerialMessage;
 
 /**
  * A TCP transport that serializes and de-serializes certain data used by our

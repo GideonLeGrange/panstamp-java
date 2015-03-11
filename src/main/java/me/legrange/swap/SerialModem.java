@@ -1,4 +1,4 @@
-package me.legrange.swap.serial;
+package me.legrange.swap;
 
 import me.legrange.swap.ModemSetup;
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 import me.legrange.swap.DecodingException;
 import me.legrange.swap.SwapMessage;
 import me.legrange.swap.MessageListener;
-import me.legrange.swap.SWAPException;
-import me.legrange.swap.SWAPModem;
+import me.legrange.swap.SwapException;
+import me.legrange.swap.SwapModem;
 
 /**
  * An interface providing access through the serial port to the SWAP modem.
@@ -22,7 +22,7 @@ import me.legrange.swap.SWAPModem;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class SerialModem implements SWAPModem {
+public final class SerialModem implements SwapModem {
 
     public SerialModem(String port, int baud) {
         this.port = port;
@@ -30,7 +30,7 @@ public final class SerialModem implements SWAPModem {
     }
 
     @Override
-    public void open() throws SWAPException {
+    public void open() throws SwapException {
         com = ComPort.open(port, baud);
         running = true;
         reader = new Reader();

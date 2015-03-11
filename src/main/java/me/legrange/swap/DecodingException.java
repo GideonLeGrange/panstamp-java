@@ -6,7 +6,7 @@ package me.legrange.swap;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class DecodingException extends SWAPException {
+public class DecodingException extends SwapException {
 
     public DecodingException(String msg) {
         super(msg);

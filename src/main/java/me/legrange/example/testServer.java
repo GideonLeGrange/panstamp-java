@@ -3,8 +3,8 @@ package me.legrange.example;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import me.legrange.swap.SWAPModem;
-import me.legrange.swap.serial.SerialModem;
+import me.legrange.swap.SwapModem;
+import me.legrange.swap.SerialModem;
 import me.legrange.swap.tcp.TcpServer;
 
 /**
@@ -16,7 +16,7 @@ public class testServer {
     public static final String PORT = "/dev/tty.usbserial-A800HNMV";
     
         public static void main(String...args) throws Exception {
-            SWAPModem m =  new SerialModem(PORT,38400);
+            SwapModem m =  new SerialModem(PORT,38400);
             m.open();
             TcpServer s = new TcpServer(m, 3333);
             System.out.println("Press enter to quit");

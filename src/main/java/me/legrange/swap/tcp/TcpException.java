@@ -1,6 +1,6 @@
 package me.legrange.swap.tcp;
 
-import me.legrange.swap.SWAPException;
+import me.legrange.swap.SwapException;
 
 /**
  * Thrown by the TcpModem if there is a problem.
@@ -8,7 +8,7 @@ import me.legrange.swap.SWAPException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class TcpException extends SWAPException {
+public class TcpException extends SwapException {
 
     /** Instantiate exception 
      * 

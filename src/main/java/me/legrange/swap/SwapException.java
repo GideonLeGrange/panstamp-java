@@ -6,13 +6,13 @@ package me.legrange.swap;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class SWAPException extends Exception {
+public class SwapException extends Exception {
 
-    public SWAPException(String msg) {
+    public SwapException(String msg) {
         super(msg);
     }
 
-    public SWAPException(String msg, Throwable cause) {
+    public SwapException(String msg, Throwable cause) {
         super(msg, cause);
     }
     

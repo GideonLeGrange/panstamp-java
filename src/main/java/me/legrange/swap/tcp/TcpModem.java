@@ -11,10 +11,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
-import me.legrange.swap.SWAPModem;
+import me.legrange.swap.SwapException;
+import me.legrange.swap.SwapModem;
 import me.legrange.swap.SwapMessage;
-import me.legrange.swap.serial.SerialModem;
+import me.legrange.swap.SerialModem;
 
 /**
  * A SWAP modem implementation that works over TCP.
@@ -22,7 +22,7 @@ import me.legrange.swap.serial.SerialModem;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public class TcpModem implements SWAPModem {
+public class TcpModem implements SwapModem {
 
     public TcpModem(String host, int port) {
         this.host = host;
@@ -46,7 +46,7 @@ public class TcpModem implements SWAPModem {
     }
 
     @Override
-    public void close() throws SWAPException {
+    public void close() throws SwapException {
         running = false;
         try {
             trans.close();
@@ -64,7 +64,7 @@ public class TcpModem implements SWAPModem {
     }
 
     @Override
-    public void send(SwapMessage msg) throws SWAPException {
+    public void send(SwapMessage msg) throws SwapException {
         trans.sendMessage(msg);
     }
 
@@ -79,7 +79,7 @@ public class TcpModem implements SWAPModem {
     }
 
     @Override
-    public ModemSetup getSetup() throws SWAPException {
+    public ModemSetup getSetup() throws SwapException {
         if (setup == null) {
             setup = new ModemSetup(0,0,0);            
         }
@@ -87,7 +87,7 @@ public class TcpModem implements SWAPModem {
     }
 
     @Override
-    public void setSetup(ModemSetup newSetup) throws SWAPException {
+    public void setSetup(ModemSetup newSetup) throws SwapException {
         trans.sendSetup(newSetup);
     }
 

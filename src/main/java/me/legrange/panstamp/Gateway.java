@@ -13,12 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.definition.DeviceDefinition;
 import me.legrange.swap.MessageListener;
-import me.legrange.swap.SWAPException;
-import me.legrange.swap.SWAPModem;
+import me.legrange.swap.SwapException;
+import me.legrange.swap.SwapModem;
 import me.legrange.swap.SwapMessage;
 import me.legrange.swap.UserMessage;
 import me.legrange.swap.ModemSetup;
-import me.legrange.swap.serial.SerialModem;
+import me.legrange.swap.SerialModem;
 import me.legrange.swap.tcp.TcpModem;
 
 /**
@@ -59,7 +59,7 @@ public final class Gateway {
      * @param modem
      * @return 
      */
-    public static Gateway create(SWAPModem modem) {
+    public static Gateway create(SwapModem modem) {
         return new Gateway(modem);
     }
      
@@ -83,7 +83,7 @@ public final class Gateway {
         try {
             modem.open();
             getSetup();
-        } catch (SWAPException ex) {
+        } catch (SwapException ex) {
             throw new GatewayException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
         }
     }
@@ -96,7 +96,7 @@ public final class Gateway {
     public void close() throws ModemException {
         try {
             modem.close();
-        } catch (SWAPException ex) {
+        } catch (SwapException ex) {
             throw new ModemException(ex.getMessage(), ex);
 
         } finally {
@@ -192,7 +192,7 @@ public final class Gateway {
      *
      * @return The SWAP modem supporting this gateway
      */
-    public SWAPModem getSWAPModem() {
+    public SwapModem getSWAPModem() {
         return modem;
     }
 
@@ -344,7 +344,7 @@ public final class Gateway {
      * @param modem The SWAP modem to use to connect to the panStamp wireless
      * network.
      */
-    private Gateway(SWAPModem modem) {
+    private Gateway(SwapModem modem) {
         this.modem = modem;
         this.lib = new ClassLoaderLibrary();
         this.store = new MemoryStore();
@@ -381,7 +381,7 @@ public final class Gateway {
     private void send(SwapMessage msg) throws ModemException {
         try {
             modem.send(msg);
-        } catch (SWAPException ex) {
+        } catch (SwapException ex) {
             throw new ModemException(ex.getMessage(), ex);
         }
     }
@@ -434,14 +434,14 @@ public final class Gateway {
         if (setup == null) {
             try {
                 setup = modem.getSetup();
-            } catch (SWAPException ex) {
+            } catch (SwapException ex) {
                 throw new ModemException(ex.getMessage(), ex);
             }
         }
         return setup;
     }
 
-    private final SWAPModem modem;
+    private final SwapModem modem;
     private final Receiver receiver;
     private DeviceLibrary lib;
     private DeviceStateStore store;

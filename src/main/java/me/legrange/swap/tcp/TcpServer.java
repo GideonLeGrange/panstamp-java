@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
-import me.legrange.swap.SWAPModem;
+import me.legrange.swap.SwapException;
+import me.legrange.swap.SwapModem;
 import me.legrange.swap.SwapMessage;
-import me.legrange.swap.serial.SerialException;
+import me.legrange.swap.SerialException;
 
 /**
  * A TCP server that serves SWAP comms from a modem over TCP/IP 
@@ -21,7 +21,7 @@ import me.legrange.swap.serial.SerialException;
  */
 public class TcpServer {
 
-    public TcpServer(SWAPModem sm, int port) throws TcpException {
+    public TcpServer(SwapModem sm, int port) throws TcpException {
         this.sm = sm;
         running = true;
         try {
@@ -43,7 +43,7 @@ public class TcpServer {
         }
     }
 
-    private void sendSetup(TcpTransport tt) throws SerialException, SWAPException {
+    private void sendSetup(TcpTransport tt) throws SerialException, SwapException {
         ModemSetup setup = sm.getSetup();
         tt.sendSetup(setup);
     }
@@ -66,7 +66,7 @@ public class TcpServer {
                             try {
                                 sm.send(msg);
                                 fireEvent(trans, msg);
-                            } catch (SWAPException ex) {
+                            } catch (SwapException ex) {
                                 Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
@@ -76,7 +76,7 @@ public class TcpServer {
                             try {
                                 sm.setSetup(setup);
                                 fireEvent(trans, setup);
-                            } catch (SWAPException ex) {
+                            } catch (SwapException ex) {
                                 Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
 
                             }
@@ -88,7 +88,7 @@ public class TcpServer {
                     Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SerialException ex) {
                     Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SWAPException ex) {
+                } catch (SwapException ex) {
                     Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -138,7 +138,7 @@ public class TcpServer {
 
     }
 
-    private final SWAPModem sm;
+    private final SwapModem sm;
     private final ServerSocket sock;
     private final Service service;
     private final List<TcpTransport> sessions = new CopyOnWriteArrayList<>();
