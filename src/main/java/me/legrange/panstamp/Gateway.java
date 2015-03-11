@@ -146,6 +146,10 @@ public final class Gateway {
         return res;
     }
 
+    /** Add a user-created device to the panStamp network. 
+     * 
+     * @param ps The device to add. 
+     */
     public void addDevice(final PanStamp ps) {
         devices.put(ps.getAddress(), ps);
         fireDeviceDetected(ps);
@@ -182,7 +186,6 @@ public final class Gateway {
     public void removeListener(GatewayListener l) {
         listeners.remove(l);
     }
-
 
     /**
      * return the SWAP modem to gain access to the lower layer
