@@ -11,9 +11,9 @@ import me.legrange.panstamp.definition.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class BinaryEndpoint extends AbstractEndpoint<Boolean> {
+final class BinaryEndpoint extends AbstractEndpoint<Boolean> {
 
-    public BinaryEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    BinaryEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
         super(reg, epDef);
     }
 

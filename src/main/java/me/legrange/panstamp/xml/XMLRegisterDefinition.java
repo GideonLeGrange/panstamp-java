@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import me.legrange.panstamp.definition.RegisterDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class XMLRegisterDefinition implements RegisterDefinition {
+final class XMLRegisterDefinition implements RegisterDefinition {
 
     public XMLRegisterDefinition(int id, String name) {
         this.id = id;

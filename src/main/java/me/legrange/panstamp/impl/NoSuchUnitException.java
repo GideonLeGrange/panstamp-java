@@ -8,11 +8,11 @@ package me.legrange.panstamp.impl;
  */
 class NoSuchUnitException extends MoteException {
 
-    public NoSuchUnitException(String msg) {
+    NoSuchUnitException(String msg) {
         super(msg);
     }
 
-    public NoSuchUnitException(String msg, Throwable cause) {
+    NoSuchUnitException(String msg, Throwable cause) {
         super(msg, cause);
     }
     

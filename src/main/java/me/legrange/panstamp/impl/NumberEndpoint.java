@@ -11,9 +11,9 @@ import me.legrange.panstamp.definition.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class NumberEndpoint extends AbstractEndpoint<Double> {
+final class NumberEndpoint extends AbstractEndpoint<Double> {
 
-    public NumberEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    NumberEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
         super(reg, epDef); 
     }
 

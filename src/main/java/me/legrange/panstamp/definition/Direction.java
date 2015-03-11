@@ -1,6 +1,5 @@
 package me.legrange.panstamp.definition;
 
-
 /**
  * Data flow direction defined.  
  *

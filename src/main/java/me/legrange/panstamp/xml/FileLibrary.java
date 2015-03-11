@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,14 +13,14 @@ import java.util.logging.Logger;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class FileLibrary extends AbstractDeviceLibrary {
+public final class FileLibrary extends XMLDeviceLibrary {
 
     public FileLibrary(File dir) {
         this.dir = dir;
     }
 
     @Override
-    public InputStream getStream(String path) {
+    InputStream getStream(String path) {
         try {
             return new FileInputStream(dir.getAbsolutePath() + "/" + path);
         } catch (FileNotFoundException ex) {

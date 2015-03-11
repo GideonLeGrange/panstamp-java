@@ -1,5 +1,7 @@
 package me.legrange.panstamp.impl;
 
+import me.legrange.panstamp.definition.DefinitionException;
+
 /**
  * Thrown if an endpoint cannot be found. 
  * 
@@ -8,7 +10,7 @@ package me.legrange.panstamp.impl;
  */
 class NoSuchEndpointException extends DefinitionException {
 
-   public NoSuchEndpointException(String message) {
+   NoSuchEndpointException(String message) {
         super(message);
     }
 

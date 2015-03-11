@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import java.io.InputStream;
 
@@ -8,10 +8,10 @@ import java.io.InputStream;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class ClassLoaderLibrary extends AbstractDeviceLibrary {
+public final class ClassLoaderLibrary extends XMLDeviceLibrary {
 
     @Override
-    public InputStream getStream(String path) {
+    InputStream getStream(String path) {
         return getClass().getClassLoader().getResourceAsStream(base + "/" + path);
     }
 

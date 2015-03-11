@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
- class XMLParser {
+ final class XMLParser {
 
      /** Parse all XML definitions in the supplied library and return a list definitions. 
       * 
@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
       * @return The list of parsed definitions.
       * @throws ParseException Thrown if there is a problem parsing the defintions. 
       */
-    public static List<XMLDeviceDefinition> parse(AbstractDeviceLibrary lib) throws ParseException {
+    public static List<XMLDeviceDefinition> parse(XMLDeviceLibrary lib) throws ParseException {
         XMLParser parser = new XMLParser(lib);
         return parser.parseDevices();
     }
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
     /**
      * create a new parser
      */
-    private XMLParser(AbstractDeviceLibrary lib) {
+    private XMLParser(XMLDeviceLibrary lib) {
         this.lib = lib;
     }
 
@@ -448,6 +448,6 @@ import org.xml.sax.SAXException;
         return els;
     }
 
-    private final AbstractDeviceLibrary lib;
+    private final XMLDeviceLibrary lib;
     private final static Logger log = Logger.getLogger(XMLParser.class.getName());
 }

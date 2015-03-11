@@ -1,5 +1,6 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.definition;
 
+import me.legrange.panstamp.DeviceNotFoundException;
 import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.GatewayException;
 
@@ -31,7 +32,7 @@ public final class CompoundDeviceLibrary implements DeviceLibrary {
     }
 
     @Override
-    public XMLDeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
         for (DeviceLibrary lib : sources) {
             if (lib.hasDeviceDefinition(manufacturedID, productId)) {
                 return lib.getDeviceDefinition(manufacturedID, productId);

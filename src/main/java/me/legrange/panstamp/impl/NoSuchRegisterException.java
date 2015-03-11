@@ -8,11 +8,11 @@ package me.legrange.panstamp.impl;
  */
 class NoSuchRegisterException extends MoteException {
 
-    public NoSuchRegisterException(String msg) {
+    NoSuchRegisterException(String msg) {
         super(msg);
     }
 
-    public NoSuchRegisterException(String msg, Throwable cause) {
+    NoSuchRegisterException(String msg, Throwable cause) {
         super(msg, cause);
     }
     

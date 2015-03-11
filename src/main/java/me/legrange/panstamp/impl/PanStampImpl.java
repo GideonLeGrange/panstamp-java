@@ -19,6 +19,7 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
+import me.legrange.panstamp.definition.DeviceDefinition;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.ParameterDefinition;
 import me.legrange.panstamp.definition.RegisterDefinition;
@@ -182,7 +183,7 @@ public class PanStampImpl implements PanStamp {
         registers.clear();
     }
 
-    XMLDeviceDefinition getDefinition() {
+    DeviceDefinition getDefinition() {
         return def;
     }
 
@@ -425,7 +426,7 @@ public class PanStampImpl implements PanStamp {
     }
 
     private final int address;
-    private XMLDeviceDefinition def;
+    private DeviceDefinition def;
     private final GatewayImpl gw;
     private int manufacturerId;
     private int productId;

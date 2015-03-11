@@ -10,9 +10,9 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class BinaryParameter extends AbstractParameter<Boolean> {
+final class BinaryParameter extends AbstractParameter<Boolean> {
 
-    public BinaryParameter(RegisterImpl reg, ParameterDefinition par) {
+    BinaryParameter(RegisterImpl reg, ParameterDefinition par) {
         super(reg, par);
     }
 

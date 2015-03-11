@@ -12,7 +12,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  */
 final class StringParameter extends AbstractParameter<String> {
 
-    public StringParameter(RegisterImpl reg, ParameterDefinition epDef) {
+    StringParameter(RegisterImpl reg, ParameterDefinition epDef) {
         super(reg, epDef);
         
     }

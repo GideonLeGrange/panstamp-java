@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.DeviceNotFoundException;
+import me.legrange.panstamp.definition.DeviceDefinition;
 
 /**
  * A device library implementation is used to find and load panStamp XML device
@@ -14,7 +16,7 @@ import me.legrange.panstamp.GatewayException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-abstract class AbstractDeviceLibrary implements DeviceLibrary {
+abstract class XMLDeviceLibrary implements DeviceLibrary {
 
     @Override
     public boolean hasDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
@@ -22,7 +24,7 @@ abstract class AbstractDeviceLibrary implements DeviceLibrary {
     }
 
     @Override
-    public XMLDeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
         XMLDeviceDefinition def = getDefinition(manufacturedID, productId);
         if (def == null) {
             throw new DeviceNotFoundException(String.format("Could not find device definition for manufacturer/product %d/%d", manufacturedID, productId));
@@ -38,7 +40,7 @@ abstract class AbstractDeviceLibrary implements DeviceLibrary {
      * @return An input stream for the XML file, or null if it could not be
      * found.
      */
-    protected abstract InputStream getStream(String path);
+    abstract InputStream getStream(String path);
 
     private synchronized XMLDeviceDefinition getDefinition(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
         if (devices == null) {

@@ -10,11 +10,11 @@ import me.legrange.panstamp.GatewayException;
  */
 class MoteException extends GatewayException {
 
-    public MoteException(String msg) {
+    MoteException(String msg) {
         super(msg);
     }
 
-    public MoteException(String msg, Throwable cause) {
+    MoteException(String msg, Throwable cause) {
         super(msg, cause);
     }
     

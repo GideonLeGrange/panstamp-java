@@ -10,9 +10,9 @@ import me.legrange.panstamp.definition.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class IntegerEndpoint extends AbstractEndpoint<Integer> {
+final class IntegerEndpoint extends AbstractEndpoint<Integer> {
 
-    public IntegerEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    IntegerEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
         super(reg, epDef);
     }
 

@@ -13,6 +13,7 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
+import me.legrange.panstamp.definition.DeviceDefinition;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.ParameterDefinition;
 
@@ -21,7 +22,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  *
  * @author gideon
  */
-public final class RegisterImpl implements Register {
+final class RegisterImpl implements Register {
 
     @Override
     public int getId() {
@@ -30,7 +31,7 @@ public final class RegisterImpl implements Register {
 
     @Override
     public String getName() {
-        XMLDeviceDefinition def = dev.getDefinition();
+        DeviceDefinition def = dev.getDefinition();
         if (def != null) {
             if (def.hasRegister(id)) {
                 return def.getRegister(id).getName();
@@ -154,13 +155,13 @@ public final class RegisterImpl implements Register {
 
     }
 
-    void addEndpoint(EndpointDefinition def) throws NoSuchUnitException {
+    void addEndpoint(EndpointDefinition def) {
         AbstractEndpoint ep = makeEndpoint(def);
         endpoints.put(def.getName(), ep);
         fireEndpointAdded(ep);
     }
 
-    void addParameter(ParameterDefinition def) throws NoSuchUnitException {
+    void addParameter(ParameterDefinition def) {
         AbstractParameter par = makeParameter(def);
         parameters.put(def.getName(), par);
         fireParameterAdded(par);
@@ -252,7 +253,7 @@ public final class RegisterImpl implements Register {
     /**
      * make an endpoint object based on it's definition
      */
-    private AbstractEndpoint makeEndpoint(EndpointDefinition epDef) throws NoSuchUnitException {
+    private AbstractEndpoint makeEndpoint(EndpointDefinition epDef) {
         switch (epDef.getType()) {
             case NUMBER:
                 return new NumberEndpoint(this, epDef);
@@ -263,14 +264,14 @@ public final class RegisterImpl implements Register {
             case INTEGER:
                 return new IntegerEndpoint(this, epDef);
             default:
-                throw new NoSuchUnitException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
+                throw new RuntimeException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
     }
 
     /**
      * make a parameter object based on it's definition
      */
-    private AbstractParameter makeParameter(ParameterDefinition def) throws NoSuchUnitException {
+    private AbstractParameter makeParameter(ParameterDefinition def) {
         switch (def.getType()) {
             case NUMBER:
                 return new NumberParameter(this, def);
@@ -281,7 +282,7 @@ public final class RegisterImpl implements Register {
             case INTEGER:
                 return new IntegerParameter(this, def);
             default:
-                throw new NoSuchUnitException(String.format("Unknown parameter type '%s'. BUG!", def.getType()));
+                throw new RuntimeException(String.format("Unknown parameter type '%s'. BUG!", def.getType()));
         }
     }
 

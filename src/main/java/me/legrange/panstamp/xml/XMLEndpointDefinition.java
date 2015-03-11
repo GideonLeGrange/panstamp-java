@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +15,7 @@ import me.legrange.panstamp.definition.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class XMLEndpointDefinition implements EndpointDefinition {
+final class XMLEndpointDefinition implements EndpointDefinition {
 
     @Override
     public XMLRegisterDefinition getRegister() {

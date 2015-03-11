@@ -1,5 +1,6 @@
 package me.legrange.panstamp.impl;
 
+import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,6 +19,7 @@ import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.NodeNotFoundException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.definition.DeviceDefinition;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -234,7 +236,7 @@ public final class GatewayImpl implements Gateway {
         send(msg);
     }
 
-    XMLDeviceDefinition getDeviceDefinition(int manId, int prodId) throws GatewayException {
+    DeviceDefinition getDeviceDefinition(int manId, int prodId) throws GatewayException {
         return lib.getDeviceDefinition(manId, prodId);
     }
 

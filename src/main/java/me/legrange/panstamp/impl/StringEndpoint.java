@@ -13,7 +13,7 @@ import me.legrange.panstamp.definition.Unit;
  */
 final class StringEndpoint extends AbstractEndpoint<String> {
 
-    public StringEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    StringEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
         super(reg, epDef);
         
     }

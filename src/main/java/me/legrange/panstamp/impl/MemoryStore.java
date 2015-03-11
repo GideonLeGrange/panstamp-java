@@ -7,14 +7,14 @@ import me.legrange.panstamp.Register;
 
 /**
  * An implementation of DeviceStateStore that keeps whatever is learned in
- * memory
+ * memory. Used as default implementation.
  *
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 final class MemoryStore implements DeviceStateStore {
 
-    public MemoryStore() {
+    MemoryStore() {
     }
 
     @Override

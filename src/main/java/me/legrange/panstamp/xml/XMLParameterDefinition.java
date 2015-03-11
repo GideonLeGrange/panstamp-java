@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp.xml;
 
 import me.legrange.panstamp.definition.ParameterDefinition;
 import me.legrange.panstamp.definition.Position;

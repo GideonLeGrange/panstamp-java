@@ -10,9 +10,9 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class IntegerParameter extends AbstractParameter<Integer> {
+final class IntegerParameter extends AbstractParameter<Integer> {
 
-    public IntegerParameter(RegisterImpl reg, ParameterDefinition par) {
+    IntegerParameter(RegisterImpl reg, ParameterDefinition par) {
         super(reg, par);
     }
 

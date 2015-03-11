@@ -10,7 +10,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class NumberParameter extends AbstractParameter<Double> {
+final class NumberParameter extends AbstractParameter<Double> {
 
     @Override
     public Double getValue() throws GatewayException {
