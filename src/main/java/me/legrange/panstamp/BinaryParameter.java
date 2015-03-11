@@ -1,6 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.definition.ParameterDefinition;
 
 /**
@@ -12,7 +11,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  */
 final class BinaryParameter extends AbstractParameter<Boolean> {
 
-    BinaryParameter(RegisterImpl reg, ParameterDefinition par) {
+    BinaryParameter(Register reg, ParameterDefinition par) {
         super(reg, par);
     }
 

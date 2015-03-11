@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
 import java.util.Collections;
 import me.legrange.panstamp.definition.EndpointDefinition;

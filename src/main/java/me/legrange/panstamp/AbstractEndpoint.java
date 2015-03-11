@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
 import me.legrange.panstamp.event.AbstractRegisterListener;
 import java.util.LinkedList;
@@ -7,11 +7,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointListener;
-import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.Unit;
 
@@ -102,7 +97,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
         throw new NoSuchUnitException(String.format("No unit '%s' found in endpoint '%s'", name, getName()));
     }
 
-    protected AbstractEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    protected AbstractEndpoint(Register reg, EndpointDefinition epDef) {
         this.reg = reg;
         this.epDef = epDef;
         this.listeners = new CopyOnWriteArrayList<>();
@@ -120,7 +115,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
         return reg.getPool();
     }
 
-    protected final RegisterImpl reg;
+    protected final Register reg;
     protected final EndpointDefinition epDef;
     private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
 

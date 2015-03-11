@@ -1,6 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.Unit;
 
@@ -13,7 +12,7 @@ import me.legrange.panstamp.definition.Unit;
  */
 final class NumberEndpoint extends AbstractEndpoint<Double> {
 
-    NumberEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    NumberEndpoint(Register reg, EndpointDefinition epDef) {
         super(reg, epDef); 
     }
 

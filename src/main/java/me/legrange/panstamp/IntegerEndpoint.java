@@ -1,6 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.Unit;
 
@@ -12,7 +11,7 @@ import me.legrange.panstamp.definition.Unit;
  */
 final class IntegerEndpoint extends AbstractEndpoint<Integer> {
 
-    IntegerEndpoint(RegisterImpl reg, EndpointDefinition epDef) {
+    IntegerEndpoint(Register reg, EndpointDefinition epDef) {
         super(reg, epDef);
     }
 

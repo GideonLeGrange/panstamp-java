@@ -1,6 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.definition.ParameterDefinition;
 
 /**
@@ -39,7 +38,7 @@ final class NumberParameter extends AbstractParameter<Double> {
         return Type.NUMBER;
     }
 
-    NumberParameter(RegisterImpl reg, ParameterDefinition par) {
+    NumberParameter(Register reg, ParameterDefinition par) {
         super(reg, par);
     }
 

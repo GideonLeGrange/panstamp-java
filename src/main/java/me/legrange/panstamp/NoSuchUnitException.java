@@ -1,4 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
+
 
 /**
  * Thrown when an endpoint is accessed with a unit that is not known.

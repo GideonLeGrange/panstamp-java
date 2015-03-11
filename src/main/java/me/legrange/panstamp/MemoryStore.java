@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

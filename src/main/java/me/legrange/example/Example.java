@@ -2,7 +2,6 @@ package me.legrange.example;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.Factory;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
@@ -29,7 +28,7 @@ public abstract class Example implements GatewayListener {
     
     protected void connect() throws GatewayException {
         say("Opening gateway on %s:%d", PORT, BAUD);
-         gw = Factory.createSerial(PORT, BAUD);
+         gw = Gateway.createSerial(PORT, BAUD);
          gw.open();
     }
     

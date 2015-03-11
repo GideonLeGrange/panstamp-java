@@ -1,4 +1,4 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
 /**
  * Thrown by a panStamp device if a register that is requested cannot be found. 

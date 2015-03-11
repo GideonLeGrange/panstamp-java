@@ -1,6 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.definition.ParameterDefinition;
 
 /**
@@ -12,7 +11,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  */
 final class StringParameter extends AbstractParameter<String> {
 
-    StringParameter(RegisterImpl reg, ParameterDefinition epDef) {
+    StringParameter(Register reg, ParameterDefinition epDef) {
         super(reg, epDef);
         
     }

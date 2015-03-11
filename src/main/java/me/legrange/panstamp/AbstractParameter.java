@@ -1,7 +1,5 @@
-package me.legrange.panstamp.impl;
+package me.legrange.panstamp;
 
-import me.legrange.panstamp.Parameter;
-import me.legrange.panstamp.Register;
 import me.legrange.panstamp.definition.ParameterDefinition;
 
 /**
@@ -38,13 +36,13 @@ abstract class AbstractParameter<T> implements Parameter<T> {
         return pat;
     }
 
-    AbstractParameter(RegisterImpl reg, ParameterDefinition par) {
+    AbstractParameter(Register reg, ParameterDefinition par) {
         this.reg = reg;
         this.par = par;
 
     }
 
-    protected final RegisterImpl reg;
+    protected final Register reg;
     protected final ParameterDefinition par;
 
 }
