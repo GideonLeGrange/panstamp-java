@@ -6,4 +6,4 @@
 
  * @since 1.0
  */
-package me.legrange.panstamp.xml;
+package me.legrange.swap;
