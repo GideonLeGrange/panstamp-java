@@ -1,8 +1,8 @@
 /**
- * The default XML implementation of the device definitions.
+ * An implementation of the SWAP protocol, including an interface to the serial SWAP modem. 
  * <p>
- * 
- * @see me.legrange.panstamp.definition
+ *
+ * @see me.legrange.swap
 
  * @since 1.0
  */
