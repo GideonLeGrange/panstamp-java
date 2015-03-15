@@ -95,6 +95,7 @@ public class SerialMessage implements SwapMessage {
         else {
             text = "0000" + text;
         }
+        System.out.printf("recv: %s\n", text);
         // convert the hex data to ints and pack it in an array
         int data[] = new int[text.length() / 2];
         for (int i = 0; i < text.length(); i = i + 2) {
