@@ -23,7 +23,7 @@ final class NumberEndpoint extends AbstractEndpoint<Double> {
     
     @Override
     public Double getValue() throws GatewayException {
-        byte bytes[] = reg.getValue();//ps.getRegister(epDef.getRegister().getId()).getValue();
+        byte bytes[] = reg.getValue();
         long val = 0;
         for (int i = 0; i < epDef.getSize().getBytes(); ++i) {
             val = val << 8;

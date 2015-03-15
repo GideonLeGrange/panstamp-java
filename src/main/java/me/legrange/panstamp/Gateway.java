@@ -56,8 +56,8 @@ public final class Gateway {
     
     /** Create a new gateway with the given pre-existing SWAP modem. 
      * 
-     * @param modem
-     * @return 
+     * @param modem The SWAP modem to use in the gateway.
+     * @return The newly created gateway.
      */
     public static Gateway create(SwapModem modem) {
         return new Gateway(modem);
@@ -91,7 +91,7 @@ public final class Gateway {
      /**
      * Disconnect the connection and close the gateway
      *
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws me.legrange.panstamp.ModemException Thrown if there is a problem closing the modem supporting the gateway.
      */
     public void close() throws ModemException {
         try {
@@ -123,7 +123,7 @@ public final class Gateway {
      *
      * @param address Address of device to fins
      * @return The device
-     * @throws me.legrange.panstamp.NodeNotFoundException
+     * @throws me.legrange.panstamp.NodeNotFoundException Thrown if the device with the given address cannot be found. 
      */
     public PanStamp getDevice(int address) throws NodeNotFoundException {
         synchronized (devices) {
@@ -233,8 +233,7 @@ public final class Gateway {
      * return the network ID for the network supported by this gateway
      *
      * @return The network ID
-     * @throws me.legrange.panstamp.core.ModemException Thrown if there is a
-     * problem determining the network ID
+     * @throws me.legrange.panstamp.ModemException Thrown if there is problem determining the network ID
      */
     public int getNetworkId() throws ModemException {
         return getSetup().getNetworkID();
@@ -245,7 +244,7 @@ public final class Gateway {
      * Get the frequency channel
      *
      * @return The channel
-     * @throws me.legrange.panstamp.core.ModemException
+     * @throws me.legrange.panstamp.ModemException Thrown if the channel could not be determined. 
      */
     public int getChannel() throws ModemException {
         return getSetup().getChannel();
@@ -254,7 +253,7 @@ public final class Gateway {
      * get the gateway panStamp's address
      *
      * @return the gateway address
-     * @throws me.legrange.panstamp.core.ModemException
+     * @throws me.legrange.panstamp.ModemException Thrown if the device address could not be determined. 
      */
     public int getDeviceAddress() throws ModemException {
         return getSetup().getDeviceAddress();
@@ -263,8 +262,7 @@ public final class Gateway {
      /**
      * Get the security option
      *
-     * @return the security option value.
-     * @throws me.legrange.panstamp.core.ModemException
+     * @return the security option value. 
      */
     public int getSecurityOption() {
         return 0; // FIX ME
@@ -282,8 +280,8 @@ public final class Gateway {
 
     /** 
      * Set the device address for the gateway panStamp 
-     * @param addr
-     * @throws GatewayException 
+     * @param addr Address to set for the modem device. 
+     * @throws GatewayException Thrown if there is a problem setting the modem device address 
      */
     public void setDeviceAddress(int addr) throws GatewayException {
         getSetup().setDeviceAddress(addr);
@@ -293,7 +291,7 @@ public final class Gateway {
      * Set the frequency channel 
      * 
      * @param channel The channel to use. 
-     * @throws GatewayException 
+     * @throws GatewayException Thrown if there is an error setting the channel.
      */
     public void setChannel(int channel) throws GatewayException {
         getSetup().setChannel(channel);
@@ -303,10 +301,9 @@ public final class Gateway {
     /** 
      * Set the security option 
      * 
-     * @param secOpt
-     * @throws GatewayException 
+     * @param secOpt Security option to use. 
      */
-    public void setSecurityOption(int secOpt) throws GatewayException {
+    public void setSecurityOption(int secOpt)  {
         // FIX ME
     }
 

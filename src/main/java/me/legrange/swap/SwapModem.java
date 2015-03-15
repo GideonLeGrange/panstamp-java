@@ -24,7 +24,7 @@ public interface SwapModem {
     /**
      * disconnect and close the modem
      *
-     * @throws me.legrange.swap.SwapException
+     * @throws me.legrange.swap.SwapException Thrown if there is a problem closing the modem. 
      */
     void close() throws SwapException;
     
@@ -39,7 +39,7 @@ public interface SwapModem {
      * send a message out onto the network
      *
      * @param msg Message to send.
-     * @throws me.legrange.swap.SwapException
+     * @throws me.legrange.swap.SwapException Thrown if there a a problem sending a message to the modem. 
      */
     void send(SwapMessage msg) throws SwapException;
 

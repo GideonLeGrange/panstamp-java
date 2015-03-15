@@ -53,9 +53,8 @@ public final class Register {
      * return the endpoints defined for this register
      *
      * @return The endpoints
-     * @throws me.legrange.panstamp.GatewayException
      */
-    public List<Endpoint> getEndpoints() throws GatewayException {
+    public List<Endpoint> getEndpoints() {
         List<Endpoint> all = new ArrayList<>();
         all.addAll(endpoints.values());
         return all;
@@ -104,13 +103,12 @@ public final class Register {
      * get the value of the register
      *
      * @return The value of the register
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
-     * problem reading the register
+     * @throws me.legrange.panstamp.NoValueException Thrown if the register value is requested but no value is available.
      */
-    public byte[] getValue() throws GatewayException {
+    public byte[] getValue() throws NoValueException { 
         synchronized (this) {
             if (value == null) {
-                throw new NoSuchRegisterException(String.format("No value received for register %d", id));
+                throw new NoValueException(String.format("No value received for register %d", id));
             }
         }
         return value;

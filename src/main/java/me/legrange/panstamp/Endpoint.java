@@ -61,7 +61,7 @@ public interface Endpoint<T> {
      *
      * @param unit Unit in which to receive the value
      * @return The value
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem retrieving and endpoint value.
      */
     T getValue(String unit) throws GatewayException;
 
@@ -69,7 +69,7 @@ public interface Endpoint<T> {
      * returns the current value of the endpoint.
      *
      * @return The value 
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem retrieving the value 
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem retrieving and endpoint value.
      */
     T getValue() throws GatewayException;
 
@@ -78,7 +78,7 @@ public interface Endpoint<T> {
      *
      * @param unit The unit in which the value is passed.
      * @param value The value to set
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem setting the endpoint value.
      */
     void setValue(String unit, T value) throws GatewayException;
 
@@ -86,7 +86,7 @@ public interface Endpoint<T> {
      * set the value of the endpoint
      *
      * @param value The value to set
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem setting the endpoint value.
      */
     void setValue(T value) throws GatewayException;
     

@@ -40,8 +40,8 @@ public final class PanStamp {
      /**
      * Return the network channel 
      *
-     * @return The channel
-     * @throws GatewayException
+     * @return The channel 
+     * @throws GatewayException Thrown if there is a problem getting the channel value
      */
     public int getChannel() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.FREQUENCY_CHANNEL);
@@ -55,7 +55,7 @@ public final class PanStamp {
      * Return the transmit interval
      *
      * @return The interval
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws GatewayException Thrown if there is a problem getting the interval value
      */
     public int getTxInterval() throws GatewayException {
         return getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL, 0);
@@ -65,7 +65,7 @@ public final class PanStamp {
      * Return the current security option
      *
      * @return The security option
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws GatewayException Thrown if there is a problem getting the security option value
      */
     public int getSecurityOption() throws GatewayException {
         return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
@@ -75,7 +75,7 @@ public final class PanStamp {
      * Return the network ID
      *
      * @return The network ID
-     * @throws GatewayException
+     * @throws GatewayException Thrown if there is a problem getting the network ID value
      */
     public int getNetwork() throws GatewayException {
         Integer v = getIntValue(StandardEndpoint.NETWORK_ID);

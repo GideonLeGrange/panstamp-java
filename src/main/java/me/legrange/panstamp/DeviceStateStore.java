@@ -26,7 +26,6 @@ public interface DeviceStateStore {
     /** Store the register value for the register.
      * 
      * @param reg The register for which the value is to be stored. 
-     * @param ep The endpoint for which the value is stored.
      * @param value The value to be stored.
      */
     void setRegisterValue(Register reg, byte[] value);

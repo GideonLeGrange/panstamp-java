@@ -30,7 +30,7 @@ public interface Parameter<T> {
     
     /** Returns true if the parameter has a known value 
      * 
-     * @return 
+     * @return True if a value is known.
      */
     boolean hasValue();
 
@@ -51,7 +51,7 @@ public interface Parameter<T> {
      * set the value of the parameter
      *
      * @param value The value to set
-     * @throws me.legrange.panstamp.GatewayException
+     * @throws GatewayException Thrown if there is a problem setting the parameter value.
      */
     void setValue(T value) throws GatewayException;
     
