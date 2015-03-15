@@ -8,8 +8,19 @@
     <packaging>jar</packaging>
 
     <name>panStamp Device Library</name>
-    <url>http://maven.apache.org</url>
-    
+    <url>https://github.com/GideonLeGrange/panstamp-java</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>git@github.com:GideonLeGrange/panstamp-java.git</url>
+        <connection>scm:git:git@github.com:GideonLeGrange/panstamp-java.git</connection>
+        <developerConnection>scm:git:git@github.com:GideonLeGrange/panstamp-java.git</developerConnection>
+    </scm>    
     <build>
         <plugins>
             <plugin>
@@ -20,6 +31,84 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin> 
+                <groupId>org.apache.maven.plugins</groupId> 
+                <artifactId>maven-jar-plugin</artifactId> 
+                <version>2.3.2</version>
+                <executions> 
+                    <execution> 
+                        <id>default-jar</id>
+                        <phase>package</phase> 
+                        <goals> 
+                            <goal>jar</goal> 
+                        </goals> 
+                        <configuration> 
+                            <excludes> 
+                                <exclude>**/examples</exclude> 
+                                <exclude>**/examples/*</exclude> 
+                            </excludes> 
+                        </configuration> 
+                    </execution> 
+                </executions> 
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <excludePackageNames>example</excludePackageNames>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <keyname>D20D95D7</keyname>
+                        </configuration>
+                        <id>sign-artifacts</id>
+<!--                        <phase>verify</phase> -->
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.2</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype-nexus-staging</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
         </plugins>    
