@@ -311,7 +311,7 @@ public final class Gateway {
      * send a command message to a remote device
      */
     void sendCommandMessage(PanStamp dev, int register, byte[] value) throws ModemException {
-        UserMessage msg = new UserMessage(SwapMessage.Type.COMMAND, getSetup().getDeviceAddress(), dev.getAddress(), register, value);
+        UserMessage msg = new UserMessage(dev.hasExtendedAddress(), SwapMessage.Type.COMMAND, getSetup().getDeviceAddress(), dev.getAddress(), register, value);
         msg.setRegisterAddress(dev.getAddress());
         send(msg);
     }
@@ -320,7 +320,7 @@ public final class Gateway {
      * send a query message to a remote device
      */
     void sendQueryMessage(PanStamp dev, int register) throws ModemException {
-        UserMessage msg = new UserMessage(SwapMessage.Type.QUERY, 0xFF, dev.getAddress(), register, new byte[]{});
+        UserMessage msg = new UserMessage(dev.hasExtendedAddress(), SwapMessage.Type.QUERY, 0xFF, dev.getAddress(), register, new byte[]{});
         msg.setRegisterAddress(dev.getAddress());
         send(msg);
     }

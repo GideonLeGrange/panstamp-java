@@ -8,7 +8,8 @@ package me.legrange.swap;
  */
 public class UserMessage implements SwapMessage {
 
-    public UserMessage(Type type, int sender, int receiver, int registerID, byte[] registerValue) {
+    public UserMessage(boolean extended, Type type, int sender, int receiver, int registerID, byte[] registerValue) {
+        this.extended = extended;
         this.type = type;
         this.sender = sender;
         this.receiver = receiver;
@@ -100,11 +101,6 @@ public class UserMessage implements SwapMessage {
         return getText();
     }
 
-    public void setExtended(boolean extended) {
-        this.extended = extended;
-        text = null;
-    }
-
     public void setSecurity(int security) {
         this.security = security;
         text = null;
@@ -185,7 +181,7 @@ public class UserMessage implements SwapMessage {
     }
 
     private final Type type;
-    private boolean extended;
+    private final boolean extended;
     private final int sender;
     private final int receiver;
     private int security;
