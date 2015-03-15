@@ -406,7 +406,6 @@ public final class PanStamp {
     }
 
     private void fireProductCodeChange(final int manufacturerId, final int productId) {
-        System.out.printf("fireProductCodeChange(%d,%d)\n", manufacturerId, productId);
         for (final PanStampListener l : listeners) {
             getPool().submit(new Runnable() {
 

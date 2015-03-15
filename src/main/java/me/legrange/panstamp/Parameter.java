@@ -9,8 +9,13 @@ package me.legrange.panstamp;
  */
 public interface Parameter<T> {
     
-    public enum Type { NUMBER, INTEGER, STRING, BINARY; };
-  
+      /** Type of value sent and/or received by an endpoint. */
+    public enum Type { 
+        /** Numbers (represented as double values */ NUMBER, 
+        /** Integer numbers */ INTEGER, 
+        /** Text values */ STRING, 
+        /** Boolean / On-off / True-false values */ BINARY; };
+    
     /** Return the name of the parameter (as defined by XML)
      * 
      * @return The name of the parameter
