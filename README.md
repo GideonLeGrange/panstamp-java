@@ -42,6 +42,6 @@ References
 Licence
 ========
 
-This library is released under the Apache 2.0 licence. See the [Licence.md](Licence.md) file
+This library is released under the Apache 2.0 licence. See the [LICENSE.md](LICENSE.md) file
 
 
