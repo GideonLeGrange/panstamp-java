@@ -6,7 +6,7 @@ The panstamp-java library provides Java programmers the ability to write gateway
 
 PanStamps are autonomous low-power wireless modules programmable from the Arduino IDE and made for telemetry and control projects. 
 
-You can read all about them [here](http://www.panstamp.com/) and [here](https://github.com/panStamp/panstamp/wiki). There's a GitHub [repository](https://github.com/panStamp/panstamp) and a [community forum.](http://www.panstamp.org/forum/)
+You can read all about them [on their commercial site](http://www.panstamp.com/) and [their wiki](https://github.com/panStamp/panstamp/wiki). There's a GitHub [repository](https://github.com/panStamp/panstamp) and a [community forum.](http://www.panstamp.org/forum/)
 
 
 ## Versions
