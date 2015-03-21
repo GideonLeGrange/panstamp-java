@@ -1,6 +1,6 @@
 # panstamp-java
 
-The panstamp-java library provides Java programmers the ability to write gateway applications that can interface with panStamp Arduino RF networks. 
+The panstamp-java library provides Java programmers the ability to write  desktop and server applications that can interface with panStamp Arduino RF networks. 
 
 ## What are panStamps? 
 
@@ -21,7 +21,7 @@ I welcome contributions, be it bug fixes or other improvements. If you fix or ch
 
 # Getting the API
 
-I recommend using the Maven artifact from Maven Central, but you can also clone the repository, or download the source as a .zip or .tar.gz file from [Releases](https://github.com/GideonLeGrange/panstamp-java/releases)
+I recommend using the Maven artifact from Maven Central, but you can also clone the repository, or download the source as a .zip or .tar.gz file from [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
 
 ## Using Maven Central
 
