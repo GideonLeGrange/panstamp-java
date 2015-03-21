@@ -11,7 +11,7 @@ public class OpenSerial {
     
     public static void main(String...args) throws Exception {
         Gateway gw = Gateway.createSerial("/dev/ttyUSB0", 38400);
-
+        // Do things with the gateway 
         // close when done 
         gw.close();
         

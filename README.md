@@ -3,7 +3,6 @@ panstamp-java
 
 A Java library for working with panStamp Arduino devices.
 
-
 Versions
 --------
 
@@ -11,10 +10,20 @@ This library uses [semantic versioning](http://semver.org/)
 
 **The current stable version is 1.0 **
 
-Getting the API
----------------
+Contributing
+------------
 
-I recommend using the Maven artifact from Maven Central using this dependency:
+I welcome contributions, be it bug fixes or other improvements. If you fix or change something, please submit a pull request. If you want to report a bug, please open an issue. 
+
+Getting the API
+===============
+
+I recommend using the Maven artifact from Maven Central, but you can also clone the repository, or download the source as a .zip or .tar.gz file from Releases](https://github.com/GideonLeGrange/panstamp-java/releases)
+
+Using Maven Central
+-------------------
+
+Add the dependency below to your pom.xml to use the artifact from Maven Central:
 
 ```xml
 <dependency>
@@ -24,20 +33,16 @@ I recommend using the Maven artifact from Maven Central using this dependency:
 </dependency>
 ```
 
-You can also clone or fork the repository, or download the source as a zip or tar.gz from [Releases](https://github.com/GideonLeGrange/panstamp-java/releases)
+Using the API 
+=============
+These examples should illustrate how to use this library. Please note that I assume that the user is proficient in Java, and understands the panStamp ecosystem.
 
-Contributing
-------------
-
-I welcome contributions, be it bug fixes or other improvements. If you fix or change something, please submit a pull request. If you want to report a bug, please open an issue. 
-
-Examples
-========
-These examples should illustrate how to use this library. Please note that I assume that the user is proficient in Java and understands the panStamp ecosystem.
-
+TBD
 
 References
 ==========
+
+
 
 Licence
 ========
