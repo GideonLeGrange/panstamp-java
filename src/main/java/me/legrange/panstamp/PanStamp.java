@@ -41,10 +41,10 @@ public final class PanStamp {
      * Return the network channel
      *
      * @return The channel
-     * @throws GatewayException Thrown if there is a problem getting the channel
+     * @throws NetworkException Thrown if there is a problem getting the channel
      * value
      */
-    public int getChannel() throws GatewayException {
+    public int getChannel() throws NetworkException {
         Integer v = getIntValue(StandardEndpoint.FREQUENCY_CHANNEL);
         if (v != null) {
             return v;
@@ -56,10 +56,10 @@ public final class PanStamp {
      * Return the transmit interval
      *
      * @return The interval
-     * @throws GatewayException Thrown if there is a problem getting the
+     * @throws NetworkException Thrown if there is a problem getting the
      * interval value
      */
-    public int getTxInterval() throws GatewayException {
+    public int getTxInterval() throws NetworkException {
         return getIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL, 0);
     }
 
@@ -67,10 +67,10 @@ public final class PanStamp {
      * Return the current security option
      *
      * @return The security option
-     * @throws GatewayException Thrown if there is a problem getting the
+     * @throws NetworkException Thrown if there is a problem getting the
      * security option value
      */
-    public int getSecurityOption() throws GatewayException {
+    public int getSecurityOption() throws NetworkException {
         return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
     }
 
@@ -78,10 +78,10 @@ public final class PanStamp {
      * Return the network ID
      *
      * @return The network ID
-     * @throws GatewayException Thrown if there is a problem getting the network
+     * @throws NetworkException Thrown if there is a problem getting the network
      * ID value
      */
-    public int getNetwork() throws GatewayException {
+    public int getNetwork() throws NetworkException {
         Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
         if (v != null) {
             return v;
@@ -93,10 +93,10 @@ public final class PanStamp {
      * Set the address of the panStamp
      *
      * @param addr The address to set
-     * @throws GatewayException Thrown if there is a problem reading the
+     * @throws NetworkException Thrown if there is a problem reading the
      * interval.
      */
-    public void setAddress(int addr) throws GatewayException {
+    public void setAddress(int addr) throws NetworkException {
         if (addr != getAddress()) {
             setIntValue(StandardEndpoint.DEVICE_ADDRESS, addr);
         }
@@ -106,9 +106,9 @@ public final class PanStamp {
      * Set the network id of the device
      *
      * @param network The network id
-     * @throws GatewayException Thrown if there is a problem setting the ID
+     * @throws NetworkException Thrown if there is a problem setting the ID
      */
-    public void setNetwork(int network) throws GatewayException {
+    public void setNetwork(int network) throws NetworkException {
         if (network != getNetwork()) {
             setIntValue(StandardEndpoint.NETWORK_ID, network);
         }
@@ -118,9 +118,9 @@ public final class PanStamp {
      * Set the network channel of the device
      *
      * @param channel The channel to set.
-     * @throws GatewayException Thrown if there is a problem setting the channel
+     * @throws NetworkException Thrown if there is a problem setting the channel
      */
-    public void setChannel(int channel) throws GatewayException {
+    public void setChannel(int channel) throws NetworkException {
         if (channel != getChannel()) {
             setIntValue(StandardEndpoint.FREQUENCY_CHANNEL, channel);
         }
@@ -130,9 +130,9 @@ public final class PanStamp {
      * Set the security option of the device.
      *
      * @param option The security option to set.
-     * @throws GatewayException Thrown if there is a problem setting the option.
+     * @throws NetworkException Thrown if there is a problem setting the option.
      */
-    public void setSecurityOption(int option) throws GatewayException {
+    public void setSecurityOption(int option) throws NetworkException {
         if (option != getSecurityOption()) {
             setIntValue(StandardEndpoint.SECURITY_OPTION, option);
         }
@@ -142,10 +142,10 @@ public final class PanStamp {
      * Set the transmit interval (in seconds) of the device.
      *
      * @param txInterval The interval to set.
-     * @throws GatewayException Thrown if there is a problem setting the
+     * @throws NetworkException Thrown if there is a problem setting the
      * interval.
      */
-    public void setTxInterval(int txInterval) throws GatewayException {
+    public void setTxInterval(int txInterval) throws NetworkException {
         if (txInterval != getTxInterval()) {
             setIntValue(StandardEndpoint.PERIODIC_TX_INTERVAL, txInterval);
         }
@@ -155,9 +155,9 @@ public final class PanStamp {
      * Get the device manufacturer id.
      *
      * @return The manufacturer Id
-     * @throws GatewayException Thrown if there is a problem reading the id.
+     * @throws NetworkException Thrown if there is a problem reading the id.
      */
-    public int getManufacturerId() throws GatewayException {
+    public int getManufacturerId() throws NetworkException {
         return manufacturerId;
     }
 
@@ -165,9 +165,9 @@ public final class PanStamp {
      * Get the device product id.
      *
      * @return The product Id
-     * @throws GatewayException Thrown if there is a problem reading the id.
+     * @throws NetworkException Thrown if there is a problem reading the id.
      */
-    public int getProductId() throws GatewayException {
+    public int getProductId() throws NetworkException {
         return productId;
     }
 
@@ -176,7 +176,7 @@ public final class PanStamp {
      *
      * @return The gateway
      */
-    public Gateway getGateway() {
+    public Network getGateway() {
         return gw;
     }
 
@@ -262,10 +262,10 @@ public final class PanStamp {
      *
      * @param gw The gateway to which this device is connected
      * @param address The address of the device
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a
      * problem creating the device.
      */
-    public PanStamp(Gateway gw, int address) throws GatewayException {
+    public PanStamp(Network gw, int address) throws NetworkException {
         this.gw = gw;
         this.address = address;
         extended = address > 255;
@@ -306,7 +306,7 @@ public final class PanStamp {
      *
      * @param value Value to send
      */
-    void sendCommandMessage(int id, byte[] value) throws GatewayException {
+    void sendCommandMessage(int id, byte[] value) throws NetworkException {
         if (isSleeper()) {
             queue(id, value);
         } else {
@@ -346,7 +346,7 @@ public final class PanStamp {
         }
     }
 
-    private int getIntValue(StandardEndpoint epDef, int defaultValue) throws GatewayException {
+    private int getIntValue(StandardEndpoint epDef, int defaultValue) throws NetworkException {
         Integer v = getIntValue(epDef);
         if (v != null) {
             return v;
@@ -355,13 +355,13 @@ public final class PanStamp {
 
     }
 
-    private void setIntValue(StandardEndpoint epDef, int val) throws GatewayException {
+    private void setIntValue(StandardEndpoint epDef, int val) throws NetworkException {
         Register reg = getRegister(epDef.getRegister().getId());
         Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
         ep.setValue(val);
     }
 
-    private Integer getIntValue(StandardEndpoint epDef) throws GatewayException {
+    private Integer getIntValue(StandardEndpoint epDef) throws NetworkException {
         Register reg = getRegister(epDef.getRegister().getId());
         if (reg.hasValue()) {
             Endpoint<Integer> ep = reg.getEndpoint(epDef.getName());
@@ -375,7 +375,7 @@ public final class PanStamp {
         fireSyncRequired();
     }
 
-    private boolean isSleeper() throws GatewayException {
+    private boolean isSleeper() throws NetworkException {
         if (def != null) {
             return def.isPowerDownMode();
         } else {
@@ -449,7 +449,7 @@ public final class PanStamp {
                         }
                         fireProductCodeChange(mfId, pdId);
                     }
-                } catch (GatewayException ex) {
+                } catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -467,7 +467,7 @@ public final class PanStamp {
                             loadDefinition();
                         }
                     }
-                } catch (GatewayException ex) {
+                } catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -479,7 +479,7 @@ public final class PanStamp {
     /**
      * load all endpoints and parameters
      */
-    private void loadDefinition() throws GatewayException {
+    private void loadDefinition() throws NetworkException {
         def = gw.getDeviceDefinition(getManufacturerId(), getProductId());
         List<RegisterDefinition> rpDefs = def.getRegisters();
         for (RegisterDefinition rpDef : rpDefs) {
@@ -496,7 +496,7 @@ public final class PanStamp {
     /**
      * get the manufacturer id for this panStamp from the actual register
      */
-    private int getManufacturerIdFromRegister() throws GatewayException {
+    private int getManufacturerIdFromRegister() throws NetworkException {
         Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
         byte val[] = reg.getValue();
         return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
@@ -505,7 +505,7 @@ public final class PanStamp {
     /**
      * get the product id for this panStamp from the actual register
      */
-    private int getProductIdFromRegister() throws GatewayException {
+    private int getProductIdFromRegister() throws NetworkException {
         Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
         byte val[] = reg.getValue();
         return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
@@ -513,7 +513,7 @@ public final class PanStamp {
 
     private final int address;
     private DeviceDefinition def;
-    private final Gateway gw;
+    private final Network gw;
     private int manufacturerId;
     private int productId;
     private int syncState;

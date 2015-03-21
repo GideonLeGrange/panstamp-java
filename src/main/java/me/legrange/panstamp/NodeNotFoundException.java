@@ -6,7 +6,7 @@ package me.legrange.panstamp;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
-public class NodeNotFoundException extends GatewayException {
+public class NodeNotFoundException extends NetworkException {
 
     public NodeNotFoundException(String msg) {
         super(msg);

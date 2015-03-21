@@ -21,7 +21,7 @@ final class IntegerEndpoint extends AbstractEndpoint<Integer> {
     }
 
     @Override
-    public Integer getValue() throws GatewayException {
+    public Integer getValue() throws NetworkException {
         byte bytes[] = reg.getValue();
         if (bytes.length > 0) {
             int val = 0;
@@ -35,7 +35,7 @@ final class IntegerEndpoint extends AbstractEndpoint<Integer> {
     }
 
     @Override
-    public void setValue(Integer value) throws GatewayException {
+    public void setValue(Integer value) throws NetworkException {
         byte bytes[]; 
         if (reg.hasValue()) {
              bytes = reg.getValue();

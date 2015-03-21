@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 
 /**
  * Thrown by a mote object when it experiences problems.
@@ -8,7 +8,7 @@ import me.legrange.panstamp.GatewayException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-class MoteException extends GatewayException {
+class MoteException extends NetworkException {
 
     MoteException(String msg) {
         super(msg);

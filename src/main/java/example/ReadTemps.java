@@ -4,8 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
@@ -25,13 +25,13 @@ public class ReadTemps extends Example  {
     }
 
     @Override
-    public void deviceDetected(Gateway gw, PanStamp ps) {
+    public void deviceDetected(Network gw, PanStamp ps) {
         System.out.printf("Detected PanStamp '%d'. Adding listener\n", ps.getAddress());
         ps.addListener(psl);
     }
 
     @Override
-    public void deviceRemoved(Gateway gw, PanStamp dev) {
+    public void deviceRemoved(Network gw, PanStamp dev) {
    }
 
     
@@ -57,7 +57,7 @@ public class ReadTemps extends Example  {
                         ep.addListener(epl);
                     }
                 }
-            } catch (GatewayException ex) {
+            } catch (NetworkException ex) {
                 Logger.getLogger(ReadTemps.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

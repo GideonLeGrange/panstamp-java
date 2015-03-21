@@ -22,7 +22,7 @@ final class BinaryEndpoint extends AbstractEndpoint<Boolean> {
     }
 
     @Override
-    public Boolean getValue() throws GatewayException {
+    public Boolean getValue() throws NetworkException {
         byte val[] = reg.getValue();
         int byteIdx = epDef.getPosition().getBytePos();
         int bitIdx = epDef.getPosition().getBitPos();
@@ -30,7 +30,7 @@ final class BinaryEndpoint extends AbstractEndpoint<Boolean> {
     }
 
     @Override
-    public void setValue(Boolean value) throws GatewayException {
+    public void setValue(Boolean value) throws NetworkException {
         byte val[] = reg.getValue();
         int byteIdx = epDef.getPosition().getBytePos();
         int bitIdx = epDef.getPosition().getBitPos();

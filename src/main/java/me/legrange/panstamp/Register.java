@@ -83,10 +83,10 @@ public final class Register {
      * set the register value and send to remote node
      *
      * @param value the new value
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a
      * problem updating the register
      */
-    public void setValue(byte value[]) throws GatewayException {
+    public void setValue(byte value[]) throws NetworkException {
         try {
             if (dev.getGateway().isOpen()) {
                 dev.sendCommandMessage(id, value);
@@ -145,10 +145,10 @@ public final class Register {
      *
      * @param name Name of endpoint we're querying
      * @return True if the endpoint is known.
-     * @throws me.legrange.panstamp.GatewayException Thrown if an error is
+     * @throws me.legrange.panstamp.NetworkException Thrown if an error is
      * experienced
      */
-    public boolean hasEndpoint(String name) throws GatewayException {
+    public boolean hasEndpoint(String name) throws NetworkException {
         return endpoints.get(name) != null;
     }
     

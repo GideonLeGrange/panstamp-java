@@ -12,7 +12,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
 final class NumberParameter extends AbstractParameter<Double> {
 
     @Override
-    public Double getValue() throws GatewayException {
+    public Double getValue() throws NetworkException {
         byte bytes[] = reg.getValue();
         long val = 0;
         for (int i = 0; i < par.getSize().getBytes(); ++i) {
@@ -23,7 +23,7 @@ final class NumberParameter extends AbstractParameter<Double> {
     }
 
     @Override
-    public void setValue(Double value) throws GatewayException {
+    public void setValue(Double value) throws NetworkException {
         long val = value.longValue();
         byte bytes[] = new byte[par.getSize().getBytes()];
         for (int i = par.getSize().getBytes() - 1; i >= 0; --i) {

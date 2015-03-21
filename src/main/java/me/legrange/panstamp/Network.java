@@ -28,43 +28,43 @@ import me.legrange.swap.tcp.TcpModem;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class Gateway {
+public final class Network {
 
-/** Create a new serial gateway (gateway attached to a serial port) with the given port and speed, 
+/** Create a new serial network (network attached to a serial port) with the given port and speed, 
      * and with the default device library and data store. 
      * 
      * @param port The serial port to open, for example COM1 or /dev/ttyS0
      * @param baud The speed at which to open it, for example 34800 
-     * @return The newly created gateway. 
+     * @return The newly created network. 
      */
-    public static Gateway createSerial(String port, int baud) {
+    public static Network createSerial(String port, int baud) {
         SerialModem sm = new SerialModem(port, baud);
         return create(sm);
     }
 
-    /** Create a new TCP/IP gateway (gateway attached to a remote TCP service) with the given host and port, 
+    /** Create a new TCP/IP network (network attached to a remote TCP service) with the given host and port, 
      * and with the default device library and data store. 
      * 
      * @param host The host name to which to connect, for example 'localhost' or '192.168.1.1'
      * @param port The TCP port to which to connect.
-     * @return The newly created gateway 
+     * @return The newly created network 
      */
-    public static Gateway createTcp(String host, int port) {
+    public static Network createTcp(String host, int port) {
         TcpModem tm = new TcpModem(host, port);
         return create(tm);
     }
     
-    /** Create a new gateway with the given pre-existing SWAP modem. 
+    /** Create a new network with the given pre-existing SWAP modem. 
      * 
-     * @param modem The SWAP modem to use in the gateway.
-     * @return The newly created gateway.
+     * @param modem The SWAP modem to use in the network.
+     * @return The newly created network.
      */
-    public static Gateway create(SwapModem modem) {
-        return new Gateway(modem);
+    public static Network create(SwapModem modem) {
+        return new Network(modem);
     }
      
     /** 
-     * Check if the gateway is open (is connected to a panStamp network). 
+     * Check if the network is open (is connected to a panStamp network). 
      * 
      * @return True if the network is running.
      */
@@ -73,25 +73,25 @@ public final class Gateway {
     }
     
     /**
-     * Open the gateway. This will open the underlying modem and internal
+     * Open the network. This will open the underlying modem and internal
      * processes that are needed.
      *
-     * @throws GatewayException Thrown if there is a problem opening the modem.
+     * @throws NetworkException Thrown if there is a problem opening the modem.
      */
-    public void open() throws GatewayException {
+    public void open() throws NetworkException {
         modem.addListener(receiver);
         try {
             modem.open();
             getSetup();
         } catch (SwapException ex) {
-            throw new GatewayException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
+            throw new NetworkException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
         }
     }
 
      /**
-     * Disconnect the connection and close the gateway
+     * Disconnect the connection and close the network
      *
-     * @throws me.legrange.panstamp.ModemException Thrown if there is a problem closing the modem supporting the gateway.
+     * @throws me.legrange.panstamp.ModemException Thrown if there is a problem closing the modem supporting the network.
      */
     public void close() throws ModemException {
         try {
@@ -136,7 +136,7 @@ public final class Gateway {
     }
 
    /**
-     * return all the devices associated with this gateway
+     * return all the devices associated with this network
      *
      * @return The list of devices
      */
@@ -174,23 +174,23 @@ public final class Gateway {
      *
      * @param l The listener to add
      */
-    public void addListener(GatewayListener l) {
+    public void addListener(NetworkListener l) {
         listeners.add(l);
     }
     
     /**
-     * remove a listener from the gateway
+     * remove a listener from the network
      *
      * @param l The listener to remove
      */
-    public void removeListener(GatewayListener l) {
+    public void removeListener(NetworkListener l) {
         listeners.remove(l);
     }
 
     /**
      * return the SWAP modem to gain access to the lower layer
      *
-     * @return The SWAP modem supporting this gateway
+     * @return The SWAP modem supporting this network
      */
     public SwapModem getSWAPModem() {
         return modem;
@@ -230,7 +230,7 @@ public final class Gateway {
     }
     
     /**
-     * return the network ID for the network supported by this gateway
+     * return the network ID for the network supported by this network
      *
      * @return The network ID
      * @throws me.legrange.panstamp.ModemException Thrown if there is problem determining the network ID
@@ -252,7 +252,7 @@ public final class Gateway {
     /**
      * get the gateway panStamp's address
      *
-     * @return the gateway address
+     * @return the network address
      * @throws me.legrange.panstamp.ModemException Thrown if the device address could not be determined. 
      */
     public int getDeviceAddress() throws ModemException {
@@ -269,21 +269,21 @@ public final class Gateway {
     }
 
 
-    /** Set the network ID for the network accessed by this gateway
+    /** Set the network ID for the network accessed by this network
      * 
      * @param id The network ID
-     * @throws GatewayException thrown if there is a problem setting the network ID 
+     * @throws NetworkException thrown if there is a problem setting the network ID 
      */
-    public void setNetworkId(int id) throws GatewayException {
+    public void setNetworkId(int id) throws NetworkException {
         getSetup().setNetworkID(id);
     }
 
     /** 
-     * Set the device address for the gateway panStamp 
+     * Set the device address for the network panStamp 
      * @param addr Address to set for the modem device. 
-     * @throws GatewayException Thrown if there is a problem setting the modem device address 
+     * @throws NetworkException Thrown if there is a problem setting the modem device address 
      */
-    public void setDeviceAddress(int addr) throws GatewayException {
+    public void setDeviceAddress(int addr) throws NetworkException {
         getSetup().setDeviceAddress(addr);
     }
 
@@ -291,9 +291,9 @@ public final class Gateway {
      * Set the frequency channel 
      * 
      * @param channel The channel to use. 
-     * @throws GatewayException Thrown if there is an error setting the channel.
+     * @throws NetworkException Thrown if there is an error setting the channel.
      */
-    public void setChannel(int channel) throws GatewayException {
+    public void setChannel(int channel) throws NetworkException {
         getSetup().setChannel(channel);
     }
 
@@ -325,7 +325,7 @@ public final class Gateway {
         send(msg);
     }
 
-    DeviceDefinition getDeviceDefinition(int manId, int prodId) throws GatewayException {
+    DeviceDefinition getDeviceDefinition(int manId, int prodId) throws NetworkException {
         return lib.getDeviceDefinition(manId, prodId);
     }
 
@@ -335,13 +335,13 @@ public final class Gateway {
     }
     
      /**
-     * Create an new gateway implementation using the given modem
+     * Create an new network implementation using the given modem
      * implementation, XML library and data store.
      *
      * @param modem The SWAP modem to use to connect to the panStamp wireless
      * network.
      */
-    private Gateway(SwapModem modem) {
+    private Network(SwapModem modem) {
         this.modem = modem;
         this.lib = new ClassLoaderLibrary();
         this.store = new MemoryStore();
@@ -349,24 +349,24 @@ public final class Gateway {
     }
     
     private void fireDeviceDetected(final PanStamp dev) {
-        for (final GatewayListener l : listeners) {
+        for (final NetworkListener l : listeners) {
             getPool().submit(new Runnable() {
 
                 @Override
                 public void run() {
-                    l.deviceDetected(Gateway.this, dev);
+                    l.deviceDetected(Network.this, dev);
                 }
             });
         }
     }
     
         private void fireDeviceRemoved(final PanStamp dev) {
-        for (final GatewayListener l : listeners) {
+        for (final NetworkListener l : listeners) {
             getPool().submit(new Runnable() {
 
                 @Override
                 public void run() {
-                    l.deviceRemoved(Gateway.this, dev);
+                    l.deviceRemoved(Network.this, dev);
                 }
             });
         }
@@ -386,7 +386,7 @@ public final class Gateway {
     /**
      * update the network based on a received message
      */
-    private void updateNetwork(SwapMessage msg) throws GatewayException {
+    private void updateNetwork(SwapMessage msg) throws NetworkException {
         int address = msg.getSender();
         synchronized (devices) {
             if (!hasDevice(address)) {
@@ -421,8 +421,8 @@ public final class Gateway {
                 Register reg = dev.getRegister(msg.getRegisterID());
                 store.setRegisterValue(reg, reg.getValue());
             }
-        } catch (GatewayException ex) {
-            java.util.logging.Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NetworkException ex) {
+            java.util.logging.Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -443,8 +443,8 @@ public final class Gateway {
     private DeviceLibrary lib;
     private DeviceStateStore store;
     private final Map<Integer, PanStamp> devices = new HashMap<>();
-    private final List<GatewayListener> listeners = new LinkedList<>();
-    private static final Logger logger = Logger.getLogger(Gateway.class.getName());
+    private final List<NetworkListener> listeners = new LinkedList<>();
+    private static final Logger logger = Logger.getLogger(Network.class.getName());
     private ModemSetup setup;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
@@ -468,8 +468,8 @@ public final class Gateway {
                 case QUERY:
                     try {
                         updateNetwork(msg);
-                    } catch (GatewayException ex) {
-                        Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NetworkException ex) {
+                        Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
                 case STATUS:

@@ -20,17 +20,17 @@ public interface DeviceLibrary {
      * @param manufacturedID Manufacturer ID for device.
      * @param productId Product ID for device. 
      * @return True if the definition is available. 
-     * @throws GatewayException If there is a problem loading a device definition. 
+     * @throws NetworkException If there is a problem loading a device definition. 
      */
-    boolean hasDeviceDefinition(int manufacturedID, int productId) throws GatewayException;
+    boolean hasDeviceDefinition(int manufacturedID, int productId) throws NetworkException;
 
     /** get the device definition based on the supplied manufacturer ID and product ID. 
      * 
      * @param manufacturedID Manufacturer ID for device.
      * @param productId Product ID for device. 
      * @return The device definition. 
-     * @throws GatewayException If there is a problem loading a device definition. 
+     * @throws NetworkException If there is a problem loading a device definition. 
      */
-    DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException;
+    DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws NetworkException;
         
 }

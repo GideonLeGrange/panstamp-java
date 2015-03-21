@@ -1,9 +1,9 @@
 package me.legrange.panstamp.event;
 
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayListener;
-import me.legrange.panstamp.GatewayListener;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkListener;
+import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStamp;
 
@@ -14,14 +14,14 @@ import me.legrange.panstamp.PanStamp;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public abstract class AbstractGatewayListener implements GatewayListener {
+public abstract class AbstractNetworkListener implements NetworkListener {
 
     @Override
-    public void deviceDetected(Gateway gw, PanStamp dev) {
+    public void deviceDetected(Network gw, PanStamp dev) {
     }
 
     @Override
-    public void deviceRemoved(Gateway gw, PanStamp dev) {
+    public void deviceRemoved(Network gw, PanStamp dev) {
     }
     
     

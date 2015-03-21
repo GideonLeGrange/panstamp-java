@@ -6,13 +6,13 @@ package me.legrange.panstamp;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
-public class GatewayException extends Exception {
+public class NetworkException extends Exception {
 
-    public GatewayException(String msg) {
+    public NetworkException(String msg) {
         super(msg);
     }
 
-    public GatewayException(String msg, Throwable cause) {
+    public NetworkException(String msg, Throwable cause) {
         super(msg, cause);
     }
     

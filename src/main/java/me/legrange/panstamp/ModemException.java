@@ -1,6 +1,6 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 
 /**
  * Thrown when there is a problem with modem communication.
@@ -8,7 +8,7 @@ import me.legrange.panstamp.GatewayException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class ModemException extends GatewayException {
+public final class ModemException extends NetworkException {
 
     ModemException(String msg) {
         super(msg);

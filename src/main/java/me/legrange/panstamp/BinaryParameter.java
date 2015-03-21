@@ -21,7 +21,7 @@ final class BinaryParameter extends AbstractParameter<Boolean> {
     }
 
     @Override
-    public Boolean getValue() throws GatewayException {
+    public Boolean getValue() throws NetworkException {
         byte val[] = reg.getValue();
         int byteIdx = par.getPosition().getBytePos();
         int bitIdx = par.getPosition().getBitPos();
@@ -29,7 +29,7 @@ final class BinaryParameter extends AbstractParameter<Boolean> {
     }
 
     @Override
-    public void setValue(Boolean value) throws GatewayException {
+    public void setValue(Boolean value) throws NetworkException {
         byte val[] = reg.getValue();
         int byteIdx = par.getPosition().getBytePos();
         int bitIdx = par.getPosition().getBitPos();

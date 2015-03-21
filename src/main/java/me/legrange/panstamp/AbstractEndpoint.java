@@ -56,12 +56,12 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     }
 
     @Override
-    public final T getValue(String unit) throws GatewayException {
+    public final T getValue(String unit) throws NetworkException {
         return transformIn(getValue(), getUnit(unit));
     }
 
     @Override
-    public void setValue(String unit, T value) throws GatewayException {
+    public void setValue(String unit, T value) throws NetworkException {
         setValue(transformOut(value, getUnit(unit)));
     }
 
@@ -129,7 +129,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
                     public void run() {
                         try {
                             l.valueReceived(AbstractEndpoint.this, getValue());
-                        } catch (GatewayException ex) {
+                        } catch (NetworkException ex) {
                             Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
                         }
 

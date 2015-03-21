@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import me.legrange.panstamp.DeviceLibrary;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.DeviceNotFoundException;
 import me.legrange.panstamp.definition.DeviceDefinition;
 
@@ -19,12 +19,12 @@ import me.legrange.panstamp.definition.DeviceDefinition;
 abstract class XMLDeviceLibrary implements DeviceLibrary {
 
     @Override
-    public boolean hasDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public boolean hasDeviceDefinition(int manufacturedID, int productId) throws NetworkException {
         return getDefinition(manufacturedID, productId) != null;
     }
 
     @Override
-    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws NetworkException {
         XMLDeviceDefinition def = getDefinition(manufacturedID, productId);
         if (def == null) {
             throw new DeviceNotFoundException(String.format("Could not find device definition for manufacturer/product %d/%d", manufacturedID, productId));

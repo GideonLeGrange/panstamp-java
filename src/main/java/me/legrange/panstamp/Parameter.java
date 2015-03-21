@@ -39,7 +39,7 @@ public interface Parameter<T> {
      * @return The value
      * @throws me.legrange.panstamp.impl.NoSuchUnitException
      */
-    T getValue() throws GatewayException;
+    T getValue() throws NetworkException;
     
     /** returns the default value of the parameter as defined in XML. 
      * 
@@ -51,9 +51,9 @@ public interface Parameter<T> {
      * set the value of the parameter
      *
      * @param value The value to set
-     * @throws GatewayException Thrown if there is a problem setting the parameter value.
+     * @throws NetworkException Thrown if there is a problem setting the parameter value.
      */
-    void setValue(T value) throws GatewayException;
+    void setValue(T value) throws NetworkException;
     
     /** Return the verification pattern for this parameter.
      * 

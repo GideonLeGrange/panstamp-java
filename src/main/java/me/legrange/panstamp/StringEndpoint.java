@@ -28,7 +28,7 @@ final class StringEndpoint extends AbstractEndpoint<String> {
     }
 
     @Override
-    public String getValue() throws GatewayException {
+    public String getValue() throws NetworkException {
         byte bytes[]  = reg.getValue();
         byte keep[] = new byte[epDef.getSize().getBytes()];
         System.arraycopy(bytes, epDef.getPosition().getBytePos(), keep, 0, epDef.getSize().getBytes());
@@ -41,7 +41,7 @@ final class StringEndpoint extends AbstractEndpoint<String> {
     }
 
     @Override
-    public void setValue(String value) throws GatewayException {
+    public void setValue(String value) throws NetworkException {
         int len = epDef.getSize().getBytes();
         if (value.length() > len) {
             value = value.substring(0, len -1);

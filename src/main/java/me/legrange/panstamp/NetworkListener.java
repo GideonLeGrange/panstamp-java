@@ -6,20 +6,20 @@ package me.legrange.panstamp;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
-public interface GatewayListener {
+public interface NetworkListener {
    
     /** A previously unknown device was detected on the SWAP network. 
      * 
      * @param gw The gateway involved.
      * @param dev The device detected.
      */
-    void deviceDetected(Gateway gw, PanStamp dev);
+    void deviceDetected(Network gw, PanStamp dev);
 
     /** A device was removed from the network. 
      * 
      * @param gw The gateway involved. 
      * @param dev The device removed. 
      */
-    void deviceRemoved(Gateway gw, PanStamp dev);
+    void deviceRemoved(Network gw, PanStamp dev);
     
 }

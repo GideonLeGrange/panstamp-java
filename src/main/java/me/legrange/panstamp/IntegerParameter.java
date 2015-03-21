@@ -21,7 +21,7 @@ final class IntegerParameter extends AbstractParameter<Integer> {
     }
     
     @Override
-    public Integer getValue() throws GatewayException {
+    public Integer getValue() throws NetworkException {
         byte bytes[] = reg.getValue();//ps.getRegister(epDef.getRegister().getId()).getValue();
         int val = 0;
         for (int i = 0; i < par.getSize().getBytes(); ++i) {
@@ -32,7 +32,7 @@ final class IntegerParameter extends AbstractParameter<Integer> {
     }
 
     @Override
-    public void setValue(Integer value) throws GatewayException {
+    public void setValue(Integer value) throws NetworkException {
         long val = value.longValue();
         byte bytes[] = new byte[par.getSize().getBytes()];
         for (int i = par.getSize().getBytes() - 1; i >= 0; --i) {

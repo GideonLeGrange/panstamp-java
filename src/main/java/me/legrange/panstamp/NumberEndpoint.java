@@ -22,7 +22,7 @@ final class NumberEndpoint extends AbstractEndpoint<Double> {
     }
     
     @Override
-    public Double getValue() throws GatewayException {
+    public Double getValue() throws NetworkException {
         byte bytes[] = reg.getValue();
         long val = 0;
         for (int i = 0; i < epDef.getSize().getBytes(); ++i) {
@@ -33,7 +33,7 @@ final class NumberEndpoint extends AbstractEndpoint<Double> {
     }
 
     @Override
-    public void setValue(Double value) throws GatewayException {
+    public void setValue(Double value) throws NetworkException {
         long val = value.longValue();
         byte bytes[] = new byte[epDef.getSize().getBytes()];
         for (int i = epDef.getSize().getBytes() -1; i >=0; --i) {

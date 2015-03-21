@@ -1,6 +1,6 @@
 package example;
 
-import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.Network;
 
 /**
  * Simple example: Open a gateway for a serial connected network.
@@ -10,7 +10,7 @@ import me.legrange.panstamp.Gateway;
 public class OpenSerial {
     
     public static void main(String...args) throws Exception {
-        Gateway gw = Gateway.createSerial("/dev/ttyUSB0", 38400);
+        Network gw = Network.createSerial("/dev/ttyUSB0", 38400);
         // Do things with the gateway 
         // close when done 
         gw.close();

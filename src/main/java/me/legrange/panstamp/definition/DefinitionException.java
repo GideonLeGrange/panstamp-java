@@ -1,6 +1,6 @@
 package me.legrange.panstamp.definition;
 
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 
 /**
  * Thrown when there is a problem with panStamp device definitions.
@@ -8,7 +8,7 @@ import me.legrange.panstamp.GatewayException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public abstract class DefinitionException extends GatewayException {
+public abstract class DefinitionException extends NetworkException {
 
     public DefinitionException(String message) {
         super(message);

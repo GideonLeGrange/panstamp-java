@@ -23,7 +23,7 @@ final class StringParameter extends AbstractParameter<String> {
     
    
     @Override
-    public String getValue() throws GatewayException {
+    public String getValue() throws NetworkException {
         byte bytes[]  = reg.getValue();
         byte keep[] = new byte[par.getSize().getBytes()];
         System.arraycopy(bytes, par.getPosition().getBytePos(), keep, 0, par.getSize().getBytes());
@@ -31,7 +31,7 @@ final class StringParameter extends AbstractParameter<String> {
     }
   
     @Override
-    public void setValue(String value) throws GatewayException {
+    public void setValue(String value) throws NetworkException {
         int len = par.getSize().getBytes();
         if (value.length() > len) {
             value = value.substring(0, len -1);

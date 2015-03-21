@@ -61,34 +61,34 @@ public interface Endpoint<T> {
      *
      * @param unit Unit in which to receive the value
      * @return The value
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem retrieving and endpoint value.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem retrieving and endpoint value.
      */
-    T getValue(String unit) throws GatewayException;
+    T getValue(String unit) throws NetworkException;
 
     /**
      * returns the current value of the endpoint.
      *
      * @return The value 
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem retrieving and endpoint value.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem retrieving and endpoint value.
      */
-    T getValue() throws GatewayException;
+    T getValue() throws NetworkException;
 
     /**
      * set the value of the endpoint
      *
      * @param unit The unit in which the value is passed.
      * @param value The value to set
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem setting the endpoint value.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem setting the endpoint value.
      */
-    void setValue(String unit, T value) throws GatewayException;
+    void setValue(String unit, T value) throws NetworkException;
 
     /**
      * set the value of the endpoint
      *
      * @param value The value to set
-     * @throws me.legrange.panstamp.GatewayException Thrown if there is a problem setting the endpoint value.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem setting the endpoint value.
      */
-    void setValue(T value) throws GatewayException;
+    void setValue(T value) throws NetworkException;
     
     /** 
      * Get the register to which this endpoint is associated. 

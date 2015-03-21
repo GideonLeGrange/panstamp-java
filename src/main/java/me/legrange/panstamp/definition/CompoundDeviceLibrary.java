@@ -2,7 +2,7 @@ package me.legrange.panstamp.definition;
 
 import me.legrange.panstamp.DeviceNotFoundException;
 import me.legrange.panstamp.DeviceLibrary;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 
 /**
  * A device library implementation that searches through one or more other
@@ -22,7 +22,7 @@ public final class CompoundDeviceLibrary implements DeviceLibrary {
     }
 
     @Override
-    public boolean hasDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public boolean hasDeviceDefinition(int manufacturedID, int productId) throws NetworkException {
         for (DeviceLibrary lib : sources) {
             if (lib.hasDeviceDefinition(manufacturedID, productId)) {
                 return true;
@@ -32,7 +32,7 @@ public final class CompoundDeviceLibrary implements DeviceLibrary {
     }
 
     @Override
-    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws GatewayException {
+    public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws NetworkException {
         for (DeviceLibrary lib : sources) {
             if (lib.hasDeviceDefinition(manufacturedID, productId)) {
                 return lib.getDeviceDefinition(manufacturedID, productId);
