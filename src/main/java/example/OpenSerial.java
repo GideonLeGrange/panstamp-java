@@ -1,4 +1,4 @@
-package me.legrange.example;
+package example;
 
 import me.legrange.panstamp.Gateway;
 
