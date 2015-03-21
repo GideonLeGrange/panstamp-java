@@ -43,7 +43,10 @@ TBD
 
 # References
 
-
+* [Commercial site](http://www.panstamp.com/)
+* [panStamp wiki](https://github.com/panStamp/panstamp/wiki)
+* [panStamp GitHub repository](https://github.com/panStamp/panstamp)
+* [panStamp community forum.](http://www.panstamp.org/forum/)
 
 # Licence
 
