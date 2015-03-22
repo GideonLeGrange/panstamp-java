@@ -30,48 +30,53 @@ import me.legrange.swap.tcp.TcpModem;
  */
 public final class Network {
 
-/** Create a new serial network (network attached to a serial port) with the given port and speed, 
-     * and with the default device library and data store. 
-     * 
+    /**
+     * Create a new serial network (network attached to a serial port) with the
+     * given port and speed, and with the default device library and data store.
+     *
      * @param port The serial port to open, for example COM1 or /dev/ttyS0
-     * @param baud The speed at which to open it, for example 34800 
-     * @return The newly created network. 
+     * @param baud The speed at which to open it, for example 34800
+     * @return The newly created network.
      */
     public static Network createSerial(String port, int baud) {
         SerialModem sm = new SerialModem(port, baud);
         return create(sm);
     }
 
-    /** Create a new TCP/IP network (network attached to a remote TCP service) with the given host and port, 
-     * and with the default device library and data store. 
-     * 
-     * @param host The host name to which to connect, for example 'localhost' or '192.168.1.1'
+    /**
+     * Create a new TCP/IP network (network attached to a remote TCP service)
+     * with the given host and port, and with the default device library and
+     * data store.
+     *
+     * @param host The host name to which to connect, for example 'localhost' or
+     * '192.168.1.1'
      * @param port The TCP port to which to connect.
-     * @return The newly created network 
+     * @return The newly created network
      */
     public static Network createTcp(String host, int port) {
         TcpModem tm = new TcpModem(host, port);
         return create(tm);
     }
-    
-    /** Create a new network with the given pre-existing SWAP modem. 
-     * 
+
+    /**
+     * Create a new network with the given pre-existing SWAP modem.
+     *
      * @param modem The SWAP modem to use in the network.
      * @return The newly created network.
      */
     public static Network create(SwapModem modem) {
         return new Network(modem);
     }
-     
-    /** 
-     * Check if the network is open (is connected to a panStamp network). 
-     * 
+
+    /**
+     * Check if the network is open (is connected to a panStamp network).
+     *
      * @return True if the network is running.
      */
     public boolean isOpen() {
         return modem.isOpen();
     }
-    
+
     /**
      * Open the network. This will open the underlying modem and internal
      * processes that are needed.
@@ -88,10 +93,11 @@ public final class Network {
         }
     }
 
-     /**
+    /**
      * Disconnect the connection and close the network
      *
-     * @throws me.legrange.panstamp.ModemException Thrown if there is a problem closing the modem supporting the network.
+     * @throws me.legrange.panstamp.ModemException Thrown if there is a problem
+     * closing the modem supporting the network.
      */
     public void close() throws ModemException {
         try {
@@ -105,7 +111,6 @@ public final class Network {
         }
     }
 
-   
     /**
      * use to check if a device with the given address is known
      *
@@ -123,7 +128,8 @@ public final class Network {
      *
      * @param address Address of device to fins
      * @return The device
-     * @throws me.legrange.panstamp.NodeNotFoundException Thrown if the device with the given address cannot be found. 
+     * @throws me.legrange.panstamp.NodeNotFoundException Thrown if the device
+     * with the given address cannot be found.
      */
     public PanStamp getDevice(int address) throws NodeNotFoundException {
         synchronized (devices) {
@@ -135,7 +141,7 @@ public final class Network {
         }
     }
 
-   /**
+    /**
      * return all the devices associated with this network
      *
      * @return The list of devices
@@ -146,9 +152,10 @@ public final class Network {
         return res;
     }
 
-    /** Add a user-created device to the panStamp network. 
-     * 
-     * @param ps The device to add. 
+    /**
+     * Add a user-created device to the panStamp network.
+     *
+     * @param ps The device to add.
      */
     public void addDevice(final PanStamp ps) {
         devices.put(ps.getAddress(), ps);
@@ -156,8 +163,9 @@ public final class Network {
         ps.getDefinition();
     }
 
-    /** Removes the device with the given address from the network
-     * 
+    /**
+     * Removes the device with the given address from the network
+     *
      * @param address The address of the device to remove.
      */
     public void removeDevice(int address) {
@@ -177,7 +185,7 @@ public final class Network {
     public void addListener(NetworkListener l) {
         listeners.add(l);
     }
-    
+
     /**
      * remove a listener from the network
      *
@@ -196,114 +204,122 @@ public final class Network {
         return modem;
     }
 
-    /** 
-     * Return the device library being used to lookup device definitions. 
+    /**
+     * Return the device library being used to lookup device definitions.
+     *
      * @return The current library.
      */
     public DeviceLibrary getDeviceLibrary() {
         return lib;
     }
 
-    /** Return the device store used to save device state. 
-     * 
+    /**
+     * Return the device store used to save device state.
+     *
      * @return The current store.
      */
     public DeviceStateStore getDeviceStore() {
         return store;
     }
 
-    /** 
+    /**
      * Set the device library used to lookup device definitions.
+     *
      * @param lib The library to use.
      */
     public void setDeviceLibrary(DeviceLibrary lib) {
         this.lib = lib;
     }
 
-    
-    /** 
-     * Set the device store to use to lookup persisted device registers. 
+    /**
+     * Set the device store to use to lookup persisted device registers.
+     *
      * @param store The store to use.
      */
     public void setDeviceStore(DeviceStateStore store) {
         this.store = store;
     }
-    
+
     /**
      * return the network ID for the network supported by this network
      *
      * @return The network ID
-     * @throws me.legrange.panstamp.ModemException Thrown if there is problem determining the network ID
+     * @throws me.legrange.panstamp.ModemException Thrown if there is problem
+     * determining the network ID
      */
     public int getNetworkId() throws ModemException {
         return getSetup().getNetworkID();
     }
 
-
     /**
      * Get the frequency channel
      *
      * @return The channel
-     * @throws me.legrange.panstamp.ModemException Thrown if the channel could not be determined. 
+     * @throws me.legrange.panstamp.ModemException Thrown if the channel could
+     * not be determined.
      */
     public int getChannel() throws ModemException {
         return getSetup().getChannel();
     }
+
     /**
      * get the gateway panStamp's address
      *
      * @return the network address
-     * @throws me.legrange.panstamp.ModemException Thrown if the device address could not be determined. 
+     * @throws me.legrange.panstamp.ModemException Thrown if the device address
+     * could not be determined.
      */
     public int getDeviceAddress() throws ModemException {
         return getSetup().getDeviceAddress();
     }
 
-     /**
+    /**
      * Get the security option
      *
-     * @return the security option value. 
+     * @return the security option value.
      */
     public int getSecurityOption() {
         return 0; // FIX ME
     }
 
-
-    /** Set the network ID for the network accessed by this network
-     * 
+    /**
+     * Set the network ID for the network accessed by this network
+     *
      * @param id The network ID
-     * @throws NetworkException thrown if there is a problem setting the network ID 
+     * @throws NetworkException thrown if there is a problem setting the network
+     * ID
      */
     public void setNetworkId(int id) throws NetworkException {
         getSetup().setNetworkID(id);
     }
 
-    /** 
-     * Set the device address for the network panStamp 
-     * @param addr Address to set for the modem device. 
-     * @throws NetworkException Thrown if there is a problem setting the modem device address 
+    /**
+     * Set the device address for the network panStamp
+     *
+     * @param addr Address to set for the modem device.
+     * @throws NetworkException Thrown if there is a problem setting the modem
+     * device address
      */
     public void setDeviceAddress(int addr) throws NetworkException {
         getSetup().setDeviceAddress(addr);
     }
 
- /** 
-     * Set the frequency channel 
-     * 
-     * @param channel The channel to use. 
+    /**
+     * Set the frequency channel
+     *
+     * @param channel The channel to use.
      * @throws NetworkException Thrown if there is an error setting the channel.
      */
     public void setChannel(int channel) throws NetworkException {
         getSetup().setChannel(channel);
     }
 
-
-    /** 
-     * Set the security option 
-     * 
-     * @param secOpt Security option to use. 
+    /**
+     * Set the security option
+     *
+     * @param secOpt Security option to use.
      */
-    public void setSecurityOption(int secOpt)  {
+    public void setSecurityOption(int secOpt) {
         // FIX ME
     }
 
@@ -329,12 +345,14 @@ public final class Network {
         return lib.getDeviceDefinition(manId, prodId);
     }
 
-    /** Get the executor service used to service library threads */
+    /**
+     * Get the executor service used to service library threads
+     */
     ExecutorService getPool() {
         return pool;
     }
-    
-     /**
+
+    /**
      * Create an new network implementation using the given modem
      * implementation, XML library and data store.
      *
@@ -347,7 +365,7 @@ public final class Network {
         this.store = new MemoryStore();
         receiver = new Receiver();
     }
-    
+
     private void fireDeviceDetected(final PanStamp dev) {
         for (final NetworkListener l : listeners) {
             getPool().submit(new Runnable() {
@@ -359,8 +377,8 @@ public final class Network {
             });
         }
     }
-    
-        private void fireDeviceRemoved(final PanStamp dev) {
+
+    private void fireDeviceRemoved(final PanStamp dev) {
         for (final NetworkListener l : listeners) {
             getPool().submit(new Runnable() {
 
