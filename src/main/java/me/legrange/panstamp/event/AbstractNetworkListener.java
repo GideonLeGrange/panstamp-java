@@ -1,14 +1,11 @@
 package me.legrange.panstamp.event;
 
 import me.legrange.panstamp.Network;
-import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkListener;
-import me.legrange.panstamp.NetworkListener;
-import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStamp;
 
 /**
- * An abstract implementation for a GatewayListener that developers can extend if 
+ * An abstract implementation for a NetworkListener that developers can extend if 
  * they only what to implement one method in the GatewayListener interface. 
  * 
  * @since 1.0
