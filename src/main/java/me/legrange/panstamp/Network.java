@@ -37,10 +37,13 @@ public final class Network {
      * @param port The serial port to open, for example COM1 or /dev/ttyS0
      * @param baud The speed at which to open it, for example 34800
      * @return The newly created network.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem creating the network.
      */
-    public static Network createSerial(String port, int baud) {
+    public static Network openSerial(String port, int baud) throws NetworkException {
         SerialModem sm = new SerialModem(port, baud);
-        return create(sm);
+        Network nw = create(sm);
+        nw.open();
+        return nw;
     }
 
     /**
@@ -52,10 +55,13 @@ public final class Network {
      * '192.168.1.1'
      * @param port The TCP port to which to connect.
      * @return The newly created network
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem creating the network.
      */
-    public static Network createTcp(String host, int port) {
+    public static Network openTcp(String host, int port) throws NetworkException {
         TcpModem tm = new TcpModem(host, port);
-        return create(tm);
+        Network nw = create(tm);
+        nw.open();
+        return nw;
     }
 
     /**

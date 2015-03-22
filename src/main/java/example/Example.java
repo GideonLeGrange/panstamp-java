@@ -16,7 +16,7 @@ public abstract class Example {
     protected abstract void doExampleCode(Network nw) throws NetworkException;
     
     protected void run() throws NetworkException {
-         nw = Network.createSerial(PORT, BAUD);
+         nw = Network.openSerial(PORT, BAUD);
          nw.open();
          doExampleCode(nw);
          nw.close();

@@ -10,7 +10,7 @@ import me.legrange.panstamp.Network;
 public class OpenSerial {
     
     public static void main(String...args) throws Exception {
-        Network nw = Network.createSerial("/dev/ttyUSB0", 38400);
+        Network nw = Network.openSerial("/dev/ttyUSB0", 38400);
         // Do things with the network 
         // close when done 
         nw.close();
