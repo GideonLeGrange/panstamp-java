@@ -20,6 +20,7 @@ import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.event.AbstractNetworkListener;
 
 /**
  *
@@ -41,6 +42,15 @@ public class NetworkEvents extends Example {
             public void deviceRemoved(Network gw, PanStamp dev) {
                 System.out.printf("Device with address %d removed to network", dev.getAddress());
             }
+        });
+        
+        nw.addListener(new AbstractNetworkListener() {
+
+            @Override
+            public void deviceDetected(Network gw, PanStamp dev) {
+                System.out.printf("Device with address %d added to network", dev.getAddress());
+            }
+            
         });
         
     }
