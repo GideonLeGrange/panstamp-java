@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.definition.DefinitionException;
 
 /**
  * An implementation of XMLDeviceLibrary that loads the XML definitions from a web server.
@@ -34,14 +32,15 @@ public class HttpLibrary extends XMLDeviceLibrary {
     }
 
     @Override
-    InputStream getStream(String path) throws XMLLoadException {
+    InputStream getStream(String path) {
         try {
             return new URL(siteUrl, path).openStream();
         } catch (MalformedURLException ex) {
-            throw new XMLLoadException(ex.getMessage(),ex);
+            log.warning(String.format("HTTP device file '%s' for does not exist under '%s'.", path, siteUrl.toString()));
         } catch (IOException ex) {
-            throw new XMLLoadException(ex.getMessage(),ex);
+            log.warning(String.format("Error loading http device file: %s", ex.getMessage()));
         }
+        return null;
     }
     
     private final URL siteUrl;
