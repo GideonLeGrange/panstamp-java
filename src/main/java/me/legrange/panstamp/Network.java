@@ -1,5 +1,7 @@
 package me.legrange.panstamp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.definition.DeviceDefinition;
+import me.legrange.panstamp.xml.HttpLibrary;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapException;
 import me.legrange.swap.SwapModem;
@@ -367,8 +370,13 @@ public final class Network {
      */
     private Network(SwapModem modem) {
         this.modem = modem;
-        this.lib = new ClassLoaderLibrary();
-        this.store = new MemoryStore();
+//      lib = new ClassLoaderLibrary();
+        try {
+            lib = new HttpLibrary(new URL(PANSTAMP_DEVICES_URL)); 
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        store = new MemoryStore();
         receiver = new Receiver();
     }
 
@@ -507,5 +515,7 @@ public final class Network {
         public void messageSent(SwapMessage msg) {
         }
     }
+    
+    private static final String PANSTAMP_DEVICES_URL = "https://github.com/panStamp/panstamp/tree/master/devices";
 
 }
