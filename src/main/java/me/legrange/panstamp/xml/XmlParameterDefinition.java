@@ -11,7 +11,7 @@ import me.legrange.panstamp.definition.Type;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-final class XMLParameterDefinition implements ParameterDefinition {
+final class XmlParameterDefinition implements ParameterDefinition {
 
     @Override
     public String getName() {
@@ -59,7 +59,7 @@ final class XMLParameterDefinition implements ParameterDefinition {
         this.verif = verif;
     }
 
-    XMLParameterDefinition(String name, Type type) {
+    XmlParameterDefinition(String name, Type type) {
         this.name = name;
         this.type = type;
     }

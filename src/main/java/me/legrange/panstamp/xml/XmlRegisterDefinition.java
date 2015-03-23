@@ -14,9 +14,9 @@ import me.legrange.panstamp.definition.RegisterDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-final class XMLRegisterDefinition implements RegisterDefinition {
+final class XmlRegisterDefinition implements RegisterDefinition {
 
-    public XMLRegisterDefinition(int id, String name) {
+    public XmlRegisterDefinition(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -54,20 +54,20 @@ final class XMLRegisterDefinition implements RegisterDefinition {
         return size;
     }
     
-    protected void addEndpoint(XMLEndpointDefinition ep) {
+    protected void addEndpoint(XmlEndpointDefinition ep) {
         endpoints.put(ep.getName(), ep);
     }
     
 
-    void addParameter(XMLParameterDefinition par) {
+    void addParameter(XmlParameterDefinition par) {
         params.put(par.getName(), par);
     }
 
     
     private final int id;
     private final String name;
-    private final Map<String, XMLEndpointDefinition> endpoints = new HashMap<>();
-    private final Map<String, XMLParameterDefinition> params = new HashMap<>();
+    private final Map<String, XmlEndpointDefinition> endpoints = new HashMap<>();
+    private final Map<String, XmlParameterDefinition> params = new HashMap<>();
 
     
 }

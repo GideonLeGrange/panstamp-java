@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
- final class XMLParser {
+ final class XmlParser {
 
      /** Parse all XML definitions in the supplied library and return a list definitions. 
       * 
@@ -33,24 +33,24 @@ import org.xml.sax.SAXException;
       * @return The list of parsed definitions.
       * @throws ParseException Thrown if there is a problem parsing the defintions. 
       */
-    public static List<XMLDeviceDefinition> parse(XMLDeviceLibrary lib) throws ParseException {
-        XMLParser parser = new XMLParser(lib);
+    public static List<XmlDeviceDefinition> parse(XmlDeviceLibrary lib) throws ParseException {
+        XmlParser parser = new XmlParser(lib);
         return parser.parseDevices();
     }
 
     /**
      * create a new parser
      */
-    private XMLParser(XMLDeviceLibrary lib) {
+    private XmlParser(XmlDeviceLibrary lib) {
         this.lib = lib;
     }
 
     /**
      * parse the devices.xml file
      */
-    private List<XMLDeviceDefinition> parseDevices() throws ParseException {
+    private List<XmlDeviceDefinition> parseDevices() throws ParseException {
         String fileName = "devices.xml";
-        List<XMLDeviceDefinition> devices = new LinkedList<>();
+        List<XmlDeviceDefinition> devices = new LinkedList<>();
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -75,14 +75,14 @@ import org.xml.sax.SAXException;
     /**
      * parse the devices for one developer
      */
-    private List<XMLDeviceDefinition> parseDeveloper(Element node) throws ParseException {
-        List<XMLDeviceDefinition> devices = new LinkedList<>();
+    private List<XmlDeviceDefinition> parseDeveloper(Element node) throws ParseException {
+        List<XmlDeviceDefinition> devices = new LinkedList<>();
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
-        XMLDeveloperDefinition dev = new XMLDeveloperDefinition(id, name);
+        XmlDeveloperDefinition dev = new XmlDeveloperDefinition(id, name);
         for (Element n : iterable(node.getChildNodes())) {
             if (n.getNodeName().equals("dev")) {
-                XMLDeviceDefinition device = parseDevice(dev, n);
+                XmlDeviceDefinition device = parseDevice(dev, n);
                 if (device != null) {
                     devices.add(device);
                 }
@@ -94,15 +94,15 @@ import org.xml.sax.SAXException;
     /**
      * parse a device configuration
      */
-    private XMLDeviceDefinition parseDevice(XMLDeveloperDefinition devel, Element node) throws ParseException {
-        XMLDeviceDefinition dev = null;
+    private XmlDeviceDefinition parseDevice(XmlDeveloperDefinition devel, Element node) throws ParseException {
+        XmlDeviceDefinition dev = null;
         int id = requireIntAttr(node, "id");
         String name = requireAttr(node, "name");
         String label = requireAttr(node, "label");
         String fileName = devel.getName() + "/" + name + ".xml";
         InputStream in = makeStream(fileName);
         if (in !=  null) {
-            dev = new XMLDeviceDefinition(devel, id, name, label);
+            dev = new XmlDeviceDefinition(devel, id, name, label);
             parseDeviceXML(dev, fileName);
         } else {
             log.warning(String.format("File '%s' for device id %d does not exist, skipping.", fileName, id));
@@ -113,7 +113,7 @@ import org.xml.sax.SAXException;
     /**
      * parse the device XML file
      */
-    private void parseDeviceXML(XMLDeviceDefinition dev, String fileName) throws ParseException {
+    private void parseDeviceXML(XmlDeviceDefinition dev, String fileName) throws ParseException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -153,7 +153,7 @@ import org.xml.sax.SAXException;
     /**
      * parse the config section
      */
-    private void parseConfig(XMLDeviceDefinition dev, Element config) throws ParseException {
+    private void parseConfig(XmlDeviceDefinition dev, Element config) throws ParseException {
         for (Element node : iterable(config.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "reg":
@@ -168,10 +168,10 @@ import org.xml.sax.SAXException;
     /**
      * parse a config/reg element
      */
-    private XMLRegisterDefinition parseConfigReg(XMLDeviceDefinition dev, Element reg) throws ParseException {
+    private XmlRegisterDefinition parseConfigReg(XmlDeviceDefinition dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
-        XMLRegisterDefinition register = new XMLRegisterDefinition(id, name);
+        XmlRegisterDefinition register = new XmlRegisterDefinition(id, name);
         for (Element node : iterable(reg.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "param":
@@ -187,13 +187,13 @@ import org.xml.sax.SAXException;
     /**
      * parse a register parameter
      */
-    private void parseParam(XMLRegisterDefinition register, Element param) throws ParseException {
+    private void parseParam(XmlRegisterDefinition register, Element param) throws ParseException {
         String name = requireAttr(param, "name");
         Type type = Type.forTag(requireAttr(param, "type"));
         if (type == null) {
             throw new ParseException(String.format("Unexpected param type '%s'", requireAttr(param, "type")));
         }
-        XMLParameterDefinition par = new XMLParameterDefinition(name, type);
+        XmlParameterDefinition par = new XmlParameterDefinition(name, type);
         for (Element node : iterable(param.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "position":
@@ -218,7 +218,7 @@ import org.xml.sax.SAXException;
     /**
      * parse param position
      */
-    private void parsePosition(XMLParameterDefinition par, Element pos) throws ParseException {
+    private void parsePosition(XmlParameterDefinition par, Element pos) throws ParseException {
         String text = requireText(pos);
         try {
             if (text.matches("[0-9]+\\.[0-9]+")) {
@@ -236,7 +236,7 @@ import org.xml.sax.SAXException;
     /**
      * parse param size
      */
-    private void parseSize(XMLParameterDefinition par, Element pos) throws ParseException {
+    private void parseSize(XmlParameterDefinition par, Element pos) throws ParseException {
         String text = requireText(pos);
         try {
             if (text.matches("[0-9]+\\.[0-9]+")) {
@@ -254,7 +254,7 @@ import org.xml.sax.SAXException;
     /**
      * parse the regular section
      */
-    private void parseRegular(XMLDeviceDefinition dev, Element regular) throws ParseException {
+    private void parseRegular(XmlDeviceDefinition dev, Element regular) throws ParseException {
         for (Element node : iterable(regular.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "reg":
@@ -270,10 +270,10 @@ import org.xml.sax.SAXException;
     /**
      * parse a reg element
      */
-    private XMLRegisterDefinition parseRegularReg(XMLDeviceDefinition dev, Element reg) throws ParseException {
+    private XmlRegisterDefinition parseRegularReg(XmlDeviceDefinition dev, Element reg) throws ParseException {
         int id = requireIntAttr(reg, "id");
         String name = requireAttr(reg, "name");
-        XMLRegisterDefinition register = new XMLRegisterDefinition(id, name);
+        XmlRegisterDefinition register = new XmlRegisterDefinition(id, name);
         for (Element node : iterable(reg.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "endpoint":
@@ -289,7 +289,7 @@ import org.xml.sax.SAXException;
     /**
      * parse a register end point
      */
-    private XMLEndpointDefinition parseEndpoint(XMLRegisterDefinition register, Element endp) throws ParseException {
+    private XmlEndpointDefinition parseEndpoint(XmlRegisterDefinition register, Element endp) throws ParseException {
         String name = requireAttr(endp, "name");
         Type type = Type.forTag(requireAttr(endp, "type"));
         if (type == null) {
@@ -299,7 +299,7 @@ import org.xml.sax.SAXException;
         if (dir == null) {
             throw new ParseException(String.format("Unexpected endpoint direction '%s'", requireAttr(endp, "dir")));
         }
-        XMLEndpointDefinition endpoint = new XMLEndpointDefinition(register, name, dir, type);
+        XmlEndpointDefinition endpoint = new XmlEndpointDefinition(register, name, dir, type);
         for (Element node : iterable(endp.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "position":
@@ -321,7 +321,7 @@ import org.xml.sax.SAXException;
     /**
      * parse endpoint position
      */
-    private void parsePosition(XMLEndpointDefinition endpoint, Element pos) throws ParseException {
+    private void parsePosition(XmlEndpointDefinition endpoint, Element pos) throws ParseException {
         String text = requireText(pos);
         try {
             if (text.matches("[0-9]+\\.[0-9]+")) {
@@ -339,7 +339,7 @@ import org.xml.sax.SAXException;
     /**
      * parse endpoint size
      */
-    private void parseSize(XMLEndpointDefinition endpoint, Element pos) throws ParseException {
+    private void parseSize(XmlEndpointDefinition endpoint, Element pos) throws ParseException {
         String text = requireText(pos);
         try {
             if (text.matches("[0-9]+\\.[0-9]+")) {
@@ -357,7 +357,7 @@ import org.xml.sax.SAXException;
     /**
      * parse endpoint units
      */
-    private void parseUnits(XMLEndpointDefinition endpoint, Element units) throws ParseException {
+    private void parseUnits(XmlEndpointDefinition endpoint, Element units) throws ParseException {
         for (Element node : iterable(units.getChildNodes())) {
             switch (node.getNodeName()) {
                 case "unit":
@@ -373,7 +373,7 @@ import org.xml.sax.SAXException;
     /**
      * parse an endpoint unit
      */
-    private void parseUnit(XMLEndpointDefinition endpoint, Element u) throws ParseException {
+    private void parseUnit(XmlEndpointDefinition endpoint, Element u) throws ParseException {
         String name = "";
         if (u.hasAttribute("name")) {
             name = u.getAttribute("name");
@@ -448,6 +448,6 @@ import org.xml.sax.SAXException;
         return els;
     }
 
-    private final XMLDeviceLibrary lib;
-    private final static Logger log = Logger.getLogger(XMLParser.class.getName());
+    private final XmlDeviceLibrary lib;
+    private final static Logger log = Logger.getLogger(XmlParser.class.getName());
 }

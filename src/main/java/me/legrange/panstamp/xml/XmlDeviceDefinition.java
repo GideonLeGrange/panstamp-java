@@ -14,7 +14,7 @@ import me.legrange.panstamp.definition.RegisterDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-final class XMLDeviceDefinition implements DeviceDefinition {
+final class XmlDeviceDefinition implements DeviceDefinition {
     
 
     @Override
@@ -74,7 +74,7 @@ final class XMLDeviceDefinition implements DeviceDefinition {
         return "Device{" + "id=" + id + ", developer=" + developer + ", name=" + name + ", label=" + label + ", product=" + product + ", powerDownMode=" + powerDownMode + '}';
     }
 
-    XMLDeviceDefinition(XMLDeveloperDefinition developer, int id, String name, String label) {
+    XmlDeviceDefinition(XmlDeveloperDefinition developer, int id, String name, String label) {
         this.id = id;
         this.developer = developer;
         this.name = name;
@@ -89,16 +89,16 @@ final class XMLDeviceDefinition implements DeviceDefinition {
         this.powerDownMode = pdm;
     }
    
-    void addRegister(XMLRegisterDefinition rd) {
+    void addRegister(XmlRegisterDefinition rd) {
         registers.put(rd.getId(), rd);
     }
 
     private final int id;
-    private final XMLDeveloperDefinition developer;
+    private final XmlDeveloperDefinition developer;
     private final String name;
     private final String label;
     private String product;
     private boolean powerDownMode;
-    private final Map<Integer, XMLRegisterDefinition> registers = new HashMap<>();
+    private final Map<Integer, XmlRegisterDefinition> registers = new HashMap<>();
 
 }

@@ -9,7 +9,7 @@ import me.legrange.panstamp.definition.DeveloperDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-final class XMLDeveloperDefinition implements DeveloperDefinition {
+final class XmlDeveloperDefinition implements DeveloperDefinition {
 
  
     @Override
@@ -28,7 +28,7 @@ final class XMLDeveloperDefinition implements DeveloperDefinition {
     }
 
     /** Create a new instance with the given id and name */
-    XMLDeveloperDefinition(int id, String name) {
+    XmlDeveloperDefinition(int id, String name) {
         this.id = id;
         this.name = name;
     }

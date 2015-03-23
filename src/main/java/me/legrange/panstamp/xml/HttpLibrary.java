@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * An implementation of XMLDeviceLibrary that loads the XML definitions from a web server.
  * @author GideonLeGrange 
  */
-public class HttpLibrary extends XMLDeviceLibrary {
+public class HttpLibrary extends XmlDeviceLibrary {
     
     public HttpLibrary(URL url) {
         siteUrl = url;

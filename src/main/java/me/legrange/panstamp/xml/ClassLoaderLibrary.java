@@ -8,7 +8,7 @@ import java.io.InputStream;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class ClassLoaderLibrary extends XMLDeviceLibrary {
+public final class ClassLoaderLibrary extends XmlDeviceLibrary {
 
     @Override
     InputStream getStream(String path) {

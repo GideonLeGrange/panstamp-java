@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class FileLibrary extends XMLDeviceLibrary {
+public final class FileLibrary extends XmlDeviceLibrary {
 
     public FileLibrary(File dir) {
         this.dir = dir;

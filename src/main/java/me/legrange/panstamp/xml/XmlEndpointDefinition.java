@@ -15,10 +15,10 @@ import me.legrange.panstamp.definition.Unit;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-final class XMLEndpointDefinition implements EndpointDefinition {
+final class XmlEndpointDefinition implements EndpointDefinition {
 
     @Override
-    public XMLRegisterDefinition getRegister() {
+    public XmlRegisterDefinition getRegister() {
         return reg;
     }
     
@@ -65,7 +65,7 @@ final class XMLEndpointDefinition implements EndpointDefinition {
         units.add(unit);
     }
 
-    protected XMLEndpointDefinition(XMLRegisterDefinition reg, String name, Direction direction, Type type) {
+    protected XmlEndpointDefinition(XmlRegisterDefinition reg, String name, Direction direction, Type type) {
         this.reg = reg;
         this.name = name;
         this.direction = direction;
@@ -74,7 +74,7 @@ final class XMLEndpointDefinition implements EndpointDefinition {
     }
 
 
-    private final XMLRegisterDefinition reg;
+    private final XmlRegisterDefinition reg;
     private final String name;
     private final Direction direction;
     private final Type type;

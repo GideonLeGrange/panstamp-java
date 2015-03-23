@@ -16,7 +16,7 @@ import me.legrange.panstamp.definition.DeviceDefinition;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-abstract class XMLDeviceLibrary implements DeviceLibrary {
+abstract class XmlDeviceLibrary implements DeviceLibrary {
 
     @Override
     public boolean hasDeviceDefinition(int manufacturedID, int productId) throws NetworkException {
@@ -25,7 +25,7 @@ abstract class XMLDeviceLibrary implements DeviceLibrary {
 
     @Override
     public DeviceDefinition getDeviceDefinition(int manufacturedID, int productId) throws NetworkException {
-        XMLDeviceDefinition def = getDefinition(manufacturedID, productId);
+        XmlDeviceDefinition def = getDefinition(manufacturedID, productId);
         if (def == null) {
             throw new DeviceNotFoundException(String.format("Could not find device definition for manufacturer/product %d/%d", manufacturedID, productId));
         }
@@ -42,11 +42,11 @@ abstract class XMLDeviceLibrary implements DeviceLibrary {
      */
     abstract InputStream getStream(String path);
 
-    private synchronized XMLDeviceDefinition getDefinition(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
+    private synchronized XmlDeviceDefinition getDefinition(int manufacturedID, int productId) throws DeviceNotFoundException, ParseException {
         if (devices == null) {
             devices = new HashMap<>();
-            List<XMLDeviceDefinition> all = XMLParser.parse(this);
-            for (XMLDeviceDefinition dev : all) {
+            List<XmlDeviceDefinition> all = XmlParser.parse(this);
+            for (XmlDeviceDefinition dev : all) {
                 devices.put(makeId(dev.getDeveloper().getId(), dev.getId()), dev);
             }
         }
@@ -57,6 +57,6 @@ abstract class XMLDeviceLibrary implements DeviceLibrary {
         return String.format("%d/%d", manufacturedID, productId);
     }
 
-    private Map<String, XMLDeviceDefinition> devices;
+    private Map<String, XmlDeviceDefinition> devices;
 
 }
