@@ -25,7 +25,7 @@ import me.legrange.panstamp.xml.HttpLibrary;
 public class TestHttpLibrary {
     
     public static void main(String...args) throws Exception {
-        HttpLibrary lib = new HttpLibrary(new URL("https://github.com/panStamp/panstamp/tree/master/devices/"));
+        HttpLibrary lib = new HttpLibrary(new URL("https://raw.githubusercontent.com/panStamp/panstamp/master/devices/"));
         lib.hasDeviceDefinition(1,4);
     }
     

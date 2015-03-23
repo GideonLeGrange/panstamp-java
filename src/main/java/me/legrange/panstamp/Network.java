@@ -370,12 +370,7 @@ public final class Network {
      */
     private Network(SwapModem modem) {
         this.modem = modem;
-//      lib = new ClassLoaderLibrary();
-        try {
-            lib = new HttpLibrary(new URL(PANSTAMP_DEVICES_URL)); 
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        lib = new ClassLoaderLibrary();
         store = new MemoryStore();
         receiver = new Receiver();
     }
@@ -515,7 +510,5 @@ public final class Network {
         public void messageSent(SwapMessage msg) {
         }
     }
-    
-    private static final String PANSTAMP_DEVICES_URL = "https://github.com/panStamp/panstamp/tree/master/devices";
-
+   
 }

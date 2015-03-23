@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <devices>
+<!-- developer id and name values are maintained and assigned by panStamp 
+Note: each developer name must have a corresponding sub-directory
+within the devices directory. Name and sub-directory are case
+sensitive and must match.
+-->
   <developer id="1" name="panStamp">
+  <!-- dev (for device) values are maintained and assigned by the developer
+  Note: each dev name must have a corresponding xml file within the developer
+  sub-directory. Name and xml file must match and are case sensitive.
+  Append .xml to the dev name. (i.e. name="abc" corresponds to abc.xml)
+  -->
     <dev id="1" name="temphum" label="Dual Temperature/Humidity sensor"/>
     <dev id="2" name="chronos" label="SWAP-enabled Chronos watch"/>
     <dev id="3" name="rgbdriver" label="RGB driver board"/>
@@ -15,9 +25,8 @@
     <dev id="12" name="binouts2" label="Advanced Binary/PWM output module + repeater"/>
     <dev id="13" name="respira" label="Respira sensor for CO and NO2"/>
     <dev id="14" name="soilmoisture" label="Soil moisture sensor"/>
-<!--    <dev id="15" name="easyvr" label="EasyVR voice recognition module"/> 
-    <dev id="16" name="firmloader" label="Firmware server"/> -->
-    <dev id="16" name="firmserver" label="Firmware server"/>
+    <dev id="15" name="easyvr" label="EasyVR voice recognition module"/>
+    <dev id="16" name="firmloader" label="Firmware server"/>
   </developer>
   <developer id="17" name="Robomotic">
     <dev id="1" name="EmmaTI" label="Emma watch"/>
@@ -37,5 +46,8 @@
   </developer>
   <developer id="29" name="panMillenium">
     <dev id="1" name="panmillenium1" label="Crouzet Millenium 3 wireless interface by panSTamp"/>
+  </developer>
+  <developer id="50" name="VentonaNet">
+    <dev id="1" name="raphio" label="Raphael's IO module"/>
   </developer>
 </devices>
