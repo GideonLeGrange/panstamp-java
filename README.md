@@ -37,9 +37,7 @@ Add the dependency below to your pom.xml to use the artifact from Maven Central:
 
 # Using the API 
 
-These examples should illustrate how to use this library. Please note that I assume that the user is proficient in Java, and understands the panStamp ecosystem.
-
-TBD
+There are [examples](https://github.com/GideonLeGrange/panstamp-java/wiki) on this project's wiki. 
 
 # References
 
