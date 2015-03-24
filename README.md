@@ -11,9 +11,9 @@ You can read all about them [on their commercial site](http://www.panstamp.com/)
 
 ## Versions
 
-This library uses [semantic versioning](http://semver.org/)
+The current stable version is *1.0*. For more information about different releases, see the [Release notes](RELEASES.md)
 
-**The current stable version is 1.0 **
+This library uses [semantic versioning](http://semver.org/)
 
 ## Contributing
 
@@ -50,6 +50,6 @@ TBD
 
 # Licence
 
-This library is released under the Apache 2.0 licence. See the [LICENSE](LICENSE) file
+This library is released under the Apache 2.0 licence. See the [licence file](LICENSE).
 
 
