@@ -40,7 +40,7 @@ final class ComPort  {
             synchronized (outLock) {
                 out.write(msg.getBytes());
                 out.flush();
-                System.out.println("sent: " + msg);
+//                System.out.println("sent: " + msg);
             }
         } catch (IOException ex) {
             throw new SerialException("IO error sending data to serial port: " + ex.getMessage(), ex);

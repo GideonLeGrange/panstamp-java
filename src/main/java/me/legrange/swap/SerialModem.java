@@ -1,6 +1,5 @@
 package me.legrange.swap;
 
-import me.legrange.swap.ModemSetup;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -10,11 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.swap.DecodingException;
-import me.legrange.swap.SwapMessage;
-import me.legrange.swap.MessageListener;
-import me.legrange.swap.SwapException;
-import me.legrange.swap.SwapModem;
 
 /**
  * An interface providing access through the serial port to the SWAP modem.
