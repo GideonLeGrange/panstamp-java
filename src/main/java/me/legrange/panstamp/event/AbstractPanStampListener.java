@@ -1,10 +1,7 @@
 package me.legrange.panstamp.event;
 
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
-import me.legrange.panstamp.PanStampListener;
-import me.legrange.panstamp.Register;
 import me.legrange.panstamp.Register;
 
 /**

@@ -41,18 +41,12 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     @Override
     public synchronized void addListener(EndpointListener<T> el) {
-        if (listeners.isEmpty()) {
-            getRegister().addListener(listener);
-        }
         listeners.add(el);
     }
 
     @Override
     public synchronized void removeListener(EndpointListener<T> el) {
         listeners.remove(el);
-        if (listeners.isEmpty()) {
-            getRegister().removeListener(listener);
-        }
     }
 
     @Override
@@ -101,25 +95,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
         this.reg = reg;
         this.epDef = epDef;
         this.listeners = new CopyOnWriteArrayList<>();
-
-    }
-
-    void destroy() {
-        listeners.clear();
-    }
-
-    /**
-     * Get the executor service used to service library threads
-     */
-    private ExecutorService pool() {
-        return reg.getPool();
-    }
-
-    protected final Register reg;
-    protected final EndpointDefinition epDef;
-    private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
-
-    private final RegisterListener listener = new AbstractRegisterListener() {
+        reg.addListener(new AbstractRegisterListener() {
         @Override
         public void valueReceived(final Register reg, final byte[] value) {
             for (final EndpointListener<T> l : listeners) {
@@ -138,6 +114,22 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
                 );
             }
         }
-    };
+    });
+    }
+
+    void destroy() {
+        listeners.clear();
+    }
+
+    /**
+     * Get the executor service used to service library threads
+     */
+    private ExecutorService pool() {
+        return reg.getPool();
+    }
+
+    protected final Register reg;
+    protected final EndpointDefinition epDef;
+    private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
 
 }

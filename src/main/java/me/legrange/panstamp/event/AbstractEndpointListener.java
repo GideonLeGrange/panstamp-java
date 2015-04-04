@@ -1,8 +1,6 @@
 package me.legrange.panstamp.event;
 
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.EndpointListener;
 
 /**

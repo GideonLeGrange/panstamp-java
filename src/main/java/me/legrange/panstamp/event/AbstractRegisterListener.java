@@ -1,12 +1,8 @@
 package me.legrange.panstamp.event;
 
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.RegisterListener;
 
 /**
