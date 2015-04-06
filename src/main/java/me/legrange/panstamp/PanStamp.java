@@ -272,14 +272,9 @@ public final class PanStamp {
         for (StandardRegister reg : StandardRegister.ALL) {
             Register impl = new Register(this, reg);
             registers.put(reg.getId(), impl);
-            if (StandardRegister.PRODUCT_CODE.getId() == reg.getId()) {
-                impl.addListener(productCodeListener());
-
-            } else if (StandardRegister.SYSTEM_STATE.getId() == reg.getId()) {
-                impl.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
-
-            }
         }
+        getRegister(StandardRegister.PRODUCT_CODE.getId()).addListener(productCodeListener());
+        getRegister(StandardRegister.SYSTEM_STATE.getId()).getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
     }
 
     void destroy() {
@@ -466,11 +461,11 @@ public final class PanStamp {
                         if ((manufacturerId != 0) && (productId != 0)) {
                             loadDefinition();
                         }
+                        fireProductCodeChange(manufacturerId, productId);
                     }
                 } catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
         };
 
