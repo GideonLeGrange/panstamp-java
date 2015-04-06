@@ -1,7 +1,5 @@
 package me.legrange.panstamp;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +12,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.definition.DeviceDefinition;
-import me.legrange.panstamp.xml.HttpLibrary;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapException;
 import me.legrange.swap.SwapModem;

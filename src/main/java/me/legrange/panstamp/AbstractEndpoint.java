@@ -96,25 +96,25 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
         this.epDef = epDef;
         this.listeners = new CopyOnWriteArrayList<>();
         reg.addListener(new AbstractRegisterListener() {
-        @Override
-        public void valueReceived(final Register reg, final byte[] value) {
-            for (final EndpointListener<T> l : listeners) {
-                pool().submit(new Runnable() {
+            @Override
+            public void valueReceived(final Register reg, final byte[] value) {
+                for (final EndpointListener<T> l : listeners) {
+                    pool().submit(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        try {
-                            l.valueReceived(AbstractEndpoint.this, getValue());
-                        } catch (NetworkException ex) {
-                            Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                        @Override
+                        public void run() {
+                            try {
+                                l.valueReceived(AbstractEndpoint.this, getValue());
+                            } catch (NetworkException ex) {
+                                Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
                         }
-
                     }
+                    );
                 }
-                );
             }
-        }
-    });
+        });
     }
 
     void destroy() {

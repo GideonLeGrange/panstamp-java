@@ -2,8 +2,6 @@ package me.legrange.panstamp;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import me.legrange.panstamp.DeviceStateStore;
-import me.legrange.panstamp.Register;
 
 /**
  * An implementation of DeviceStateStore that keeps whatever is learned in
