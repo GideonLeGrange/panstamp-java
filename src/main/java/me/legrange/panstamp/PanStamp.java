@@ -498,8 +498,11 @@ public final class PanStamp {
      */
     private int getManufacturerIdFromRegister() throws NetworkException {
         Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
-        byte val[] = reg.getValue();
-        return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
+        if (reg.hasValue()) {
+            byte val[] = reg.getValue();
+            return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
+        }
+        return 0;
     }
 
     /**
@@ -507,8 +510,11 @@ public final class PanStamp {
      */
     private int getProductIdFromRegister() throws NetworkException {
         Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
-        byte val[] = reg.getValue();
-        return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
+        if (reg.hasValue()) {
+            byte val[] = reg.getValue();
+            return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
+        }
+        return 0;
     }
 
     private final int address;
