@@ -19,6 +19,8 @@ This library uses [semantic versioning](http://semver.org/)
 
 I welcome contributions, be it bug fixes or other improvements. If you fix or change something, please submit a pull request. If you want to report a bug, please open an issue. 
 
+You're also welcome to join the discussion in the [Java thread on the panStamp forum](http://www.panstamp.org/forum/forumdisplay.php?fid=24).
+
 # Getting the API
 
 I recommend using the Maven artifact from Maven Central, but you can also clone the repository, or download the source as a .zip or .tar.gz file from [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
