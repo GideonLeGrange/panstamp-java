@@ -11,7 +11,7 @@ You can read all about them [on their commercial site](http://www.panstamp.com/)
 
 ## Versions
 
-The current stable version is *1.0*. For more information about different releases, see the [Release notes](RELEASES.md)
+The current stable version is *1.0.1*. For more information about different releases, see the [Release notes](RELEASES.md)
 
 This library uses [semantic versioning](http://semver.org/)
 
@@ -33,7 +33,7 @@ Add the dependency below to your pom.xml to use the artifact from Maven Central:
 <dependency>
   <groupId>me.legrange</groupId>
   <artifactId>panstamp-java</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
