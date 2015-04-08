@@ -26,7 +26,7 @@ final class BinaryEndpoint extends AbstractEndpoint<Boolean> {
         byte val[] = reg.getValue();
         int byteIdx = epDef.getPosition().getBytePos();
         int bitIdx = epDef.getPosition().getBitPos();
-        return (val[byteIdx] & ~(0b1 << bitIdx)) != 0;
+        return (val[byteIdx] & (0b1 << bitIdx)) != 0;
     }
 
     @Override
