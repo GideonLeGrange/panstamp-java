@@ -41,7 +41,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     @Override
     public void setUnit(String unit) throws NoSuchUnitException {
-        unit = unit.trim();
+        unit = (unit != null) ? unit.trim() : "";
         this.unit = unit.isEmpty() ? getUnit(unit) : null;
     }
 
