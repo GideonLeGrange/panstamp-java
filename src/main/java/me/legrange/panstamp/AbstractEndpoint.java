@@ -35,6 +35,17 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     }
 
     @Override
+    public String getUnit() {
+        return (unit != null) ? unit.getName() : "";
+    }
+
+    @Override
+    public void setUnit(String unit) throws NoSuchUnitException {
+        unit = unit.trim();
+        this.unit = unit.isEmpty() ? getUnit(unit) : null;
+    }
+
+    @Override
     public final boolean hasValue() {
         return reg.hasValue();
     }
@@ -50,13 +61,24 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     }
 
     @Override
-    public final T getValue(String unit) throws NetworkException {
-        return transformIn(getValue(), getUnit(unit));
+    public final T getValue() throws NetworkException {
+        return read(unit);
     }
 
     @Override
-    public void setValue(String unit, T value) throws NetworkException {
-        setValue(transformOut(value, getUnit(unit)));
+    public final void setValue(T value) throws NetworkException {
+        write(unit, value);
+    }
+
+    
+    @Override
+    public final T getValue(String unit) throws NetworkException {
+        return read(getUnit(unit));
+    }
+
+    @Override
+    public final void setValue(String unit, T value) throws NetworkException {
+        write(getUnit(unit), value);
     }
 
     @Override
@@ -65,22 +87,21 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     }
 
     /**
-     * Transform the output value from a value in the given unit
+     * Write and transform the output value from a value in the given unit
      *
      * @param value The value to transform
      * @param unit The unit from which to transform it
-     * @return The transformed value
      */
-    protected abstract T transformOut(T value, Unit unit);
+    protected abstract void write(Unit unit, T value) throws NetworkException;
 
     /**
-     * Transform the input value to a value in the given unit
+     * Read and transform the input value to a value in the given unit
      *
      * @param value The value to transform
      * @param unit The unit to which to transform it
      * @return The transformed value
      */
-    protected abstract T transformIn(T value, Unit unit);
+    protected abstract T read(Unit unit) throws NetworkException;
 
     protected final Unit getUnit(String name) throws NoSuchUnitException {
         for (Unit u : epDef.getUnits()) {
@@ -115,6 +136,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
                 }
             }
         });
+        unit = !epDef.getUnits().isEmpty() ? epDef.getUnits().get(0) : null;
     }
 
     void destroy() {
@@ -131,5 +153,6 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     protected final Register reg;
     protected final EndpointDefinition epDef;
     private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
+    private Unit unit = null;
 
 }
