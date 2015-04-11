@@ -36,6 +36,24 @@ public interface Endpoint<T> {
      * @return The supported units. This can be empty
      */
     List<String> getUnits();
+    
+    /** 
+     * Return the unit currently used for converting the endpoint values. This is
+     * the unit set by calling getUnit() or the default unit to use if no unit is set. The default
+     * unit is the first unit in the device definition, if units are defined, or an empty string. 
+     * 
+     * @return The unit used. 
+     */
+    String getUnit();
+    
+    /** 
+     * Set the unit to use for converting endpoint values.
+     * @see getUnit() for more information. 
+     * 
+     * @param unit The unit to use
+     * @throws NoSuchUnitException Thrown if the unit specified does not exist.  
+     */
+    void setUnit(String unit) throws NoSuchUnitException;
 
     /**
      * Add a listener to the endpoint.
