@@ -21,6 +21,9 @@ project/plugins/project/
 
 # Maven 
 target/
+pom.xml.versionsBackup
+
+
 
 # Netbeans
 build/
