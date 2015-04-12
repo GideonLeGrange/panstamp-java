@@ -33,18 +33,21 @@ final class BinaryParameter extends AbstractParameter<Boolean> {
         byte val[] = reg.getValue();
         int byteIdx = par.getPosition().getBytePos();
         int bitIdx = par.getPosition().getBitPos();
-        val[byteIdx] = (byte)(val[byteIdx] & ~(0b1 << bitIdx) |                                  ((byte)(value ? 0b1 : 0b0) << bitIdx));  
+        val[byteIdx] = (byte)(val[byteIdx] & ~(0b1 << bitIdx) | ((byte)(value ? 0b1 : 0b0) << bitIdx));  
         reg.setValue(val);
     }
 
     @Override
     public Boolean getDefault() {
-        String val = par.getDefault().trim();
-        if (val.toLowerCase().equals("true") || val.toLowerCase().equals("yes")) return true;
-        if (val.toLowerCase().equals("false") || val.toLowerCase().equals("no")) return false;
-        if (val.equals("1")) return true;
-        if (val.equals("0")) return false;
-        return false;
+        String val = par.getDefault().trim().toLowerCase();
+        switch (val) {
+            case "true": 
+            case "yes":
+            case "1" :
+                return true;
+            default : 
+                return false;
+        }
     }
 
 
