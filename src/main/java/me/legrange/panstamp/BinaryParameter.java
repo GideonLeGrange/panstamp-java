@@ -39,8 +39,7 @@ final class BinaryParameter extends AbstractParameter<Boolean> {
 
     @Override
     public Boolean getDefault() {
-        String val = par.getDefault().trim().toLowerCase();
-        switch (val) {
+        switch (par.getDefault().trim().toLowerCase()) {
             case "true": 
             case "yes":
             case "1" :
