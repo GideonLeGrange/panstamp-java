@@ -127,7 +127,7 @@ public final class SerialModem implements SwapModem {
         try {
             return Integer.parseInt(res);
         } catch (NumberFormatException e) {
-            throw new SerialException(String.format("Malformed integer response '%s' to %s comamnd", res, cmd));
+            throw new SerialException(String.format("Malformed integer response '%s' (%s) to %s comamnd", res, asHex(res), cmd), e);
         }
     }
 
@@ -136,7 +136,7 @@ public final class SerialModem implements SwapModem {
         try {
             return Integer.parseInt(res, 16);
         } catch (NumberFormatException e) {
-            throw new SerialException(String.format("Malformed hex response '%s' to %s comamnd", res, cmd));
+            throw new SerialException(String.format("Malformed hex response '%s' (%s) to %s comamnd", res, asHex(res), cmd), e);
         }
     }
 
@@ -292,6 +292,15 @@ public final class SerialModem implements SwapModem {
                 }
             }
         }
+    }
+    
+    private String asHex(String text) { 
+        byte[] bytes = text.getBytes();
+        StringBuilder buf = new StringBuilder();
+        for (byte b : bytes) {
+            buf.append(String.format("%2x", b));
+        }
+        return buf.toString();
     }
 
     private static class ReceiveTask implements Runnable {
