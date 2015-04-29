@@ -22,4 +22,18 @@ public interface NetworkListener {
      */
     void deviceRemoved(Network gw, PanStamp dev);
     
+    /** The network was opened. 
+     * 
+     * @param nw The network.
+     * @see 1.2
+     */
+    void networkOpened(Network nw);
+    
+    /** The network was closed. 
+     * 
+     * @param nw The network.
+     * @see 1.2
+     */
+    void networkClosed(Network nw);
+    
 }

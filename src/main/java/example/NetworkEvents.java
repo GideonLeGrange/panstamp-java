@@ -42,6 +42,16 @@ public class NetworkEvents extends Example {
             public void deviceRemoved(Network gw, PanStamp dev) {
                 System.out.printf("Device with address %d removed to network", dev.getAddress());
             }
+
+            @Override
+            public void networkOpened(Network nw) {
+                System.out.printf("Network %s opened", nw.toString());
+            }
+
+            @Override
+            public void networkClosed(Network nw) {
+                System.out.printf("Network %s closed", nw.toString());
+            }
         });
         
         nw.addListener(new AbstractNetworkListener() {

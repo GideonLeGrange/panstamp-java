@@ -20,6 +20,16 @@ public abstract class AbstractNetworkListener implements NetworkListener {
     @Override
     public void deviceRemoved(Network gw, PanStamp dev) {
     }
+
+    @Override
+    public void networkOpened(Network nw) {
+    }
+
+    @Override
+    public void networkClosed(Network nw) {
+    }
+    
+    
     
     
 }
