@@ -41,8 +41,10 @@ final class IntegerEndpoint extends AbstractEndpoint<Integer> {
 
     @Override
     protected void write(Unit unit, Integer value) throws NetworkException {
-        Double d = (value - unit.getOffset()) / unit.getFactor();
-        value = d.intValue();
+        if (unit != null) {
+            Double d = (value - unit.getOffset()) / unit.getFactor();
+            value = d.intValue();
+        }
         byte bytes[];
         if (reg.hasValue()) {
             bytes = reg.getValue();

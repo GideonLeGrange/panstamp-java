@@ -38,7 +38,9 @@ final class NumberEndpoint extends AbstractEndpoint<Double> {
 
     @Override
     protected void write(Unit unit, Double value) throws NetworkException {
-        value = (value - unit.getOffset()) / unit.getFactor();
+        if (unit != null) {
+           value = (value - unit.getOffset()) / unit.getFactor();
+        }
         long val = value.longValue();
         byte bytes[] = new byte[epDef.getSize().getBytes()];
         for (int i = epDef.getSize().getBytes() - 1; i >= 0; --i) {
