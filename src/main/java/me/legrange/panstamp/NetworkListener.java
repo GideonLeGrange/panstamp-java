@@ -25,14 +25,14 @@ public interface NetworkListener {
     /** The network was opened. 
      * 
      * @param nw The network.
-     * @see 1.2
+     * @since  1.2
      */
     void networkOpened(Network nw);
     
     /** The network was closed. 
      * 
      * @param nw The network.
-     * @see 1.2
+     * @since 1.2
      */
     void networkClosed(Network nw);
     
