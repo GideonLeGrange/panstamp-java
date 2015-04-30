@@ -63,6 +63,16 @@ public class TestEvents {
             public void deviceRemoved(Network gw, PanStamp dev) {
                 say("N: Device with address %d removed to network", dev.getAddress());
             }
+
+            @Override
+            public void networkOpened(Network nw) {
+                say("N: Opened");
+            }
+
+            @Override
+            public void networkClosed(Network nw) {
+                say("N: Closed");
+            }
         });
         for (PanStamp ps : nw.getDevices()) {
             addPanStamp(ps);

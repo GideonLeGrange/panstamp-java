@@ -109,6 +109,13 @@ public interface Endpoint<T> {
     void setValue(T value) throws NetworkException;
     
     /** 
+     * Test if the endpoint is an output or just an input. 
+     * @return True if the endpoint is an output. 
+     * @since 1.2
+     */
+    boolean isOutput();
+    
+    /** 
      * Get the register to which this endpoint is associated. 
      * @return The register containing this endpoint. 
      */

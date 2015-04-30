@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.legrange.panstamp.definition.Direction;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.Unit;
 
@@ -85,7 +86,12 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     public Register getRegister() {
         return reg;
     }
-
+    
+    @Override
+    public boolean isOutput() {
+        return epDef.getDirection() == Direction.OUT;
+    }
+    
     /**
      * Write and transform the output value from a value in the given unit
      *

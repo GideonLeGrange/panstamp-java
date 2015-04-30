@@ -28,7 +28,7 @@ import me.legrange.swap.tcp.TcpModem;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-public final class Network {
+public final class Network implements AutoCloseable {
 
     /**
      * Create a new serial network (network attached to a serial port) with the
@@ -97,6 +97,7 @@ public final class Network {
         } catch (SwapException ex) {
             throw new NetworkException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
         }
+        fireNetworkOpened();
     }
 
     /**
@@ -105,6 +106,7 @@ public final class Network {
      * @throws me.legrange.panstamp.ModemException Thrown if there is a problem
      * closing the modem supporting the network.
      */
+    @Override
     public void close() throws ModemException {
         try {
             modem.close();
@@ -115,6 +117,7 @@ public final class Network {
             modem.removeListener(receiver);
             devices.clear();
         }
+        fireNetworkClosed();
     }
 
     /**
@@ -391,6 +394,30 @@ public final class Network {
                 @Override
                 public void run() {
                     l.deviceRemoved(Network.this, dev);
+                }
+            });
+        }
+    }
+    
+    private void fireNetworkOpened() {
+        for (final NetworkListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.networkOpened(Network.this);
+                }
+            });
+        }
+    }
+    
+      private void fireNetworkClosed() {
+        for (final NetworkListener l : listeners) {
+            getPool().submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    l.networkClosed(Network.this);
                 }
             });
         }
