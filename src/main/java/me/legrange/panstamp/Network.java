@@ -106,6 +106,7 @@ public final class Network implements AutoCloseable {
      * @throws me.legrange.panstamp.ModemException Thrown if there is a problem
      * closing the modem supporting the network.
      */
+    @Override
     public void close() throws ModemException {
         try {
             modem.close();
