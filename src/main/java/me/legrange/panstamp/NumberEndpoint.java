@@ -30,7 +30,10 @@ final class NumberEndpoint extends AbstractEndpoint<Double> {
             val = val << 8;
             val = val | (bytes[epDef.getPosition().getBytePos() + i]) & 0xFF;
         }
-        return ((double) val) * unit.getFactor() + unit.getOffset();
+        if (unit != null) {
+            return ((double) val) * unit.getFactor() + unit.getOffset();
+        }
+        return (double)val;
     }
 
     @Override

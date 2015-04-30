@@ -30,8 +30,11 @@ final class IntegerEndpoint extends AbstractEndpoint<Integer> {
                 val = val << 8;
                 val = val | (bytes[epDef.getPosition().getBytePos() + i]) & 0xFF;
             }
-            Double d = (val * unit.getFactor() + unit.getOffset());
-            return d.intValue();
+            if (unit != null) {
+                Double d = (val * unit.getFactor() + unit.getOffset());
+                return d.intValue();
+            }
+            return val;
         }
         return null;
     }
