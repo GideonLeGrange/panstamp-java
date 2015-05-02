@@ -11,7 +11,7 @@ import me.legrange.swap.tcp.TcpServer;
  *
  * @author gideon
  */
-public class testServer {
+public class TestTCPServer {
     
     public static final String PORT = "/dev/tty.usbserial-A800HNMV";
     
