@@ -18,6 +18,15 @@ public final class FileLibrary extends XmlDeviceLibrary {
     public FileLibrary(File dir) {
         this.dir = dir;
     }
+    
+    /** Return the directory used for loading by this file loader.
+     * 
+     * @return The absolute directory path. 
+     * @since 1.2
+     */
+    public String getDirectory() {
+        return dir.getAbsolutePath();
+    }
 
     @Override
     InputStream getStream(String path) {
