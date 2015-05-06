@@ -399,7 +399,7 @@ public final class PanStamp {
 
                 @Override
                 public void run() {
-                    l.syncStateChange(PanStamp.this, syncState);
+                    l.syncRequired(PanStamp.this);
                 }
             });
         }
