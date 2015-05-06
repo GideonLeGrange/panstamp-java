@@ -115,7 +115,6 @@ public final class Network implements AutoCloseable {
 
         } finally {
             modem.removeListener(receiver);
-            devices.clear();
         }
         fireNetworkClosed();
     }
@@ -180,9 +179,9 @@ public final class Network implements AutoCloseable {
     public void removeDevice(int address) {
         final PanStamp ps = devices.get(address);
         if (ps != null) {
-            fireDeviceRemoved(ps);
             ps.destroy();
             devices.remove(address);
+            fireDeviceRemoved(ps);
         }
     }
 
@@ -472,7 +471,8 @@ public final class Network implements AutoCloseable {
                 Register reg = dev.getRegister(msg.getRegisterID());
                 store.setRegisterValue(reg, reg.getValue());
             }
-        } catch (NetworkException ex) {
+        } 
+        catch (NetworkException ex) {
             java.util.logging.Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
 
