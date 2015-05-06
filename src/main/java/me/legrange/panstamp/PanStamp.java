@@ -73,6 +73,17 @@ public final class PanStamp {
     public int getSecurityOption() throws NetworkException {
         return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
     }
+    
+    /** 
+     * Return the current sync state 
+     * 
+     * @return The sync state
+     * @throws NetworkException
+     * @since 1.2
+     */
+    public int getSyncState() throws NetworkException {
+        return getIntValue(StandardEndpoint.SYSTEM_STATE, 2);
+    }
 
     /**
      * Return the network ID
