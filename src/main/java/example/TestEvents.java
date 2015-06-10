@@ -46,17 +46,6 @@ public class TestEvents {
     /** Connect to serial port and start the network */
     private void connect() throws NetworkException {
         nw = Network.openSerial(PORT, BAUD);
-        try {
-            final String[] libraries = ClassScope.getLoadedLibraries(ClassLoader.getSystemClassLoader()); //MyClassName.class.getClassLoader()
-            for (String s : libraries) {
-                System.out.println("L: " + s);
-            }
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TestEvents.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TestEvents.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
     }
 
     /** Set up the listeners for the objects currently in the tree.
