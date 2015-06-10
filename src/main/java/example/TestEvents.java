@@ -1,6 +1,8 @@
 package example;
 
 import java.math.BigInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.ModemException;
@@ -44,6 +46,16 @@ public class TestEvents {
     /** Connect to serial port and start the network */
     private void connect() throws NetworkException {
         nw = Network.openSerial(PORT, BAUD);
+        try {
+            final String[] libraries = ClassScope.getLoadedLibraries(ClassLoader.getSystemClassLoader()); //MyClassName.class.getClassLoader()
+            for (String s : libraries) {
+                System.out.println("L: " + s);
+            }
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TestEvents.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TestEvents.class.getName()).log(Level.SEVERE, null, ex);
+        }
        
     }
 

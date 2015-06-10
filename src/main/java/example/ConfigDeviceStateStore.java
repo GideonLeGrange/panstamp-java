@@ -1,20 +1,7 @@
-/*
- * Copyright 2015 gideon.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package example;
 
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 import me.legrange.panstamp.DeviceStateStore;
 import me.legrange.panstamp.Register;
@@ -26,23 +13,46 @@ import me.legrange.panstamp.Register;
  */
 public class ConfigDeviceStateStore implements DeviceStateStore {
 
+    ConfigDeviceStateStore() {
+        // NB NB NB 
+        // hard code your panstamp registers here
+        // example: I want to set register 0 for device 3 to 00010004 which means "product code for device 3 is temp sensor"
+        data.put(makeKey(3,0), new byte[]{0,0,0,1,0,0,0,4});
+    }
+    
     // assume productCodes is filled in from the config file by the application
-    private Map<Integer, byte[]> productCodes;
+    private final Map<String, byte[]> data = new HashMap<>();
 
     @Override
     public boolean hasRegisterValue(Register reg) {
-        return (reg.getId() == 0) && (productCodes.get(reg.getDevice().getAddress()) != null);
+        String key = makeKey(reg);
+        boolean res = data.containsKey(key);
+        System.out.printf("hasRegisterValue(%d for %d) == %b\n", reg.getId(), reg.getDevice().getAddress(), res);
+        return res;
     }
 
     @Override
     public byte[] getRegisterValue(Register reg) {
-        return productCodes.get(reg.getId());
+        byte val[] = data.getOrDefault(makeKey(reg), new byte[]{});
+        System.out.printf("getRegisterValue(%d for %d) == %s\n", reg.getId(), reg.getDevice().getAddress(), formatBytes(val));
+        return val;
     }
 
     @Override
     public void setRegisterValue(Register reg, byte[] value) {
-        // don't have to do anything since it is a config file, but a good idea would be to log 
-        // if the product code set by the library does not match the one we have in the config file
+        System.out.printf("setRegisterValue(%d for %d) = %s\n", reg.getId(), reg.getDevice().getAddress(), formatBytes(value));
+        data.put(makeKey(reg), value);
     }
     
+    private String makeKey(Register reg) {
+        return makeKey(reg.getDevice().getAddress(), reg.getId());
+    }
+    private String makeKey(int addr, int id) {
+        return String.format("%d=>%d", addr, id);
+    }
+
+    
+    private String formatBytes(byte val[]) {
+        return new BigInteger(val).toString(16);
+    }
 }

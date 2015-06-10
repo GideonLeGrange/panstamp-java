@@ -47,11 +47,6 @@ public class ListDevices extends Example {
             System.out.printf("panStamp with address %d is on the network\n", device.getAddress(), device.getName());
         }
         
-        boolean hasIt = nw.hasDevice(2);
-        System.out.printf("Do we have device #2? %s\n", (hasIt ? "yes" : "no"));
-
-        PanStamp dev = nw.getDevice(2);
-        
     }
 
 }
