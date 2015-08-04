@@ -447,7 +447,8 @@ public final class Network implements AutoCloseable {
                         Register reg = dev.getRegister(sr.getId());
                         if (!reg.hasValue()) {
                             if (store.hasRegisterValue(reg)) {
-                                reg.setValue(store.getRegisterValue(reg));
+                                reg.valueReceived(store.getRegisterValue(reg));
+                               // reg.setValue(store.getRegisterValue(reg));
                             }
                         }
                     }
