@@ -92,7 +92,9 @@ public final class Network implements AutoCloseable {
     public void open() throws NetworkException {
         modem.addListener(receiver);
         try {
-            modem.open();
+            if (!modem.isOpen()) {
+                modem.open();
+            }
             getSetup();
         } catch (SwapException ex) {
             throw new NetworkException(String.format("Error opening SWAP modem: %s", ex.getMessage()), ex);
@@ -448,7 +450,6 @@ public final class Network implements AutoCloseable {
                         if (!reg.hasValue()) {
                             if (store.hasRegisterValue(reg)) {
                                 reg.valueReceived(store.getRegisterValue(reg));
-                               // reg.setValue(store.getRegisterValue(reg));
                             }
                         }
                     }
