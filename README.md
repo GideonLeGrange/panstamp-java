@@ -11,9 +11,7 @@ You can read all about them [on their commercial site](http://www.panstamp.com/)
 
 ## Versions
 
-The current stable version is *1.2*. For more information about different releases, see  [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
-
-The current development version is 2.0 which fixes several bugs and makes some non-backwards compatible API changes.
+The current stable version is *2.0*. For more information about different releases, see  [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
 
 This library uses [semantic versioning](http://semver.org/)
 
