@@ -7,7 +7,7 @@ package me.legrange.panstamp;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
-public interface Parameter<T> {
+public interface Parameter<T> extends Comparable<Parameter<T>>{
     
       /** Type of value sent and/or received by an endpoint. */
     public enum Type { 
