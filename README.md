@@ -33,7 +33,7 @@ Add the dependency below to your pom.xml to use the artifact from Maven Central:
 <dependency>
   <groupId>me.legrange</groupId>
   <artifactId>panstamp-java</artifactId>
-  <version>1.2</version>
+  <version>2.0</version>
 </dependency>
 ```
 
