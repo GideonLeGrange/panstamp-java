@@ -3,9 +3,10 @@ package me.legrange.panstamp;
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -496,7 +497,7 @@ public final class Network implements AutoCloseable {
     private DeviceLibrary lib;
     private DeviceStateStore store;
     private final Map<Integer, PanStamp> devices = new HashMap<>();
-    private final List<NetworkListener> listeners = new LinkedList<>();
+    private final Set<NetworkListener> listeners = new CopyOnWriteArraySet<>();
     private static final Logger logger = Logger.getLogger(Network.class.getName());
     private ModemSetup setup;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {

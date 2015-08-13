@@ -7,8 +7,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -529,9 +530,9 @@ public final class PanStamp {
     private int manufacturerId;
     private int productId;
     private int syncState;
-    private boolean extended;
+    private final boolean extended;
     private final Map<Integer, Register> registers = new ConcurrentHashMap<>();
-    private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
+    private transient final Set<PanStampListener> listeners = new CopyOnWriteArraySet<>(); // wish I knew why this was transient...
 
     private class UpdateOnSync extends AbstractPanStampListener {
 

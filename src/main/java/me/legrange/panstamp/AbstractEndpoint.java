@@ -3,7 +3,8 @@ package me.legrange.panstamp;
 import me.legrange.panstamp.event.AbstractRegisterListener;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -142,7 +143,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     protected AbstractEndpoint(Register reg, EndpointDefinition epDef) {
         this.reg = reg;
         this.epDef = epDef;
-        this.listeners = new CopyOnWriteArrayList<>();
+        this.listeners = new CopyOnWriteArraySet<>();
         reg.addListener(new AbstractRegisterListener() {
             @Override
             public void valueReceived(final Register reg, final byte[] value) {
@@ -179,7 +180,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     protected final Register reg;
     protected final EndpointDefinition epDef;
-    private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
+    private final Set<EndpointListener<T>> listeners;
     private Unit unit = null;
 
 }
