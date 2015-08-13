@@ -89,7 +89,7 @@ public final class Register {
      */
     public void setValue(byte value[]) throws NetworkException {
         try {
-            if (dev.getGateway().isOpen()) {
+            if (dev.getNetwork().isOpen()) {
                 dev.sendCommandMessage(id, value);
             } else {
                 this.value = value;
