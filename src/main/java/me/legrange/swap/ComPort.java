@@ -5,18 +5,17 @@ import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
  * A wrapper around a RXTX serial port.
- * 
+ *
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
-final class ComPort  {
+final class ComPort {
 
     /**
      * open the com port.
@@ -40,7 +39,6 @@ final class ComPort  {
             synchronized (outLock) {
                 out.write(msg.getBytes());
                 out.flush();
-//                System.out.println("sent: " + msg);
             }
         } catch (IOException ex) {
             throw new SerialException("IO error sending data to serial port: " + ex.getMessage(), ex);
@@ -50,10 +48,26 @@ final class ComPort  {
     /**
      * read a line of text from the com port
      */
-     String read() throws SerialException {
+    String read() throws SerialException {
         try {
+            StringBuilder line = new StringBuilder();
             synchronized (inLock) {
-                return in.readLine();
+                while (true) {
+                    int val = in.read();
+                    if (val < 0) {
+                        return line.toString();
+                    }
+                    switch (val) {
+                        case '\n':
+                        case '\r':
+                            if (line.length() > 0) {
+                                return line.toString();
+                            }
+                            break;
+                        default:
+                            line.append((char) val);
+                    }
+                }
             }
         } catch (IOException ex) {
             throw new SerialException("IO error reading data from serial port: " + ex.getMessage(), ex);
@@ -63,7 +77,7 @@ final class ComPort  {
     /**
      * Close serial port
      */
-     void close() throws SerialException {
+    void close() throws SerialException {
         try {
             in.close();
             out.close();
@@ -96,7 +110,7 @@ final class ComPort  {
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
             port.enableReceiveTimeout(Integer.MAX_VALUE);
             port.enableReceiveThreshold(0);
-            in = new BufferedReader(new InputStreamReader(port.getInputStream()));
+            in = port.getInputStream();
             out = port.getOutputStream();
             out.flush();
         } catch (PortInUseException ex) {
@@ -106,7 +120,7 @@ final class ComPort  {
         }
     }
 
-    private BufferedReader in;
+    private InputStream in;
     private OutputStream out;
     private SerialPort port;
     private final Object inLock = new Object();

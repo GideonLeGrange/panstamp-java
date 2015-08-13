@@ -46,7 +46,7 @@ public final class SerialModem implements SwapModem {
     public boolean isOpen() {
         return running;
     }
-    
+
     @Override
     public synchronized void send(SwapMessage msg) throws SerialException {
         com.send(msg.getText() + "\r");
@@ -77,9 +77,8 @@ public final class SerialModem implements SwapModem {
                             readATasHex("ATDA?"));
                     leaveCommandMode();
                 }
-            }
-            else {
-                setup = new ModemSetup(0,0,0);
+            } else {
+                setup = new ModemSetup(0, 0, 0);
             }
         }
         return setup;
@@ -168,7 +167,7 @@ public final class SerialModem implements SwapModem {
             if (tryCommandMode()) {
                 return;
             }
-            count --;
+            count--;
         }
         throw new SerialException("Timed out waiting for command mode");
     }
@@ -263,9 +262,13 @@ public final class SerialModem implements SwapModem {
                     if (in.length() == 0) {
                         continue;
                     }
-                    if ((in.length() >= 12) && in.startsWith("(")) {
-                        mode = Mode.DATA;
-                        fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
+                    if (in.charAt(0) == '(') {
+                        if (in.length() >= 12) {
+                            mode = Mode.DATA;
+                            fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
+                        } else {
+                            // truncated SWAP message, drop silently
+                        }
                     } else {
                         // handle AT responses here
                         switch (in) {
@@ -293,8 +296,8 @@ public final class SerialModem implements SwapModem {
             }
         }
     }
-    
-    private String asHex(String text) { 
+
+    private String asHex(String text) {
         byte[] bytes = text.getBytes();
         StringBuilder buf = new StringBuilder();
         for (byte b : bytes) {
