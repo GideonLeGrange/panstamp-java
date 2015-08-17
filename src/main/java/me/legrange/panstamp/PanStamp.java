@@ -73,10 +73,10 @@ public final class PanStamp {
     public int getSecurityOption() throws NetworkException {
         return getIntValue(StandardEndpoint.SECURITY_OPTION, 0);
     }
-    
-    /** 
-     * Return the current sync state 
-     * 
+
+    /**
+     * Return the current sync state
+     *
      * @return The sync state
      * @throws NetworkException
      * @since 1.2
@@ -331,7 +331,7 @@ public final class PanStamp {
             fireRegisterDetected(reg);
         }
     }
-    
+
     boolean hasExtendedAddress() {
         return extended;
     }
@@ -444,25 +444,15 @@ public final class PanStamp {
         return new AbstractRegisterListener() {
             @Override
             public void valueReceived(Register reg, byte value[]) {
-                try {
-                    int mfId = getManufacturerIdFromRegister();
-                    int pdId = getProductIdFromRegister();
-                    if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
-                        manufacturerId = mfId;
-                        productId = pdId;
-                        if ((manufacturerId != 0) && (productId != 0)) {
-                            loadDefinition();
-                        }
-                        fireProductCodeChange(mfId, pdId);
-                    }
-                } catch (NetworkException ex) {
-                    Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
+                updated(reg, value);
             }
 
             @Override
             public void valueSet(Register reg, byte[] value) {
+                updated(reg, value);
+            }
+
+            private void updated(Register reg, byte[] value) {
                 try {
                     int mfId = getManufacturerIdFromRegister();
                     int pdId = getProductIdFromRegister();
@@ -529,7 +519,7 @@ public final class PanStamp {
     private int manufacturerId;
     private int productId;
     private int syncState;
-    private boolean extended;
+    private final boolean extended;
     private final Map<Integer, Register> registers = new ConcurrentHashMap<>();
     private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
 
