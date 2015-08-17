@@ -3,8 +3,9 @@ package me.legrange.panstamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import me.legrange.panstamp.definition.DeviceDefinition;
 import me.legrange.panstamp.definition.EndpointDefinition;
@@ -88,7 +89,7 @@ public final class Register {
      */
     public void setValue(byte value[]) throws NetworkException {
         try {
-            if (dev.getGateway().isOpen()) {
+            if (dev.getNetwork().isOpen()) {
                 dev.sendCommandMessage(id, value);
             } else {
                 this.value = value;
@@ -328,7 +329,7 @@ public final class Register {
     private String name = "";
     private final Map<String, AbstractEndpoint> endpoints = new ConcurrentHashMap<>();
     private final Map<String, AbstractParameter> parameters = new ConcurrentHashMap<>();
-    private final List<RegisterListener> listeners = new CopyOnWriteArrayList<>();
+    private final Set<RegisterListener> listeners = new CopyOnWriteArraySet<>();
     private byte[] value;
 
 }

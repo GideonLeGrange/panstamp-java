@@ -7,8 +7,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +50,7 @@ public final class PanStamp {
         if (v != null) {
             return v;
         }
-        return getGateway().getChannel();
+        return getNetwork().getChannel();
     }
 
     /**
@@ -92,12 +93,12 @@ public final class PanStamp {
      * @throws NetworkException Thrown if there is a problem getting the network
      * ID value
      */
-    public int getNetwork() throws NetworkException {
+    public int getNetworkId() throws NetworkException {
         Integer v = getIntValue(StandardEndpoint.NETWORK_ID);
         if (v != null) {
             return v;
         }
-        return getGateway().getNetworkId();
+        return getNetwork().getNetworkId();
     }
 
     /**
@@ -116,12 +117,12 @@ public final class PanStamp {
     /**
      * Set the network id of the device
      *
-     * @param network The network id
+     * @param networkId The network id
      * @throws NetworkException Thrown if there is a problem setting the ID
      */
-    public void setNetwork(int network) throws NetworkException {
-        if (network != getNetwork()) {
-            setIntValue(StandardEndpoint.NETWORK_ID, network);
+    public void setNetworkId(int networkId) throws NetworkException {
+        if (networkId != getNetworkId()) {
+            setIntValue(StandardEndpoint.NETWORK_ID, networkId);
         }
     }
 
@@ -183,12 +184,12 @@ public final class PanStamp {
     }
 
     /**
-     * Get the gateway this device is attached to.
+     * Get the network this device is attached to.
      *
-     * @return The gateway
+     * @return The network
      */
-    public Network getGateway() {
-        return gw;
+    public Network getNetwork() {
+        return nw;
     }
 
     /**
@@ -277,7 +278,7 @@ public final class PanStamp {
      * problem creating the device.
      */
     public PanStamp(Network gw, int address) throws NetworkException {
-        this.gw = gw;
+        this.nw = gw;
         this.address = address;
         extended = address > 255;
         for (StandardRegister reg : StandardRegister.ALL) {
@@ -304,7 +305,7 @@ public final class PanStamp {
      * send a query message to the remote node
      */
     void sendQueryMessage(int id) throws ModemException {
-        gw.sendQueryMessage(this, id);
+        nw.sendQueryMessage(this, id);
     }
 
     /**
@@ -316,7 +317,7 @@ public final class PanStamp {
         if (isSleeper()) {
             queue(id, value);
         } else {
-            gw.sendCommandMessage(this, id, value);
+            nw.sendCommandMessage(this, id, value);
         }
     }
 
@@ -337,7 +338,7 @@ public final class PanStamp {
     }
 
     ExecutorService getPool() {
-        return gw.getPool();
+        return nw.getPool();
     }
 
     private void fireRegisterDetected(final Register reg) {
@@ -476,7 +477,7 @@ public final class PanStamp {
      * load all endpoints and parameters
      */
     private void loadDefinition() throws NetworkException {
-        def = gw.getDeviceDefinition(getManufacturerId(), getProductId());
+        def = nw.getDeviceDefinition(getManufacturerId(), getProductId());
         List<RegisterDefinition> rpDefs = def.getRegisters();
         for (RegisterDefinition rpDef : rpDefs) {
             Register reg = (Register) getRegister(rpDef.getId());
@@ -515,13 +516,13 @@ public final class PanStamp {
 
     private final int address;
     private DeviceDefinition def;
-    private final Network gw;
+    private final Network nw;
     private int manufacturerId;
     private int productId;
     private int syncState;
     private final boolean extended;
     private final Map<Integer, Register> registers = new ConcurrentHashMap<>();
-    private transient final List<PanStampListener> listeners = new CopyOnWriteArrayList<>();
+    private transient final Set<PanStampListener> listeners = new CopyOnWriteArraySet<>(); // wish I knew why this was transient...
 
     private class UpdateOnSync extends AbstractPanStampListener {
 
@@ -538,7 +539,7 @@ public final class PanStamp {
                 case 1:
                 case 3:
                     try {
-                        gw.sendCommandMessage(PanStamp.this, id, val);
+                        nw.sendCommandMessage(PanStamp.this, id, val);
                     } catch (ModemException ex) {
                         Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {

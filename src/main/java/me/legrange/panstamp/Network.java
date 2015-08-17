@@ -2,10 +2,12 @@ package me.legrange.panstamp;
 
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -37,7 +39,8 @@ public final class Network implements AutoCloseable {
      * @param port The serial port to open, for example COM1 or /dev/ttyS0
      * @param baud The speed at which to open it, for example 34800
      * @return The newly created network.
-     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem creating the network.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a
+     * problem creating the network.
      */
     public static Network openSerial(String port, int baud) throws NetworkException {
         SerialModem sm = new SerialModem(port, baud);
@@ -55,7 +58,8 @@ public final class Network implements AutoCloseable {
      * '192.168.1.1'
      * @param port The TCP port to which to connect.
      * @return The newly created network
-     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem creating the network.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a
+     * problem creating the network.
      */
     public static Network openTcp(String host, int port) throws NetworkException {
         TcpModem tm = new TcpModem(host, port);
@@ -170,7 +174,6 @@ public final class Network implements AutoCloseable {
     public void addDevice(final PanStamp ps) {
         devices.put(ps.getAddress(), ps);
         fireDeviceDetected(ps);
-        ps.getDefinition();
     }
 
     /**
@@ -399,7 +402,7 @@ public final class Network implements AutoCloseable {
             });
         }
     }
-    
+
     private void fireNetworkOpened() {
         for (final NetworkListener l : listeners) {
             getPool().submit(new Runnable() {
@@ -411,8 +414,8 @@ public final class Network implements AutoCloseable {
             });
         }
     }
-    
-      private void fireNetworkClosed() {
+
+    private void fireNetworkClosed() {
         for (final NetworkListener l : listeners) {
             getPool().submit(new Runnable() {
 
@@ -442,20 +445,17 @@ public final class Network implements AutoCloseable {
         int address = msg.getSender();
         synchronized (devices) {
             if (!hasDevice(address)) {
-                try {
-                    PanStamp dev = new PanStamp(this, address);
-                    addDevice(dev);
-                    for (StandardRegister sr : StandardRegister.ALL) {
-                        Register reg = dev.getRegister(sr.getId());
-                        if (!reg.hasValue()) {
-                            if (store.hasRegisterValue(reg)) {
-                                reg.valueReceived(store.getRegisterValue(reg));
-                            }
+                PanStamp dev = new PanStamp(this, address);
+                devices.put(address, dev);
+                for (StandardRegister sr : StandardRegister.ALL) {
+                    Register reg = dev.getRegister(sr.getId());
+                    if (!reg.hasValue()) {
+                        if (store.hasRegisterValue(reg)) {
+                            reg.valueReceived(store.getRegisterValue(reg));
                         }
                     }
-                } catch (NoSuchUnitException ex) {
-                    throw new ModemException(ex.getMessage(), ex);
                 }
+                fireDeviceDetected(dev);
             }
         }
     }
@@ -465,7 +465,6 @@ public final class Network implements AutoCloseable {
      */
     private void processStatusMessage(SwapMessage msg) {
         try {
-            updateNetwork(msg);
             PanStamp dev = (PanStamp) getDevice(msg.getRegisterAddress());
             dev.statusMessageReceived(msg);
             if (msg.isStandardRegister()) {
@@ -473,8 +472,7 @@ public final class Network implements AutoCloseable {
                 Register reg = dev.getRegister(msg.getRegisterID());
                 store.setRegisterValue(reg, reg.getValue());
             }
-        } 
-        catch (NetworkException ex) {
+        } catch (NetworkException ex) {
             java.util.logging.Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -496,7 +494,7 @@ public final class Network implements AutoCloseable {
     private DeviceLibrary lib;
     private DeviceStateStore store;
     private final Map<Integer, PanStamp> devices = new HashMap<>();
-    private final List<NetworkListener> listeners = new LinkedList<>();
+    private final Set<NetworkListener> listeners = new CopyOnWriteArraySet<>();
     private static final Logger logger = Logger.getLogger(Network.class.getName());
     private ModemSetup setup;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
@@ -516,18 +514,13 @@ public final class Network implements AutoCloseable {
 
         @Override
         public void messageReceived(SwapMessage msg) {
-            switch (msg.getType()) {
-                case COMMAND:
-                case QUERY:
-                    try {
-                        updateNetwork(msg);
-                    } catch (NetworkException ex) {
-                        Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case STATUS:
-                    processStatusMessage(msg);
-                    break;
+            try {
+                updateNetwork(msg);
+            } catch (NetworkException ex) {
+                Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (msg.getType() == SwapMessage.Type.STATUS) {
+                processStatusMessage(msg);
             }
 
         }
@@ -536,5 +529,5 @@ public final class Network implements AutoCloseable {
         public void messageSent(SwapMessage msg) {
         }
     }
-   
+
 }

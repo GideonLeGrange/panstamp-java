@@ -3,7 +3,8 @@ package me.legrange.panstamp;
 import me.legrange.panstamp.event.AbstractRegisterListener;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,6 +92,27 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     public boolean isOutput() {
         return epDef.getDirection() == Direction.OUT;
     }
+
+    @Override
+    public int compareTo(Endpoint<T> o) {
+        int dif = getRegister().getDevice().getAddress() - o.getRegister().getDevice().getAddress();
+        if (dif == 0) {
+            dif = getRegister().getId() - o.getRegister().getId();
+            if (dif == 0) {
+                if (o instanceof AbstractEndpoint) {
+                    AbstractEndpoint ep = (AbstractEndpoint) o;
+                    dif = epDef.getPosition().getBytePos() - ep.epDef.getPosition().getBytePos();
+                    if (dif == 0) {
+                        dif = epDef.getPosition().getBitPos() - ep.epDef.getPosition().getBitPos();
+                    }
+                }
+                else {
+                    return getName().compareTo(o.getName()); // fall back to alpha order if we really can't figure out natural order.
+                }
+            }
+        }
+        return dif;
+    }
     
     /**
      * Write and transform the output value from a value in the given unit
@@ -121,7 +143,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     protected AbstractEndpoint(Register reg, EndpointDefinition epDef) {
         this.reg = reg;
         this.epDef = epDef;
-        this.listeners = new CopyOnWriteArrayList<>();
+        this.listeners = new CopyOnWriteArraySet<>();
         reg.addListener(new AbstractRegisterListener() {
             @Override
             public void valueReceived(final Register reg, final byte[] value) {
@@ -158,7 +180,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
 
     protected final Register reg;
     protected final EndpointDefinition epDef;
-    private final CopyOnWriteArrayList<EndpointListener<T>> listeners;
+    private final Set<EndpointListener<T>> listeners;
     private Unit unit = null;
 
 }

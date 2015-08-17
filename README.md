@@ -11,7 +11,7 @@ You can read all about them [on their commercial site](http://www.panstamp.com/)
 
 ## Versions
 
-The current stable version is *1.2*. For more information about different releases, see  [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
+The current stable version is *2.0*. For more information about different releases, see  [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
 
 This library uses [semantic versioning](http://semver.org/)
 
@@ -33,7 +33,7 @@ Add the dependency below to your pom.xml to use the artifact from Maven Central:
 <dependency>
   <groupId>me.legrange</groupId>
   <artifactId>panstamp-java</artifactId>
-  <version>1.2</version>
+  <version>2.0</version>
 </dependency>
 ```
 
@@ -46,7 +46,7 @@ There are [examples](https://github.com/GideonLeGrange/panstamp-java/wiki) on th
 * [Commercial site](http://www.panstamp.com/)
 * [panStamp wiki](https://github.com/panStamp/panstamp/wiki)
 * [panStamp GitHub repository](https://github.com/panStamp/panstamp)
-* [panStamp community forum.](http://www.panstamp.org/forum/)
+* [panStamp community forum](http://www.panstamp.org/forum/)
 
 # Licence
 

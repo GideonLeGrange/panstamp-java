@@ -10,7 +10,7 @@ import java.util.List;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
-public interface Endpoint<T> {
+public interface Endpoint<T> extends Comparable<Endpoint<T>> {
     
     /** Type of value sent and/or received by an endpoint. */
     public enum Type { 
