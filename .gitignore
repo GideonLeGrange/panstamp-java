@@ -49,3 +49,6 @@ _site/
 .project
 
 *.json
+
+# OS X 
+.DS_Store
