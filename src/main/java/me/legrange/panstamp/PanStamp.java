@@ -457,7 +457,7 @@ public final class PanStamp {
                 try {
                     int mfId = getManufacturerIdFromRegister();
                     int pdId = getProductIdFromRegister();
-                    if ((mfId != getManufacturerId()) || (pdId != getProductId())) {
+                    if ((mfId != manufacturerId) || (pdId != productId)) {
                         manufacturerId = mfId;
                         productId = pdId;
                         if ((manufacturerId != 0) && (productId != 0)) {
