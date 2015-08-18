@@ -171,11 +171,21 @@ public final class Network implements AutoCloseable {
      *
      * @param ps The device to add.
      */
-    public void addDevice(final PanStamp ps) {
-        devices.put(ps.getAddress(), ps);
-        fireDeviceDetected(ps);
+    public void addDevice(final PanStamp dev) {
+        synchronized(devices) {
+                devices.put(dev.getAddress(), dev);
+                for (StandardRegister sr : StandardRegister.ALL) {
+                    Register reg = dev.getRegister(sr.getId());
+                    if (!reg.hasValue()) {
+                        if (store.hasRegisterValue(reg)) {
+                            reg.valueReceived(store.getRegisterValue(reg));
+                        }
+                    }
+                }
+                fireDeviceDetected(dev);    
+        }
     }
-
+    
     /**
      * Removes the device with the given address from the network
      *
@@ -445,17 +455,7 @@ public final class Network implements AutoCloseable {
         int address = msg.getSender();
         synchronized (devices) {
             if (!hasDevice(address)) {
-                PanStamp dev = new PanStamp(this, address);
-                devices.put(address, dev);
-                for (StandardRegister sr : StandardRegister.ALL) {
-                    Register reg = dev.getRegister(sr.getId());
-                    if (!reg.hasValue()) {
-                        if (store.hasRegisterValue(reg)) {
-                            reg.valueReceived(store.getRegisterValue(reg));
-                        }
-                    }
-                }
-                fireDeviceDetected(dev);
+                addDevice(new PanStamp(this, address));
             }
         }
     }
