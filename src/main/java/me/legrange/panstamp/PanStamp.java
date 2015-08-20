@@ -79,7 +79,7 @@ public final class PanStamp {
      * Return the current sync state
      *
      * @return The sync state
-     * @throws NetworkException
+     * @throws NetworkException when the sync state cannot be retrieved.
      * @since 1.2
      */
     public int getSyncState() throws NetworkException {

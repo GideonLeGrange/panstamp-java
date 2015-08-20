@@ -169,7 +169,7 @@ public final class Network implements AutoCloseable {
     /**
      * Add a user-created device to the panStamp network.
      *
-     * @param ps The device to add.
+     * @param dev The device to add.
      */
     public void addDevice(final PanStamp dev) {
         synchronized(devices) {

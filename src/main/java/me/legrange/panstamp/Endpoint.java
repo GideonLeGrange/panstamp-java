@@ -48,7 +48,7 @@ public interface Endpoint<T> extends Comparable<Endpoint<T>> {
     
     /** 
      * Set the unit to use for converting endpoint values.
-     * @see getUnit() for more information. 
+     * @see #getUnit() for more information. 
      * 
      * @param unit The unit to use
      * @throws NoSuchUnitException Thrown if the unit specified does not exist.  
