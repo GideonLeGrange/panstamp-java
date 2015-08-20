@@ -15,9 +15,10 @@ public abstract class Example {
     
     protected abstract void doExampleCode(Network nw) throws NetworkException;
     
-    protected void run() throws NetworkException {
+    protected void run() throws NetworkException, InterruptedException {
          nw = Network.openSerial(PORT, BAUD);
          doExampleCode(nw);
+          Thread.sleep(100000);
          nw.close();
          System.exit(0);
     }
