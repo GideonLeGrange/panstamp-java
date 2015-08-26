@@ -171,21 +171,28 @@ public final class Network implements AutoCloseable {
      *
      * @param dev The device to add.
      */
-    public void addDevice(final PanStamp dev) {
-        synchronized(devices) {
-                devices.put(dev.getAddress(), dev);
-                for (StandardRegister sr : StandardRegister.ALL) {
-                    Register reg = dev.getRegister(sr.getId());
-                    if (!reg.hasValue()) {
-                        if (store.hasRegisterValue(reg)) {
-                            reg.valueReceived(store.getRegisterValue(reg));
-                        }
+    public void addDevice(final PanStamp dev) throws MoteException {
+        synchronized (devices) {
+            devices.put(dev.getAddress(), dev);
+            for (StandardRegister sr : StandardRegister.ALL) {
+                Register reg;
+                if (!dev.hasRegister(sr.getId())) {
+                    reg = new Register(dev, sr);
+                    dev.addRegister(reg);
+                }
+                else {
+                    reg = dev.getRegister(sr.getId());
+                }
+                if (!reg.hasValue()) {
+                    if (store.hasRegisterValue(reg)) {
+                        reg.valueReceived(store.getRegisterValue(reg));
                     }
                 }
-                fireDeviceDetected(dev);    
+            }
+            fireDeviceDetected(dev);
         }
     }
-    
+
     /**
      * Removes the device with the given address from the network
      *
@@ -469,8 +476,10 @@ public final class Network implements AutoCloseable {
             dev.statusMessageReceived(msg);
             if (msg.isStandardRegister()) {
                 StandardRegister sr = StandardRegister.forId(msg.getRegisterID());
-                Register reg = dev.getRegister(msg.getRegisterID());
-                store.setRegisterValue(reg, reg.getValue());
+                if (dev.hasRegister(msg.getRegisterID())) {
+                    Register reg = dev.getRegister(msg.getRegisterID());
+                    store.setRegisterValue(reg, reg.getValue());
+                }
             }
         } catch (NetworkException ex) {
             java.util.logging.Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);

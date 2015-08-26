@@ -210,15 +210,12 @@ public final class PanStamp {
      *
      * @return the register for the given id
      * @param id ID of register to return
+     * @throws When a register requested does not exist.
      */
-    public Register getRegister(int id) {
-        Register reg;
-        synchronized (registers) {
-            reg = registers.get(id);
-            if (reg == null) {
-                reg = new Register(this, id);
-                registers.put(id, reg);
-            }
+    public Register getRegister(int id) throws NoSuchRegisterException {
+        Register reg = registers.get(id);
+        if (reg == null) {
+            throw new NoSuchRegisterException(String.format("Could not find register %d in device %d", id, getAddress()));
         }
         return reg;
     }
@@ -282,11 +279,16 @@ public final class PanStamp {
         this.address = address;
         extended = address > 255;
         for (StandardRegister reg : StandardRegister.ALL) {
-            Register impl = new Register(this, reg);
-            registers.put(reg.getId(), impl);
+            addRegister(new Register(this, reg));
         }
         getRegister(StandardRegister.PRODUCT_CODE.getId()).addListener(productCodeListener());
         getRegister(StandardRegister.SYSTEM_STATE.getId()).getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
+    }
+    
+    void addRegister(Register reg) {
+        synchronized(registers) {
+            registers.put(reg.getId(), reg);
+        }
     }
 
     void destroy() {
@@ -324,8 +326,15 @@ public final class PanStamp {
     /**
      * Receive a status message from the remote node.
      */
-    void statusMessageReceived(SwapMessage msg) {
-        Register reg = (Register) getRegister(msg.getRegisterID());
+    void statusMessageReceived(SwapMessage msg) throws NoSuchRegisterException {
+        Register reg;
+        if (!hasRegister(msg.getRegisterID())) {
+            reg = new Register(this, msg.getRegisterID());
+            addRegister(reg);
+        }
+        else {
+            reg = getRegister(msg.getRegisterID());
+        }
         boolean isNew = !reg.hasValue();
         reg.valueReceived(msg.getRegisterValue());
         if (isNew) {
@@ -480,7 +489,14 @@ public final class PanStamp {
         def = nw.getDeviceDefinition(getManufacturerId(), getProductId());
         List<RegisterDefinition> rpDefs = def.getRegisters();
         for (RegisterDefinition rpDef : rpDefs) {
-            Register reg = (Register) getRegister(rpDef.getId());
+            Register reg;
+            if (!hasRegister(rpDef.getId())) {
+                reg = new Register(this, rpDef.getId());
+                addRegister(reg);
+            }
+            else {
+                reg = getRegister(rpDef.getId());
+            }
             for (EndpointDefinition epDef : rpDef.getEndpoints()) {
                 reg.addEndpoint(epDef);
             }
