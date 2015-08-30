@@ -2,7 +2,6 @@ package me.legrange.panstamp;
 
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,8 +176,7 @@ public final class Network implements AutoCloseable {
             for (StandardRegister sr : StandardRegister.ALL) {
                 Register reg;
                 if (!dev.hasRegister(sr.getId())) {
-                    reg = new Register(dev, sr);
-                    dev.addRegister(reg);
+                    reg = dev.addRegister(sr.getId());
                 } else {
                     reg = dev.getRegister(sr.getId());
                 }

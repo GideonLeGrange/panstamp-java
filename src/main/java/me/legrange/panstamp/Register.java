@@ -18,7 +18,7 @@ import me.legrange.panstamp.definition.ParameterDefinition;
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
 public final class Register {
-    
+
     /**
      * return the register ID
      *
@@ -28,8 +28,9 @@ public final class Register {
         return id;
     }
 
-    /** Get the register name as defined in XML.
-     * 
+    /**
+     * Get the register name as defined in XML.
+     *
      * @return The name of the register.
      */
     public String getName() {
@@ -41,16 +42,17 @@ public final class Register {
         }
         return name;
     }
-    
-    /** Get the device to which this register belongs. 
-     * 
-     * @return The panStamp device.  
+
+    /**
+     * Get the device to which this register belongs.
+     *
+     * @return The panStamp device.
      */
     public PanStamp getDevice() {
         return dev;
     }
 
-   /**
+    /**
      * return the endpoints defined for this register
      *
      * @return The endpoints
@@ -61,7 +63,7 @@ public final class Register {
         return all;
     }
 
-  /**
+    /**
      * Add a listener to receive register updates
      *
      * @param l listener to add
@@ -69,7 +71,6 @@ public final class Register {
     public void addListener(RegisterListener l) {
         listeners.add(l);
     }
-
 
     /**
      * remove a listener
@@ -100,13 +101,14 @@ public final class Register {
         }
     }
 
-       /**
+    /**
      * get the value of the register
      *
      * @return The value of the register
-     * @throws me.legrange.panstamp.NoValueException Thrown if the register value is requested but no value is available.
+     * @throws me.legrange.panstamp.NoValueException Thrown if the register
+     * value is requested but no value is available.
      */
-    public byte[] getValue() throws NoValueException { 
+    public byte[] getValue() throws NoValueException {
         synchronized (this) {
             if (value == null) {
                 throw new NoValueException(String.format("No value received for register %d", id));
@@ -117,6 +119,7 @@ public final class Register {
 
     /**
      * return true if the register has a currently known value
+     *
      * @return True if the register's value is known.
      */
     public boolean hasValue() {
@@ -130,7 +133,8 @@ public final class Register {
      *
      * @param name The name of the endpoint needed
      * @return The endpoint object
-     * @throws me.legrange.panstamp.EndpointNotFoundException Thrown if an endpoint with that name could not be found.
+     * @throws me.legrange.panstamp.EndpointNotFoundException Thrown if an
+     * endpoint with that name could not be found.
      */
     public Endpoint getEndpoint(String name) throws EndpointNotFoundException {
         Endpoint ep = endpoints.get(name);
@@ -139,7 +143,6 @@ public final class Register {
         }
         return ep;
     }
-
 
     /**
      * returns true if the device has an endpoint with the given name
@@ -152,9 +155,10 @@ public final class Register {
     public boolean hasEndpoint(String name) throws NetworkException {
         return endpoints.get(name) != null;
     }
-    
-    /** 
-     * Returns the parameters (if any) for this endpoint 
+
+    /**
+     * Returns the parameters (if any) for this endpoint
+     *
      * @return The list of parameters
      */
     public List<Parameter> getParameters() {
@@ -163,10 +167,9 @@ public final class Register {
         return all;
     }
 
-    
-    /** 
-     * return true if the register is one of the panStamp standard registers. 
-     * 
+    /**
+     * return true if the register is one of the panStamp standard registers.
+     *
      * @return True if it is standard
      */
     public boolean isStandard() {
@@ -215,17 +218,20 @@ public final class Register {
     /**
      * create a new register for the given dev and register address
      */
-    Register(PanStamp mote, int id) {
-        this.dev = mote;
+    Register(PanStamp dev, int id) {
+        this.dev = dev;
         this.id = id;
+        if (id <= StandardRegister.MAX.getId()) {
+            StandardRegister sr = StandardRegister.forId(id);
+            for (EndpointDefinition sep : sr.getEndpoints()) {
+                addEndpoint(sep);
+            }
+        }
     }
 
-    Register(PanStamp mote, StandardRegister reg) throws NoSuchUnitException {
-        this(mote, reg.getId());
+    Register(PanStamp dev, StandardRegister reg) throws NoSuchUnitException {
+        this(dev, reg.getId());
         name = reg.getName();
-        for (EndpointDefinition sep : reg.getEndpoints()) {
-            addEndpoint(sep);
-        }
     }
 
     private void fireValueReceived(final byte[] value) {
@@ -242,7 +248,7 @@ public final class Register {
             );
         }
     }
-    
+
     private void fireValueSet(final byte[] value) {
         for (final RegisterListener l : listeners) {
             getPool().submit(

@@ -278,17 +278,27 @@ public final class PanStamp {
         this.nw = gw;
         this.address = address;
         extended = address > 255;
-        for (StandardRegister reg : StandardRegister.ALL) {
-            addRegister(new Register(this, reg));
+        for (StandardRegister sr : StandardRegister.ALL) {
+            Register reg = addRegister(sr);
+            if (sr == StandardRegister.PRODUCT_CODE) {
+                reg.addListener(productCodeListener());
+            }
+            else if (sr == StandardRegister.SYSTEM_STATE) {
+                reg.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
+            }
         }
-        getRegister(StandardRegister.PRODUCT_CODE.getId()).addListener(productCodeListener());
-        getRegister(StandardRegister.SYSTEM_STATE.getId()).getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
+    }
+
+    Register addRegister(int id) {
+        Register reg = new Register(this, id);
+        registers.put(id, reg);
+        return reg;
     }
     
-    void addRegister(Register reg) {
-        synchronized(registers) {
-            registers.put(reg.getId(), reg);
-        }
+    private Register addRegister(StandardRegister sr) throws NoSuchUnitException {
+        Register reg = new Register(this, sr);
+        registers.put(sr.getId(), reg);
+        return reg;
     }
 
     void destroy() {
@@ -331,8 +341,7 @@ public final class PanStamp {
         if (!hasRegister(msg.getRegisterID())) {
             reg = new Register(this, msg.getRegisterID());
             addRegister(reg);
-        }
-        else {
+        } else {
             reg = getRegister(msg.getRegisterID());
         }
         boolean isNew = !reg.hasValue();
@@ -493,8 +502,7 @@ public final class PanStamp {
             if (!hasRegister(rpDef.getId())) {
                 reg = new Register(this, rpDef.getId());
                 addRegister(reg);
-            }
-            else {
+            } else {
                 reg = getRegister(rpDef.getId());
             }
             for (EndpointDefinition epDef : rpDef.getEndpoints()) {
