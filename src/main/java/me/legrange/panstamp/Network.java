@@ -179,8 +179,7 @@ public final class Network implements AutoCloseable {
                 if (!dev.hasRegister(sr.getId())) {
                     reg = new Register(dev, sr);
                     dev.addRegister(reg);
-                }
-                else {
+                } else {
                     reg = dev.getRegister(sr.getId());
                 }
                 if (!reg.hasValue()) {
@@ -478,7 +477,9 @@ public final class Network implements AutoCloseable {
                 StandardRegister sr = StandardRegister.forId(msg.getRegisterID());
                 if (dev.hasRegister(msg.getRegisterID())) {
                     Register reg = dev.getRegister(msg.getRegisterID());
-                    store.setRegisterValue(reg, reg.getValue());
+                    if (reg.hasValue()) {
+                        store.setRegisterValue(reg, reg.getValue());
+                    }
                 }
             }
         } catch (NetworkException ex) {
