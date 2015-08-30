@@ -339,8 +339,7 @@ public final class PanStamp {
     void statusMessageReceived(SwapMessage msg) throws NoSuchRegisterException {
         Register reg;
         if (!hasRegister(msg.getRegisterID())) {
-            reg = new Register(this, msg.getRegisterID());
-            addRegister(reg);
+            reg = addRegister(msg.getRegisterID());
         } else {
             reg = getRegister(msg.getRegisterID());
         }
@@ -500,8 +499,7 @@ public final class PanStamp {
         for (RegisterDefinition rpDef : rpDefs) {
             Register reg;
             if (!hasRegister(rpDef.getId())) {
-                reg = new Register(this, rpDef.getId());
-                addRegister(reg);
+                reg = addRegister(rpDef.getId());
             } else {
                 reg = getRegister(rpDef.getId());
             }
