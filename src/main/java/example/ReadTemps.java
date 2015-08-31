@@ -15,7 +15,6 @@
  */
 package example;
 
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceStateStore;
@@ -25,8 +24,6 @@ import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.event.AbstractEndpointListener;
-import me.legrange.panstamp.event.AbstractNetworkListener;
 
 /**
  *
@@ -68,8 +65,7 @@ public class ReadTemps extends Example {
                 
             });
             
-            PanStamp ps = new PanStamp(nw,3);
-            nw.addDevice(ps);
+            PanStamp ps = nw.addDevice(3);
             Thread.sleep(1000);
             Register r = ps.getRegister(12);
             final Endpoint<Double> e = r.getEndpoint("Temperature");

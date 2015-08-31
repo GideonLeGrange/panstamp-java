@@ -145,14 +145,14 @@ public final class Network implements AutoCloseable {
      *
      * @param address Address of device to fins
      * @return The device
-     * @throws me.legrange.panstamp.NodeNotFoundException Thrown if the device
+     * @throws me.legrange.panstamp.NoSuchDeviceException Thrown if the device
      * with the given address cannot be found.
      */
-    public PanStamp getDevice(int address) throws NodeNotFoundException {
+    public PanStamp getDevice(int address) throws NoSuchDeviceException {
         synchronized (devices) {
             PanStamp dev = devices.get(address);
             if (dev == null) {
-                throw new NodeNotFoundException(String.format("No device found for address %02x", address));
+                throw new NoSuchDeviceException(String.format("No device found for address %02x", address));
             }
             return dev;
         }

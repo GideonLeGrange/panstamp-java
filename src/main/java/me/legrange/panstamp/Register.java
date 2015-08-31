@@ -192,6 +192,9 @@ public final class Register {
             this.value = value;
         }
         fireValueReceived(value);
+        for (AbstractEndpoint ep : endpoints.values()) {
+            ep.valueReceived();
+        }
 
     }
 

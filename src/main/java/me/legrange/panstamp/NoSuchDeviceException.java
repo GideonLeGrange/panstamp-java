@@ -6,13 +6,13 @@ package me.legrange.panstamp;
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange
  */
-public class NodeNotFoundException extends NetworkException {
+public class NoSuchDeviceException extends NetworkException {
 
-    public NodeNotFoundException(String msg) {
+    public NoSuchDeviceException(String msg) {
         super(msg);
     }
 
-    public NodeNotFoundException(String msg, Throwable cause) {
+    public NoSuchDeviceException(String msg, Throwable cause) {
         super(msg, cause);
     }
 

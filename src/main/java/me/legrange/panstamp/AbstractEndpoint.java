@@ -1,6 +1,5 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.event.AbstractRegisterListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +70,6 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
         write(unit, value);
     }
 
-    
     @Override
     public final T getValue(String unit) throws NetworkException {
         return read(getUnit(unit));
@@ -86,7 +84,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     public Register getRegister() {
         return reg;
     }
-    
+
     @Override
     public boolean isOutput() {
         return epDef.getDirection() == Direction.OUT;
@@ -104,15 +102,14 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
                     if (dif == 0) {
                         dif = epDef.getPosition().getBitPos() - ep.epDef.getPosition().getBitPos();
                     }
-                }
-                else {
+                } else {
                     return getName().compareTo(o.getName()); // fall back to alpha order if we really can't figure out natural order.
                 }
             }
         }
         return dif;
     }
-    
+
     /**
      * Write and transform the output value from a value in the given unit
      *
@@ -142,42 +139,43 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     protected AbstractEndpoint(Register reg, EndpointDefinition epDef) {
         this.reg = reg;
         this.epDef = epDef;
-        this.listeners = new CopyOnWriteArraySet<>();
-        reg.addListener(new AbstractRegisterListener() {
-            @Override
-            public void valueReceived(final Register reg, final byte[] value) {
-                for (final EndpointListener<T> l : listeners) {
-                    submit(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                l.valueReceived(AbstractEndpoint.this, getValue());
-                            } catch (NetworkException ex) {
-                                Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-
-                        }
-                    }
-                    );
-                }
-            }
-        });
         unit = !epDef.getUnits().isEmpty() ? epDef.getUnits().get(0) : null;
+    }
+
+    void valueReceived() {
+        fireValueReceived();
     }
 
     void destroy() {
         listeners.clear();
     }
-    
+
+    private void fireValueReceived() {
+        for (final EndpointListener<T> l : listeners) {
+            submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        l.valueReceived(AbstractEndpoint.this, getValue());
+                    } catch (NetworkException ex) {
+                        Logger.getLogger(AbstractEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+            );
+        }
+
+    }
+
     private void submit(Runnable task) {
         reg.submit(task);
     }
 
-
     protected final Register reg;
     protected final EndpointDefinition epDef;
-    private final Set<EndpointListener<T>> listeners;
+    private final Set<EndpointListener<T>> listeners = new CopyOnWriteArraySet<>();
     private Unit unit = null;
 
 }
