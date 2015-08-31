@@ -304,7 +304,6 @@ public final class PanStamp {
         }
     }
 
-
     Register addRegister(int id) {
         Register reg = new Register(this, id);
         registers.put(id, reg);
@@ -485,12 +484,8 @@ public final class PanStamp {
 
             private void updated(Register reg) {
                 try {
-                    int mfId = ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName())).getValue();
-                    int pdId = ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName())).getValue();
-                    System.out.printf("Product code updated: %d/%d\n", mfId, pdId);
-                    if ((mfId != manufacturerId) || (pdId != productId)) {
-                        setProductCode(mfId, pdId);
-                    }
+                    setProductCode((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName()).getValue(),
+                            ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName())).getValue());
                 } catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -498,9 +493,9 @@ public final class PanStamp {
         };
 
     }
-    
+
     private PanStampListener updateOnSyncListener(final int id, final byte[] val) {
-       return new AbstractPanStampListener() {
+        return new AbstractPanStampListener() {
             @Override
             public void syncStateChange(PanStamp dev, int syncState) {
                 switch (syncState) {
@@ -551,5 +546,5 @@ public final class PanStamp {
     private final boolean extended;
     private final Map<Integer, Register> registers = new ConcurrentHashMap<>();
     private transient final Set<PanStampListener> listeners = new CopyOnWriteArraySet<>(); // wish I knew why this was transient...
-   
+
 }
