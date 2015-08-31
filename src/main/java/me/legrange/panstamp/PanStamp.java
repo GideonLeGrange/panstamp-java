@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.definition.DeviceDefinition;
@@ -294,7 +293,7 @@ public final class PanStamp {
         return reg;
     }
     
-    private Register addRegister(StandardRegister sr) throws NoSuchUnitException {
+    Register addRegister(StandardRegister sr) throws NoSuchUnitException {
         Register reg = new Register(this, sr);
         registers.put(sr.getId(), reg);
         return reg;

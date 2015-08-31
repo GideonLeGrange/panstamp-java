@@ -14,6 +14,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.definition.DeviceDefinition;
+import me.legrange.panstamp.definition.EndpointDefinition;
+import me.legrange.panstamp.definition.ParameterDefinition;
+import me.legrange.panstamp.definition.RegisterDefinition;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapException;
 import me.legrange.swap.SwapModem;
@@ -169,25 +172,54 @@ public final class Network implements AutoCloseable {
     /**
      * Add a user-created device to the panStamp network.
      *
-     * @param dev The device to add.
-     * @throws me.legrange.panstamp.NoSuchRegisterException Thrown if a register can't be found, won't happen in practice.
+     * @param addr the network address of the new device
+     * @return The newly created device
+     * @throws me.legrange.panstamp.NoSuchRegisterException Thrown if a register
+     * can't be found, won't happen in practice.
      */
-    public void addDevice(final PanStamp dev) throws NoSuchRegisterException  {
-            devices.put(dev.getAddress(), dev);
-            for (StandardRegister sr : StandardRegister.ALL) {
-                Register reg;
-                if (!dev.hasRegister(sr.getId())) {
-                    reg = dev.addRegister(sr.getId());
-                } else {
-                    reg = dev.getRegister(sr.getId());
+    public PanStamp addDevice(final int addr) throws NetworkException {
+        if (devices.containsKey(addr)) {
+            throw new DuplicateDeviceException(String.format("A panStamp device for address '%d' already exists", addr));
+        }
+        // create new panStamp with given adddress
+        PanStamp dev = new PanStamp(this, addr);
+        // now assign all it's standard registers 
+        for (StandardRegister sr : StandardRegister.ALL) {
+            Register reg = dev.addRegister(sr);
+            if (store.hasRegisterValue(reg)) {
+                byte val[] = store.getRegisterValue(reg);
+                reg.valueReceived(val);
+            }
+            for (EndpointDefinition epDef : sr.getEndpoints()) {
+                reg.addEndpoint(epDef);
+            }
+            for (ParameterDefinition par : sr.getParameters()) {
+                reg.addParameter(par);
+            }
+            if (sr == StandardRegister.PRODUCT_CODE) {
+                    // FIXME - need to decide if we want to handle product code like this or in a more
+                // generic fashion from events from below, but either way it needs to be more reliable. 
+            }
+        }
+        // if we have a product code, load and create all endpoints 
+        if ((dev.getManufacturerId() != 0) && (dev.getProductId() != 0)) {
+            DeviceDefinition def = getDeviceDefinition(dev.getManufacturerId(), dev.getProductId());
+            List<RegisterDefinition> rpDefs = def.getRegisters();
+            for (RegisterDefinition rpDef : rpDefs) {
+                Register reg = dev.addRegister(rpDef.getId());
+                for (EndpointDefinition epDef : rpDef.getEndpoints()) {
+                    reg.addEndpoint(epDef);
                 }
-                if (!reg.hasValue()) {
-                    if (store.hasRegisterValue(reg)) {
-                        reg.valueReceived(store.getRegisterValue(reg));
-                    }
+                for (ParameterDefinition par : rpDef.getParameters()) {
+                    reg.addParameter(par);
                 }
             }
-            fireDeviceDetected(dev);
+        }
+        // save it in the device collection 
+        devices.put(addr, dev);
+        // let all listeners know about it 
+        fireDeviceDetected(dev);
+        return dev;
     }
 
     /**
@@ -456,7 +488,7 @@ public final class Network implements AutoCloseable {
         int address = msg.getSender();
         synchronized (devices) {
             if (!hasDevice(address)) {
-                addDevice(new PanStamp(this, address));
+                addDevice(address);
             }
         }
     }

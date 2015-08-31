@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
 import me.legrange.panstamp.definition.DeviceDefinition;
 import me.legrange.panstamp.definition.EndpointDefinition;
 import me.legrange.panstamp.definition.ParameterDefinition;
@@ -196,33 +195,30 @@ public final class Register {
 
     }
 
-    void addEndpoint(EndpointDefinition def) {
+    Endpoint addEndpoint(EndpointDefinition def) {
         AbstractEndpoint ep = makeEndpoint(def);
         endpoints.put(def.getName(), ep);
         fireEndpointAdded(ep);
+        return ep;
     }
 
-    void addParameter(ParameterDefinition def) {
+    Parameter addParameter(ParameterDefinition def) {
         AbstractParameter par = makeParameter(def);
         parameters.put(def.getName(), par);
         fireParameterAdded(par);
+        return par;
     }
 
     void submit(Runnable task) {
         dev.submit(task);
     }
+
     /**
      * create a new register for the given dev and register address
      */
     Register(PanStamp dev, int id) {
         this.dev = dev;
         this.id = id;
-        if (id <= StandardRegister.MAX.getId()) {
-            StandardRegister sr = StandardRegister.forId(id);
-            for (EndpointDefinition sep : sr.getEndpoints()) {
-                addEndpoint(sep);
-            }
-        }
     }
 
     Register(PanStamp dev, StandardRegister reg) throws NoSuchUnitException {
