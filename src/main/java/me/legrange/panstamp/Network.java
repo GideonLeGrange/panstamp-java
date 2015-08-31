@@ -173,8 +173,7 @@ public final class Network implements AutoCloseable {
      *
      * @param addr the network address of the new device
      * @return The newly created device
-     * @throws me.legrange.panstamp.NoSuchRegisterException Thrown if a register
-     * can't be found, won't happen in practice.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem adding the device.
      */
     public PanStamp addDevice(final int addr) throws NetworkException {
         if (devices.containsKey(addr)) {
