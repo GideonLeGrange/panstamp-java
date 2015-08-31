@@ -1,7 +1,5 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.NetworkException;
-
 /**
  * Thrown when there is a problem with modem communication.
  * 

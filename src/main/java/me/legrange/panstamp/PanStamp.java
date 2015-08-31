@@ -290,6 +290,7 @@ public final class PanStamp {
     Register addRegister(int id) {
         Register reg = new Register(this, id);
         registers.put(id, reg);
+        fireRegisterDetected(reg);
         return reg;
     }
     
@@ -341,11 +342,7 @@ public final class PanStamp {
         } else {
             reg = getRegister(msg.getRegisterID());
         }
-        boolean isNew = !reg.hasValue();
         reg.valueReceived(msg.getRegisterValue());
-        if (isNew) {
-            fireRegisterDetected(reg);
-        }
     }
 
     boolean hasExtendedAddress() {

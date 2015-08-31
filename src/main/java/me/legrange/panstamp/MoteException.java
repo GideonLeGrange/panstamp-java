@@ -1,7 +1,5 @@
 package me.legrange.panstamp;
 
-import me.legrange.panstamp.NetworkException;
-
 /**
  * Thrown by a mote object when it experiences problems.
  *
@@ -17,7 +15,5 @@ class MoteException extends NetworkException {
     MoteException(String msg, Throwable cause) {
         super(msg, cause);
     }
-    
-    
-    
+   
 }
