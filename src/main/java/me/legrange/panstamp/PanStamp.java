@@ -210,8 +210,7 @@ public final class PanStamp {
      *
      * @return the register for the given id
      * @param id ID of register to return
-     * @throws When a register requested does not exist.
-     */
+     * @throws me.legrange.panstamp.NoSuchRegisterException When a register requested does not exist. */
     public Register getRegister(int id) throws NoSuchRegisterException {
         Register reg = registers.get(id);
         if (reg == null) {
