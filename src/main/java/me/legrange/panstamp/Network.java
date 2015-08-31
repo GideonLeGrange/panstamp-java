@@ -257,7 +257,7 @@ public final class Network implements AutoCloseable {
      *
      * @return The SWAP modem supporting this network
      */
-    public SwapModem getSWAPModem() {
+    public SwapModem getSwapModem() {
         return modem;
     }
 
