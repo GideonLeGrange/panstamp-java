@@ -208,13 +208,9 @@ public final class Register {
         fireParameterAdded(par);
     }
 
-    /**
-     * Get the executor service used to service library threads
-     */
-    ExecutorService getPool() {
-        return dev.getPool();
+    void submit(Runnable task) {
+        dev.submit(task);
     }
-
     /**
      * create a new register for the given dev and register address
      */
@@ -236,7 +232,7 @@ public final class Register {
 
     private void fireValueReceived(final byte[] value) {
         for (final RegisterListener l : listeners) {
-            getPool().submit(
+            submit(
                     new Runnable() {
 
                         @Override
@@ -251,7 +247,7 @@ public final class Register {
 
     private void fireValueSet(final byte[] value) {
         for (final RegisterListener l : listeners) {
-            getPool().submit(
+            submit(
                     new Runnable() {
 
                         @Override
@@ -266,7 +262,7 @@ public final class Register {
 
     private void fireEndpointAdded(final Endpoint ep) {
         for (final RegisterListener l : listeners) {
-            getPool().submit(
+            submit(
                     new Runnable() {
 
                         @Override
@@ -281,7 +277,7 @@ public final class Register {
 
     private void fireParameterAdded(final Parameter par) {
         for (final RegisterListener l : listeners) {
-            getPool().submit(
+            submit(
                     new Runnable() {
 
                         @Override

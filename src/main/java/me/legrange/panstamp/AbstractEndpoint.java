@@ -148,7 +148,7 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
             @Override
             public void valueReceived(final Register reg, final byte[] value) {
                 for (final EndpointListener<T> l : listeners) {
-                    pool().submit(new Runnable() {
+                    submit(new Runnable() {
 
                         @Override
                         public void run() {
@@ -170,13 +170,11 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     void destroy() {
         listeners.clear();
     }
-
-    /**
-     * Get the executor service used to service library threads
-     */
-    private ExecutorService pool() {
-        return reg.getPool();
+    
+    private void submit(Runnable task) {
+        reg.submit(task);
     }
+
 
     protected final Register reg;
     protected final EndpointDefinition epDef;

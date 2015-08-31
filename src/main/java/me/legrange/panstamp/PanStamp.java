@@ -353,13 +353,13 @@ public final class PanStamp {
         return extended;
     }
 
-    ExecutorService getPool() {
-        return nw.getPool();
+    void submit(Runnable task) {
+        nw.submit(task);
     }
 
     private void fireRegisterDetected(final Register reg) {
         for (final PanStampListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -423,7 +423,7 @@ public final class PanStamp {
 
     private void fireSyncRequired() {
         for (final PanStampListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -435,7 +435,7 @@ public final class PanStamp {
 
     private void fireSyncStateChanged(final int syncState) {
         for (final PanStampListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -447,7 +447,7 @@ public final class PanStamp {
 
     private void fireProductCodeChange(final int manufacturerId, final int productId) {
         for (final PanStampListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {

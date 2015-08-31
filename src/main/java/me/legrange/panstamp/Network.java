@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -169,9 +170,9 @@ public final class Network implements AutoCloseable {
      * Add a user-created device to the panStamp network.
      *
      * @param dev The device to add.
+     * @throws me.legrange.panstamp.NoSuchRegisterException Thrown if a register can't be found, won't happen in practice.
      */
-    public void addDevice(final PanStamp dev) throws MoteException {
-        synchronized (devices) {
+    public void addDevice(final PanStamp dev) throws NoSuchRegisterException  {
             devices.put(dev.getAddress(), dev);
             for (StandardRegister sr : StandardRegister.ALL) {
                 Register reg;
@@ -187,7 +188,6 @@ public final class Network implements AutoCloseable {
                 }
             }
             fireDeviceDetected(dev);
-        }
     }
 
     /**
@@ -372,11 +372,8 @@ public final class Network implements AutoCloseable {
         return lib.getDeviceDefinition(manId, prodId);
     }
 
-    /**
-     * Get the executor service used to service library threads
-     */
-    ExecutorService getPool() {
-        return pool;
+    void submit(Runnable task) {
+        pool.submit(task);
     }
 
     /**
@@ -395,7 +392,7 @@ public final class Network implements AutoCloseable {
 
     private void fireDeviceDetected(final PanStamp dev) {
         for (final NetworkListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -407,7 +404,7 @@ public final class Network implements AutoCloseable {
 
     private void fireDeviceRemoved(final PanStamp dev) {
         for (final NetworkListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -419,7 +416,7 @@ public final class Network implements AutoCloseable {
 
     private void fireNetworkOpened() {
         for (final NetworkListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -431,7 +428,7 @@ public final class Network implements AutoCloseable {
 
     private void fireNetworkClosed() {
         for (final NetworkListener l : listeners) {
-            getPool().submit(new Runnable() {
+            submit(new Runnable() {
 
                 @Override
                 public void run() {
@@ -501,7 +498,7 @@ public final class Network implements AutoCloseable {
     private final Receiver receiver;
     private DeviceLibrary lib;
     private DeviceStateStore store;
-    private final Map<Integer, PanStamp> devices = new HashMap<>();
+    private final Map<Integer, PanStamp> devices = new ConcurrentHashMap<>();
     private final Set<NetworkListener> listeners = new CopyOnWriteArraySet<>();
     private static final Logger logger = Logger.getLogger(Network.class.getName());
     private ModemSetup setup;
