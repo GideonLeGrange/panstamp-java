@@ -209,7 +209,9 @@ public final class PanStamp {
      *
      * @return the register for the given id
      * @param id ID of register to return
-     * @throws me.legrange.panstamp.NoSuchRegisterException When a register requested does not exist. */
+     * @throws me.legrange.panstamp.NoSuchRegisterException When a register
+     * requested does not exist.
+     */
     public Register getRegister(int id) throws NoSuchRegisterException {
         Register reg = registers.get(id);
         if (reg == null) {
@@ -272,20 +274,36 @@ public final class PanStamp {
      * @throws me.legrange.panstamp.NetworkException Thrown if there is a
      * problem creating the device.
      */
-    public PanStamp(Network gw, int address) throws NetworkException {
+    PanStamp(Network gw, int address) throws NetworkException {
         this.nw = gw;
         this.address = address;
         extended = address > 255;
+        // now assign all it's standard registers 
         for (StandardRegister sr : StandardRegister.ALL) {
             Register reg = addRegister(sr);
+            for (EndpointDefinition epDef : sr.getEndpoints()) {
+                reg.addEndpoint(epDef);
+            }
+            for (ParameterDefinition par : sr.getParameters()) {
+                reg.addParameter(par);
+            }
             if (sr == StandardRegister.PRODUCT_CODE) {
                 reg.addListener(productCodeListener());
-            }
-            else if (sr == StandardRegister.SYSTEM_STATE) {
+            } else if (sr == StandardRegister.SYSTEM_STATE) {
                 reg.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName()).addListener(systemStateListener());
             }
         }
     }
+
+    void setProductCode(int mId, int pId) throws NetworkException {
+        if ((mId != manufacturerId) || (pId != productId) || (def == null)) {
+            this.manufacturerId = mId;
+            this.productId = pId;
+            loadDefinition();
+            fireProductCodeChange(manufacturerId, productId);
+        }
+    }
+
 
     Register addRegister(int id) {
         Register reg = new Register(this, id);
@@ -293,7 +311,7 @@ public final class PanStamp {
         fireRegisterDetected(reg);
         return reg;
     }
-    
+
     Register addRegister(StandardRegister sr) throws NoSuchUnitException {
         Register reg = new Register(this, sr);
         registers.put(sr.getId(), reg);
@@ -389,8 +407,8 @@ public final class PanStamp {
         return null;
     }
 
-    private void queue(int id, byte[] value) {
-        addListener(new UpdateOnSync(id, value));
+    private void queue(final int id, final byte[] val) {
+        addListener(updateOnSyncListener(id, val));
         fireSyncRequired();
     }
 
@@ -405,16 +423,6 @@ public final class PanStamp {
             int v = ep.getValue();
             return (v != 3) && (v != 1);
         }
-    }
-
-    private EndpointListener systemStateListener() {
-        return new EndpointListener<Integer>() {
-
-            @Override
-            public void valueReceived(Endpoint<Integer> ep, Integer syncState) {
-                fireSyncStateChanged(syncState);
-            }
-        };
     }
 
     private void fireSyncRequired() {
@@ -453,29 +461,35 @@ public final class PanStamp {
         }
     }
 
+    private EndpointListener systemStateListener() {
+        return new EndpointListener<Integer>() {
+
+            @Override
+            public void valueReceived(Endpoint<Integer> ep, Integer syncState) {
+                fireSyncStateChanged(syncState);
+            }
+        };
+    }
+
     private RegisterListener productCodeListener() {
         return new AbstractRegisterListener() {
             @Override
             public void valueReceived(Register reg, byte value[]) {
-                updated(reg, value);
+                updated(reg);
             }
 
             @Override
             public void valueSet(Register reg, byte[] value) {
-                updated(reg, value);
+                updated(reg);
             }
 
-            private void updated(Register reg, byte[] value) {
+            private void updated(Register reg) {
                 try {
-                    int mfId = getManufacturerIdFromRegister();
-                    int pdId = getProductIdFromRegister();
+                    int mfId = ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName())).getValue();
+                    int pdId = ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName())).getValue();
+                    System.out.printf("Product code updated: %d/%d\n", mfId, pdId);
                     if ((mfId != manufacturerId) || (pdId != productId)) {
-                        manufacturerId = mfId;
-                        productId = pdId;
-                        if ((manufacturerId != 0) && (productId != 0)) {
-                            loadDefinition();
-                        }
-                        fireProductCodeChange(manufacturerId, productId);
+                        setProductCode(mfId, pdId);
                     }
                 } catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
@@ -483,6 +497,27 @@ public final class PanStamp {
             }
         };
 
+    }
+    
+    private PanStampListener updateOnSyncListener(final int id, final byte[] val) {
+       return new AbstractPanStampListener() {
+            @Override
+            public void syncStateChange(PanStamp dev, int syncState) {
+                switch (syncState) {
+                    case 1:
+                    case 3:
+                        try {
+                            nw.sendCommandMessage(PanStamp.this, id, val);
+                        } catch (ModemException ex) {
+                            Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            removeListener(this);
+                        }
+                        break;
+                    default:
+                }
+            }
+        };
     }
 
     /**
@@ -507,30 +542,6 @@ public final class PanStamp {
         }
     }
 
-    /**
-     * get the manufacturer id for this panStamp from the actual register
-     */
-    private int getManufacturerIdFromRegister() throws NetworkException {
-        Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
-        if (reg.hasValue()) {
-            byte val[] = reg.getValue();
-            return val[0] << 24 | val[1] << 16 | val[2] << 8 | val[3];
-        }
-        return 0;
-    }
-
-    /**
-     * get the product id for this panStamp from the actual register
-     */
-    private int getProductIdFromRegister() throws NetworkException {
-        Register reg = getRegister(StandardRegister.PRODUCT_CODE.getId());
-        if (reg.hasValue()) {
-            byte val[] = reg.getValue();
-            return val[4] << 24 | val[5] << 16 | val[6] << 8 | val[7];
-        }
-        return 0;
-    }
-
     private final int address;
     private DeviceDefinition def;
     private final Network nw;
@@ -540,31 +551,5 @@ public final class PanStamp {
     private final boolean extended;
     private final Map<Integer, Register> registers = new ConcurrentHashMap<>();
     private transient final Set<PanStampListener> listeners = new CopyOnWriteArraySet<>(); // wish I knew why this was transient...
-
-    private class UpdateOnSync extends AbstractPanStampListener {
-
-        private UpdateOnSync(int id, byte[] val) {
-            this.id = id;
-            this.val = val;
-        }
-        private final int id;
-        private final byte[] val;
-
-        @Override
-        public void syncStateChange(PanStamp dev, int syncState) {
-            switch (syncState) {
-                case 1:
-                case 3:
-                    try {
-                        nw.sendCommandMessage(PanStamp.this, id, val);
-                    } catch (ModemException ex) {
-                        Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
-                    } finally {
-                        removeListener(this);
-                    }
-                    break;
-                default:
-            }
-        }
-    }
+   
 }

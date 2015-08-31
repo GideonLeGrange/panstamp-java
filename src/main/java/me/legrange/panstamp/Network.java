@@ -173,7 +173,8 @@ public final class Network implements AutoCloseable {
      *
      * @param addr the network address of the new device
      * @return The newly created device
-     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem adding the device.
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a
+     * problem adding the device.
      */
     public PanStamp addDevice(final int addr) throws NetworkException {
         if (devices.containsKey(addr)) {
@@ -181,38 +182,21 @@ public final class Network implements AutoCloseable {
         }
         // create new panStamp with given adddress
         PanStamp dev = new PanStamp(this, addr);
-        // now assign all it's standard registers 
-        for (StandardRegister sr : StandardRegister.ALL) {
-            Register reg = dev.addRegister(sr);
+        // update value for all standard registers from store if we have data
+        for (Register reg : dev.getRegisters()) {
             if (store.hasRegisterValue(reg)) {
                 byte val[] = store.getRegisterValue(reg);
                 reg.valueReceived(val);
             }
-            for (EndpointDefinition epDef : sr.getEndpoints()) {
-                reg.addEndpoint(epDef);
-            }
-            for (ParameterDefinition par : sr.getParameters()) {
-                reg.addParameter(par);
-            }
-            if (sr == StandardRegister.PRODUCT_CODE) {
-                    // FIXME - need to decide if we want to handle product code like this or in a more
-                // generic fashion from events from below, but either way it needs to be more reliable. 
-            }
         }
-        // if we have a product code, load and create all endpoints 
-        if ((dev.getManufacturerId() != 0) && (dev.getProductId() != 0)) {
-            DeviceDefinition def = getDeviceDefinition(dev.getManufacturerId(), dev.getProductId());
-            List<RegisterDefinition> rpDefs = def.getRegisters();
-            for (RegisterDefinition rpDef : rpDefs) {
-                Register reg = dev.addRegister(rpDef.getId());
-                for (EndpointDefinition epDef : rpDef.getEndpoints()) {
-                    reg.addEndpoint(epDef);
-                }
-                for (ParameterDefinition par : rpDef.getParameters()) {
-                    reg.addParameter(par);
-                }
-            }
+               // set the product code 
+    /*    Register pReg = dev.getRegister(StandardRegister.PRODUCT_CODE.getId());
+        if (pReg.hasValue()) {
+            dev.setProductCode(((Endpoint<Integer>) pReg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName())).getValue(),
+                    ((Endpoint<Integer>) pReg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName())).getValue());
         }
+
+ */
         // save it in the device collection 
         devices.put(addr, dev);
         // let all listeners know about it 
@@ -504,11 +488,13 @@ public final class Network implements AutoCloseable {
                     Register reg = dev.getRegister(msg.getRegisterID());
                     if (reg.hasValue()) {
                         store.setRegisterValue(reg, reg.getValue());
+
                     }
                 }
             }
         } catch (NetworkException ex) {
-            java.util.logging.Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Network.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -530,7 +516,8 @@ public final class Network implements AutoCloseable {
     private DeviceStateStore store;
     private final Map<Integer, PanStamp> devices = new ConcurrentHashMap<>();
     private final Set<NetworkListener> listeners = new CopyOnWriteArraySet<>();
-    private static final Logger logger = Logger.getLogger(Network.class.getName());
+    private static final Logger logger = Logger.getLogger(Network.class
+            .getName());
     private ModemSetup setup;
     private final ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
 
