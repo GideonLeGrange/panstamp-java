@@ -20,19 +20,22 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class parses XML device definitions into DeviceDefinitons objects. 
+ * This class parses XML device definitions into DeviceDefinitons objects.
  *
  * @since 1.0
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
- final class XmlParser {
+final class XmlParser {
 
-     /** Parse all XML definitions in the supplied library and return a list definitions. 
-      * 
-      * @param lib The library from which to read the device definitions. 
-      * @return The list of parsed definitions.
-      * @throws ParseException Thrown if there is a problem parsing the defintions. 
-      */
+    /**
+     * Parse all XML definitions in the supplied library and return a list
+     * definitions.
+     *
+     * @param lib The library from which to read the device definitions.
+     * @return The list of parsed definitions.
+     * @throws ParseException Thrown if there is a problem parsing the
+     * defintions.
+     */
     public static List<XmlDeviceDefinition> parse(XmlDeviceLibrary lib) throws ParseException {
         XmlParser parser = new XmlParser(lib);
         return parser.parseDevices();
@@ -55,8 +58,11 @@ import org.xml.sax.SAXException;
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(makeStream(fileName));
-
+            InputStream in = makeStream(fileName);
+            if (in == null) {
+                throw new ParseException(String.format("Could not access file '%s'.", fileName));
+            }
+            Document doc = db.parse(in);
             Element root = doc.getDocumentElement();
             if (!root.getNodeName().equals("devices")) {
                 throw new ParseException(String.format("Excpected 'devices' element, but found '%s'", root.getNodeName()));
@@ -101,7 +107,7 @@ import org.xml.sax.SAXException;
         String label = requireAttr(node, "label");
         String fileName = devel.getName() + "/" + name + ".xml";
         InputStream in = makeStream(fileName);
-        if (in !=  null) {
+        if (in != null) {
             dev = new XmlDeviceDefinition(devel, id, name, label);
             parseDeviceXML(dev, fileName);
         } else {
@@ -243,7 +249,7 @@ import org.xml.sax.SAXException;
                 String parts[] = text.split("\\.");
                 par.setSize(new Size(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
             } else {
-                par.setSize(new Size(Integer.parseInt(text),0));
+                par.setSize(new Size(Integer.parseInt(text), 0));
             }
 
         } catch (NumberFormatException e) {
@@ -434,9 +440,9 @@ import org.xml.sax.SAXException;
     }
 
     private InputStream makeStream(String fileName) {
-        return lib.getStream(fileName); 
+        return lib.getStream(fileName);
     }
-    
+
     private static Iterable<Element> iterable(final NodeList nl) {
         List<Element> els = new LinkedList<>();
         for (int i = 0; i < nl.getLength(); ++i) {

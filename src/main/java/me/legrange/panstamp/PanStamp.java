@@ -3,6 +3,7 @@ package me.legrange.panstamp;
 import me.legrange.panstamp.event.AbstractPanStampListener;
 import me.legrange.panstamp.event.AbstractRegisterListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -275,6 +276,7 @@ public final class PanStamp {
      * problem creating the device.
      */
     PanStamp(Network gw, int address) throws NetworkException {
+        logger.warning(String.format("PanStamp(%d,%d)", gw.getNetworkId(), address));
         this.nw = gw;
         this.address = address;
         extended = address > 255;
@@ -296,14 +298,15 @@ public final class PanStamp {
     }
 
     void setProductCode(int mId, int pId) throws NetworkException {
+                logger.warning(String.format("setProductCode(%d,%d)", mId, pId));
         if ((mId != manufacturerId) || (pId != productId) || (def == null)) {
             this.manufacturerId = mId;
             this.productId = pId;
             loadDefinition();
+            loadDefinition();
             fireProductCodeChange(manufacturerId, productId);
         }
     }
-
 
     Register addRegister(int id) {
         Register reg = new Register(this, id);
@@ -450,6 +453,8 @@ public final class PanStamp {
     }
 
     private void fireProductCodeChange(final int manufacturerId, final int productId) {
+                logger.warning(String.format("fireProductCodeChange(%d,%d)", manufacturerId, productId));
+
         for (final PanStampListener l : listeners) {
             submit(new Runnable() {
 
@@ -475,19 +480,22 @@ public final class PanStamp {
         return new AbstractRegisterListener() {
             @Override
             public void valueReceived(Register reg, byte value[]) {
+                logger.warning(String.format("valueReceived(%s,%s)", reg.getId(), Arrays.toString(value)));
                 updated(reg);
             }
 
             @Override
             public void valueSet(Register reg, byte[] value) {
+                logger.warning(String.format("valueSet(%s,%s)", reg.getId(), Arrays.toString(value)));
                 updated(reg);
             }
 
             private void updated(Register reg) {
                 try {
+                logger.warning(String.format("updated(%s)", reg.getId()));
                     int mfId = ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName())).getValue();
                     int pdId = ((Endpoint<Integer>) reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName())).getValue();
-                        setProductCode(mfId, pdId);
+                    setProductCode(mfId, pdId);
                 } catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -495,9 +503,9 @@ public final class PanStamp {
         };
 
     }
-    
+
     private PanStampListener updateOnSyncListener(final int id, final byte[] val) {
-       return new AbstractPanStampListener() {
+        return new AbstractPanStampListener() {
             @Override
             public void syncStateChange(PanStamp dev, int syncState) {
                 switch (syncState) {
@@ -521,6 +529,8 @@ public final class PanStamp {
      * load all endpoints and parameters
      */
     private void loadDefinition() throws NetworkException {
+                        logger.warning("loadDefinition()");
+try {
         def = nw.getDeviceDefinition(getManufacturerId(), getProductId());
         List<RegisterDefinition> rpDefs = def.getRegisters();
         for (RegisterDefinition rpDef : rpDefs) {
@@ -537,6 +547,11 @@ public final class PanStamp {
                 reg.addParameter(par);
             }
         }
+}
+catch (Throwable e) {
+    logger.warning(String.format("Mofo error detected %s",e.getMessage()));
+    e.printStackTrace();
+}
     }
 
     private final int address;
@@ -548,5 +563,7 @@ public final class PanStamp {
     private final boolean extended;
     private final Map<Integer, Register> registers = new ConcurrentHashMap<>();
     private transient final Set<PanStampListener> listeners = new CopyOnWriteArraySet<>(); // wish I knew why this was transient...
-   
+    private static final Logger logger = Logger.getLogger(PanStamp.class
+            .getName());
+
 }

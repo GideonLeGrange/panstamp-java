@@ -13,9 +13,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.definition.DeviceDefinition;
-import me.legrange.panstamp.definition.EndpointDefinition;
-import me.legrange.panstamp.definition.ParameterDefinition;
-import me.legrange.panstamp.definition.RegisterDefinition;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapException;
 import me.legrange.swap.SwapModem;
@@ -177,6 +174,7 @@ public final class Network implements AutoCloseable {
      * problem adding the device.
      */
     public PanStamp addDevice(final int addr) throws NetworkException {
+        logger.warning(String.format("addDevice(%d)", addr));
         if (devices.containsKey(addr)) {
             throw new DuplicateDeviceException(String.format("A panStamp device for address '%d' already exists", addr));
         }
@@ -467,6 +465,7 @@ public final class Network implements AutoCloseable {
      * update the network based on a received message
      */
     private void updateNetwork(SwapMessage msg) throws NetworkException {
+        logger.warning(String.format("updateNetwork(%s)", msg.getText()));
         int address = msg.getSender();
         synchronized (devices) {
             if (!hasDevice(address)) {
