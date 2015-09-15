@@ -126,7 +126,7 @@ public final class SerialModem implements SwapModem {
         try {
             return Integer.parseInt(res);
         } catch (NumberFormatException e) {
-            throw new SerialException(String.format("Malformed integer response '%s' (%s) to %s comamnd", res, asHex(res), cmd), e);
+            throw new SerialException(String.format("Malformed integer response '%s' (%s) to %s commamnd", res, asHex(res), cmd), e);
         }
     }
 
@@ -135,7 +135,7 @@ public final class SerialModem implements SwapModem {
         try {
             return Integer.parseInt(res, 16);
         } catch (NumberFormatException e) {
-            throw new SerialException(String.format("Malformed hex response '%s' (%s) to %s comamnd", res, asHex(res), cmd), e);
+            throw new SerialException(String.format("Malformed hex response '%s' (%s) to %s commamnd", res, asHex(res), cmd), e);
         }
     }
 
@@ -143,7 +143,7 @@ public final class SerialModem implements SwapModem {
         String res = sendATCommand(cmd);
         switch (res) {
             case "ERROR":
-                throw new SerialException(String.format("Error on %s command", cmd));
+                throw new SerialException(String.format("Error received on %s command", cmd));
             case "OK":
                 throw new SerialException(String.format("Unexpected OK in %s command", cmd));
             default:
