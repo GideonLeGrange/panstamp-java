@@ -49,7 +49,7 @@ public final class SerialModem implements SwapModem {
 
     @Override
     public synchronized void send(SwapMessage msg) throws SerialException {
-        com.send(msg.getText() + "\r");
+        send(msg.getText() + "\r");
         fireEvent(msg, ReceiveTask.Direction.OUT);
     }
 
@@ -174,7 +174,7 @@ public final class SerialModem implements SwapModem {
 
     private boolean tryCommandMode() throws SerialException {
         int count = 0;
-        com.send("+++");
+        send("+++");
         while ((mode != Mode.COMMAND) && (count < 15)) {
             try {
                 Thread.sleep(100);
@@ -193,7 +193,7 @@ public final class SerialModem implements SwapModem {
         if (mode == Mode.DATA) {
             return;
         }
-        com.send("ATO\r");
+        send("ATO\r");
         while (mode != Mode.DATA) {
             try {
                 Thread.sleep(100);
@@ -204,8 +204,7 @@ public final class SerialModem implements SwapModem {
     }
 
     private String sendATCommand(String cmd) throws SerialException {
-        com.send(cmd + "\r");
-        String res;
+        send(cmd + "\r");
         try {
             return results.take();
         } catch (InterruptedException ex) {
@@ -213,6 +212,16 @@ public final class SerialModem implements SwapModem {
         }
     }
 
+    private void send(String cmd) throws SerialException {
+        log("SEND: '" +  cmd.replace("\r", "\\r") + "'");
+        com.send(cmd);
+    }
+    
+    private void log(String msg) {
+        synchronized(System.out) {
+            System.out.println(msg);
+        }
+    }
     /**
      * send the received message to listeners
      */
@@ -259,7 +268,9 @@ public final class SerialModem implements SwapModem {
             while (running) {
                 try {
                     String in = com.read();
+                    log("RECV: '" + in + "'");
                     if (in.length() == 0) {
+                        log("RECV - discarded blank line");
                         continue;
                     }
                     if (in.charAt(0) == '(') {
@@ -268,6 +279,7 @@ public final class SerialModem implements SwapModem {
                             fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
                         } else {
                             // truncated SWAP message, drop silently
+                            log("RECV - discarded truncated SWAP message");
                         }
                     } else {
                         // handle AT responses here
@@ -282,6 +294,7 @@ public final class SerialModem implements SwapModem {
                             case "OK":
                             case "ERROR":
                             default:
+                                log("RECV - AT response '" + in + "'");
                                 results.add(in);
 
                         }
