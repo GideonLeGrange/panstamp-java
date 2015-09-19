@@ -213,15 +213,22 @@ public final class SerialModem implements SwapModem {
     }
 
     private void send(String cmd) throws SerialException {
-        log("SEND: '" +  cmd.replace("\r", "\\r") + "'");
+        log("SEND: '" + cmd.replace("\r", "") + "'");
         com.send(cmd);
     }
-    
+
+    private String read() throws SerialException {
+        String in = com.read();
+        log("RECV: '" + in + "'");
+        return in.trim();
+    }
+
     private void log(String msg) {
-        synchronized(System.out) {
+        synchronized (System.out) {
             System.out.println(msg);
         }
     }
+
     /**
      * send the received message to listeners
      */
@@ -263,45 +270,41 @@ public final class SerialModem implements SwapModem {
      */
     private class Reader extends Thread {
 
+        private static final String OK_COMMAND = "OK-Command mode";
+        private static final String OK_DATA = "OK-Data mode";
+        private static final String MODEM_READY = "Modem ready!";
+
+        private boolean isSwapMessage(String in) {
+            return !in.isEmpty() && (in.charAt(0) == '(') && in.length() >= 12;
+        }
+
         @Override
         public void run() {
             while (running) {
                 try {
-                    String in = com.read();
-                    log("RECV: '" + in + "'");
-                    if (in.length() == 0) {
-                        log("RECV - discarded blank line");
-                        continue;
+                    String in = read();
+                    if (in.isEmpty()) {
+                        continue; // discred empty lines
                     }
-                    if (in.charAt(0) == '(') {
-                        if (in.length() >= 12) {
-                            mode = Mode.DATA;
-                            fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
-                        } else {
-                            // truncated SWAP message, drop silently
-                            log("RECV - discarded truncated SWAP message");
-                        }
+                    if (isSwapMessage(in)) {
+                        mode = Mode.DATA;
+                        fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
                     } else {
-                        // handle AT responses here
                         switch (in) {
-                            case "OK-Command mode":
+                            case OK_COMMAND:
                                 mode = Mode.COMMAND;
                                 break;
-                            case "Modem ready!":
-                            case "OK-Data mode":
+                            case MODEM_READY:
+                            case OK_DATA:
                                 mode = Mode.DATA;
                                 break;
-                            case "OK":
-                            case "ERROR":
                             default:
-                                log("RECV - AT response '" + in + "'");
-                                results.add(in);
-
+                                if (mode == Mode.COMMAND) {
+                                    results.add(in);
+                                }
                         }
                     }
-                } catch (SerialException ex) {
-                    Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DecodingException ex) {
+                } catch (SerialException | DecodingException ex) {
                     Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Throwable ex) {
                     Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
