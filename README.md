@@ -39,7 +39,7 @@ Add the dependency below to your pom.xml to use the artifact from Maven Central:
 
 # Using the API 
 
-There are documented [examples](https://github.com/GideonLeGrange/panstamp-java/wiki) on this project's wiki and some simple example programs in the [src/main/java/example] directory.
+There are documented [examples](https://github.com/GideonLeGrange/panstamp-java/wiki) on this project's wiki and some simple example programs in the [src/main/java/example](src/main/java/example) directory.
 
 # References
 
