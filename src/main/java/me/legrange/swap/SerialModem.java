@@ -49,7 +49,7 @@ public final class SerialModem implements SwapModem {
 
     @Override
     public synchronized void send(SwapMessage msg) throws SerialException {
-        com.send(msg.getText() + "\r");
+        send(msg.getText() + "\r");
         fireEvent(msg, ReceiveTask.Direction.OUT);
     }
 
@@ -159,7 +159,7 @@ public final class SerialModem implements SwapModem {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
+               logger.log(Level.SEVERE, null, ex);
             }
         }
         int count = 3;
@@ -174,7 +174,7 @@ public final class SerialModem implements SwapModem {
 
     private boolean tryCommandMode() throws SerialException {
         int count = 0;
-        com.send("+++");
+        send("+++");
         while ((mode != Mode.COMMAND) && (count < 15)) {
             try {
                 Thread.sleep(100);
@@ -193,7 +193,7 @@ public final class SerialModem implements SwapModem {
         if (mode == Mode.DATA) {
             return;
         }
-        com.send("ATO\r");
+        send("ATO\r");
         while (mode != Mode.DATA) {
             try {
                 Thread.sleep(100);
@@ -204,13 +204,27 @@ public final class SerialModem implements SwapModem {
     }
 
     private String sendATCommand(String cmd) throws SerialException {
-        com.send(cmd + "\r");
-        String res;
+        send(cmd + "\r");
         try {
             return results.take();
         } catch (InterruptedException ex) {
             throw new SerialException("Interruped waiting for AT response");
         }
+    }
+
+    private void send(String cmd) throws SerialException {
+        log("SEND: '" + cmd.replace("\r", "") + "'");
+        com.send(cmd);
+    }
+
+    private String read() throws SerialException {
+        String in = com.read();
+        log("RECV: '" + in + "'");
+        return in.trim();
+    }
+
+    private void log(String msg) {
+        logger.finest(msg);
     }
 
     /**
@@ -247,6 +261,8 @@ public final class SerialModem implements SwapModem {
             return t;
         }
     });
+    
+    private static final Logger logger = Logger.getLogger(SerialModem.class.getName());
 
     /**
      * The reader thread that receives data from the modem, unpacks it into
@@ -254,44 +270,44 @@ public final class SerialModem implements SwapModem {
      */
     private class Reader extends Thread {
 
+        private static final String OK_COMMAND = "OK-Command mode";
+        private static final String OK_DATA = "OK-Data mode";
+        private static final String MODEM_READY = "Modem ready!";
+
+        private boolean isSwapMessage(String in) {
+            return !in.isEmpty() && (in.charAt(0) == '(') && in.length() >= 12;
+        }
+
         @Override
         public void run() {
             while (running) {
                 try {
-                    String in = com.read();
-                    if (in.length() == 0) {
-                        continue;
+                    String in = read();
+                    if (in.isEmpty()) {
+                        continue; // discard empty lines
                     }
-                    if (in.charAt(0) == '(') {
-                        if (in.length() >= 12) {
-                            mode = Mode.DATA;
-                            fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
-                        } else {
-                            // truncated SWAP message, drop silently
-                        }
+                    if (isSwapMessage(in)) {
+                        mode = Mode.DATA;
+                        fireEvent(new SerialMessage(in), ReceiveTask.Direction.IN);
                     } else {
-                        // handle AT responses here
                         switch (in) {
-                            case "OK-Command mode":
+                            case OK_COMMAND:
                                 mode = Mode.COMMAND;
                                 break;
-                            case "Modem ready!":
-                            case "OK-Data mode":
+                            case MODEM_READY:
+                            case OK_DATA:
                                 mode = Mode.DATA;
                                 break;
-                            case "OK":
-                            case "ERROR":
                             default:
-                                results.add(in);
-
+                                if (mode == Mode.COMMAND) {
+                                    results.add(in);
+                                }
                         }
                     }
-                } catch (SerialException ex) {
-                    Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DecodingException ex) {
-                    Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SerialException | DecodingException ex) {
+                    logger.log(Level.SEVERE, null, ex);
                 } catch (Throwable ex) {
-                    Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -328,7 +344,7 @@ public final class SerialModem implements SwapModem {
                     l.messageSent(msg);
                 }
             } catch (Throwable e) {
-                Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, e);
+                logger.log(Level.SEVERE, null, e);
             }
         }
 
