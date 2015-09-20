@@ -159,7 +159,7 @@ public final class SerialModem implements SwapModem {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
+               logger.log(Level.SEVERE, null, ex);
             }
         }
         int count = 3;
@@ -224,9 +224,7 @@ public final class SerialModem implements SwapModem {
     }
 
     private void log(String msg) {
-        synchronized (System.out) {
-            System.out.println(msg);
-        }
+        logger.finest(msg);
     }
 
     /**
@@ -263,6 +261,8 @@ public final class SerialModem implements SwapModem {
             return t;
         }
     });
+    
+    private static final Logger logger = Logger.getLogger(SerialModem.class.getName());
 
     /**
      * The reader thread that receives data from the modem, unpacks it into
@@ -284,7 +284,7 @@ public final class SerialModem implements SwapModem {
                 try {
                     String in = read();
                     if (in.isEmpty()) {
-                        continue; // discred empty lines
+                        continue; // discard empty lines
                     }
                     if (isSwapMessage(in)) {
                         mode = Mode.DATA;
@@ -305,9 +305,9 @@ public final class SerialModem implements SwapModem {
                         }
                     }
                 } catch (SerialException | DecodingException ex) {
-                    Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.SEVERE, null, ex);
                 } catch (Throwable ex) {
-                    Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -344,7 +344,7 @@ public final class SerialModem implements SwapModem {
                     l.messageSent(msg);
                 }
             } catch (Throwable e) {
-                Logger.getLogger(SerialModem.class.getName()).log(Level.SEVERE, null, e);
+                logger.log(Level.SEVERE, null, e);
             }
         }
 
