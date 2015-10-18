@@ -7,7 +7,7 @@ package me.legrange.panstamp.definition;
  * @author Gideon le Grange https://github.com/GideonLeGrange *
  */
 public enum Type {
-    BINARY("bin"), NUMBER("num"), STRING("str"), INTEGER("int");
+    BINARY("bin"), NUMBER("num"), STRING("str"), INTEGER("int"), BSTRING("bstr");
 
     public static Type forTag(String tag) {
         for (Type type : Type.values()) {

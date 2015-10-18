@@ -17,7 +17,8 @@ public interface Endpoint<T> extends Comparable<Endpoint<T>> {
         /** Numbers (represented as double values */ NUMBER, 
         /** Integer numbers */ INTEGER, 
         /** Text values */ STRING, 
-        /** Boolean / On-off / True-false values */ BINARY; };
+        /** Boolean / On-off / True-false values */ BINARY,
+        /** byte arrays */ BYTE_ARRAY; };
     
    
     /** Return the name of this endpoint.

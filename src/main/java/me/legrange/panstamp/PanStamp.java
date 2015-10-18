@@ -465,7 +465,8 @@ public final class PanStamp {
                         }
                         fireProductCodeChange(manufacturerId, productId);
                     }
-                } catch (NetworkException ex) {
+                }
+                catch (NetworkException ex) {
                     Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
