@@ -301,6 +301,8 @@ public final class Register {
                 return new BinaryEndpoint(this, epDef);
             case INTEGER:
                 return new IntegerEndpoint(this, epDef);
+            case BSTRING : 
+                return new ByteArrayEndpoint(this, epDef);
             default:
                 throw new RuntimeException(String.format("Unknown end point type '%s'. BUG!", epDef.getType()));
         }
@@ -319,6 +321,8 @@ public final class Register {
                 return new BinaryParameter(this, def);
             case INTEGER:
                 return new IntegerParameter(this, def);
+            case BSTRING : 
+                return new ByteArrayParameter(this, def);
             default:
                 throw new RuntimeException(String.format("Unknown parameter type '%s'. BUG!", def.getType()));
         }

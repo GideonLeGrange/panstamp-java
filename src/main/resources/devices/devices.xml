@@ -25,8 +25,10 @@ sensitive and must match.
     <dev id="12" name="binouts2" label="Advanced Binary/PWM output module + repeater"/>
     <dev id="13" name="respira" label="Respira sensor for CO and NO2"/>
     <dev id="14" name="soilmoisture" label="Soil moisture sensor"/>
-    <dev id="15" name="easyvr" label="EasyVR voice recognition module"/>
-    <dev id="16" name="firmloader" label="Firmware server"/>
+    <dev id="15" name="co2meter" label="CO2 and temperature-humidity sensor"/>
+    <dev id="16" name="firmserver" label="Firmware server"/>
+    <dev id="17" name="idtag" label="Identification tag transmitter"/>
+    <dev id="4278190080" name="unprogrammed" label="Unprogrammed device"/>
   </developer>
   <developer id="17" name="Robomotic">
     <dev id="1" name="EmmaTI" label="Emma watch"/>
@@ -47,7 +49,8 @@ sensitive and must match.
   <developer id="29" name="panMillenium">
     <dev id="1" name="panmillenium1" label="Crouzet Millenium 3 wireless interface by panSTamp"/>
   </developer>
-  <developer id="50" name="VentonaNet">
-    <dev id="1" name="raphio" label="Raphael's IO module"/>
+  <developer id="51" name="kuttel">
+    <dev id="1" name="dhtinput" label="DHT Sensor and Inputs"/>
+    <dev id="2" name="thr" label="Dual Temperature-Humidity-Sensor and Relay-Actor"/>
   </developer>
 </devices>

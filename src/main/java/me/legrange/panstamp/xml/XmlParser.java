@@ -102,7 +102,14 @@ final class XmlParser {
      */
     private XmlDeviceDefinition parseDevice(XmlDeveloperDefinition devel, Element node) throws ParseException {
         XmlDeviceDefinition dev = null;
-        int id = requireIntAttr(node, "id");
+        long lid = requireLongAttr(node, "id");
+        int id;
+        if (lid > Integer.MAX_VALUE) {
+            id = (int)(Integer.MAX_VALUE - lid);
+        }
+        else {
+            id = (int)lid;
+        }
         String name = requireAttr(node, "name");
         String label = requireAttr(node, "label");
         String fileName = devel.getName() + "/" + name + ".xml";
@@ -421,6 +428,14 @@ final class XmlParser {
             throw new ParseException(String.format("Attribute '%s' is not defined", name));
         }
         return text;
+    }
+
+    private long requireLongAttr(Element node, String name) throws ParseException {
+        try {
+            return Long.parseLong(requireAttr(node, name));
+        } catch (NumberFormatException e) {
+            throw new ParseException(String.format("Attribute '%s' is not an integer", name), e);
+        }
     }
 
     private int requireIntAttr(Element node, String name) throws ParseException {
