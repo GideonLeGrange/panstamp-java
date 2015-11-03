@@ -467,7 +467,7 @@ public final class PanStamp {
                     }
                 }
                 catch (NetworkException ex) {
-                    Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
                 }
             }
         };
@@ -542,7 +542,7 @@ public final class PanStamp {
                     try {
                         nw.sendCommandMessage(PanStamp.this, id, val);
                     } catch (ModemException ex) {
-                        Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(PanStamp.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
                     } finally {
                         removeListener(this);
                     }
