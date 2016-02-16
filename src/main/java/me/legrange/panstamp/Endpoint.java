@@ -110,6 +110,14 @@ public interface Endpoint<T> extends Comparable<Endpoint<T>> {
     void setValue(T value) throws NetworkException;
     
     /** 
+     * request a value for the endpoint from the network. 
+     * 
+     * @throws me.legrange.panstamp.NetworkException Thrown if there is a problem requesting the endpoint value.
+     * @since 2.2
+     */
+    void requestValue() throws NetworkException;
+    
+    /** 
      * Test if the endpoint is an output or just an input. 
      * @return True if the endpoint is an output. 
      * @since 1.2

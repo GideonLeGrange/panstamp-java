@@ -84,6 +84,11 @@ abstract class AbstractEndpoint<T> implements Endpoint<T> {
     }
 
     @Override
+    public void requestValue() throws NetworkException {
+        reg.requestValue();
+    }
+
+    @Override
     public Register getRegister() {
         return reg;
     }
