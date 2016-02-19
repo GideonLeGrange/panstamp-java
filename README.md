@@ -13,8 +13,6 @@ You can read all about them [on their commercial site](http://www.panstamp.com/)
 
 The current stable version is *2.2*. For more information about different releases, see  [Releases](https://github.com/GideonLeGrange/panstamp-java/releases).
 
-This library uses [semantic versioning](http://semver.org/)
-
 ## Contributing
 
 I welcome contributions, be it bug fixes or other improvements. If you fix or change something, please submit a pull request. If you want to report a bug, please open an issue. 
